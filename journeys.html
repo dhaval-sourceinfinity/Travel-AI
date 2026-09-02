@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Our Journeys — Travel AI</title>
+  <meta name="description" content="A considered collection of journeys across Dubai and Japan — each with its own character, pace and way of experiencing the destination." />
+  <meta name="theme-color" content="#080b0d" />
+  <link rel="canonical" href="https://travel-ai.example/journeys.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Our Journeys — Travel AI" />
+  <meta property="og:description" content="Journeys worth taking across Dubai and Japan." />
+  <meta property="og:image" content="assets/images/journeys/dubai-1.webp" />
+
+  <!-- Preload LCP image (first card) & core fonts -->
+  <link rel="preload" as="image" href="assets/images/journeys/dubai-1.webp" fetchpriority="high" />
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-600.woff2" crossorigin />
+
+  <!-- Styles: tokens → reset → base → layout → components → page → responsive -->
+  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/home.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+
+  <script type="module" src="js/journeys.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header id="site-header" class="site-header"></header>
+
+  <main id="main">
+    <section class="section section--deep section--flush page-section" aria-labelledby="journeys-title">
+      <div class="container">
+        <div class="split split--bordered">
+          <h1 class="section-title" id="journeys-title">Journeys worth taking.</h1>
+          <p class="lede">We don't believe in showing you hundreds of holidays and leaving you to choose. Instead, our Travel AI Agents bring together a considered collection of journeys across Dubai and Japan — each with its own character, pace and way of experiencing the destination.</p>
+        </div>
+
+        <div class="journeys journeys--list reveal" data-journeys="all">
+          <!-- Journey cards rendered by js/journeys.js (shared journey-card component) -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+</body>
+</html>
