@@ -77,16 +77,20 @@
   --fs-cta: clamp(38px, 8vw, 67px);
   --fs-hero: clamp(46px, 13vw, 136px);
 
-  /* ---- Motion ---------------------------------------------------------- */
+  /* ---- Motion: base micro-interactions (DESIGN.md specification) ----- */
   --dur-fast: 160ms;
   --dur-normal: 240ms;
   --dur-slow: 600ms;
+  --duration-fast: var(--dur-fast);
+  --duration-normal: var(--dur-normal);
   --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
 
   /* ---- Motion: cinematic timing ---------------------------------------- */
   --motion-fast: 180ms;
   --motion-normal: 350ms;
+  --motion-hover: 500ms;
   --motion-reveal: 700ms;
+  --motion-hero-title: 900ms;
   --motion-slow: 1000ms;
   --motion-cinematic: 1400ms;
 

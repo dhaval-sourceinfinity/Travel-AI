@@ -18,7 +18,15 @@
    -------------------------------------------------------------------------- */
 [data-motion].is-visible {
   opacity: 1;
-  transform: none !important;
+  transform: none;
+}
+
+/* Allow interactive component hover lifts once revealed */
+.journey-card[data-motion].is-visible:hover {
+  transform: translateY(-3px);
+}
+.btn-hero[data-motion].is-visible:hover {
+  transform: translateY(-1px);
 }
 
 /* --------------------------------------------------------------------------
@@ -40,6 +48,12 @@
   transition:
     opacity var(--motion-reveal) var(--ease-reveal);
   transition-delay: var(--motion-delay, 0ms);
+}
+
+/* -- Line Reveal & Char Reveal (conventions established for later phases) -- */
+.js-ready [data-motion="line-reveal"],
+.js-ready [data-motion="char-reveal"] {
+  will-change: opacity, transform;
 }
 
 /* -- Fade Down (header / nav entrance) ----------------------------------- */
@@ -90,8 +104,8 @@
 .js-ready [data-motion="hero-title"] {
   transform: translateY(30px);
   transition:
-    opacity 900ms var(--ease-reveal),
-    transform 900ms var(--ease-reveal);
+    opacity var(--motion-hero-title) var(--ease-reveal),
+    transform var(--motion-hero-title) var(--ease-reveal);
   transition-delay: var(--motion-delay, 0ms);
 }
 
@@ -99,8 +113,8 @@
 .js-ready [data-motion="hero-text"] {
   transform: translateY(18px);
   transition:
-    opacity 700ms var(--ease-reveal),
-    transform 700ms var(--ease-reveal);
+    opacity var(--motion-reveal) var(--ease-reveal),
+    transform var(--motion-reveal) var(--ease-reveal);
   transition-delay: var(--motion-delay, 0ms);
 }
 
@@ -108,8 +122,8 @@
 .js-ready [data-motion="hero-cta"] {
   transform: translateY(12px) scale(.96);
   transition:
-    opacity 600ms var(--ease-reveal),
-    transform 600ms var(--ease-reveal);
+    opacity var(--dur-slow) var(--ease-reveal),
+    transform var(--dur-slow) var(--ease-reveal);
   transition-delay: var(--motion-delay, 0ms);
 }
 
@@ -125,13 +139,19 @@
 
 /* --------------------------------------------------------------------------
    5. Stagger system
-   Elements inside a [data-motion-stagger] container receive auto-delays.
+   Elements inside a [data-motion="stagger"] or [data-motion-stagger] container receive auto-delays.
    -------------------------------------------------------------------------- */
+[data-motion="stagger"] > [data-motion]:nth-child(1),
 [data-motion-stagger] > [data-motion]:nth-child(1) { --motion-delay: 0ms; }
+[data-motion="stagger"] > [data-motion]:nth-child(2),
 [data-motion-stagger] > [data-motion]:nth-child(2) { --motion-delay: var(--stagger-normal); }
+[data-motion="stagger"] > [data-motion]:nth-child(3),
 [data-motion-stagger] > [data-motion]:nth-child(3) { --motion-delay: calc(var(--stagger-normal) * 2); }
+[data-motion="stagger"] > [data-motion]:nth-child(4),
 [data-motion-stagger] > [data-motion]:nth-child(4) { --motion-delay: calc(var(--stagger-normal) * 3); }
+[data-motion="stagger"] > [data-motion]:nth-child(5),
 [data-motion-stagger] > [data-motion]:nth-child(5) { --motion-delay: calc(var(--stagger-normal) * 4); }
+[data-motion="stagger"] > [data-motion]:nth-child(6),
 [data-motion-stagger] > [data-motion]:nth-child(6) { --motion-delay: calc(var(--stagger-normal) * 5); }
 
 /* --------------------------------------------------------------------------
@@ -147,7 +167,7 @@
 .journey-card__img,
 .person-card__img,
 .place-card__img {
-  transition: transform 500ms var(--ease-reveal);
+  transition: transform var(--motion-hover) var(--ease-reveal);
 }
 .dest-card:hover .dest-card__img,
 .journey-card:hover .journey-card__img,
@@ -208,6 +228,7 @@
     transform: scale(1.03);
   }
   /* Reduce stagger on mobile */
+  [data-motion="stagger"] > [data-motion]:nth-child(n+4),
   [data-motion-stagger] > [data-motion]:nth-child(n+4) {
     --motion-delay: calc(var(--stagger-small) * 3) !important;
   }

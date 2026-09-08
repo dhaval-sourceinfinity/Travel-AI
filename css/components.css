@@ -310,10 +310,10 @@
   max-width: 42ch;
 }
 .dest-card:hover .dest-card__img {
-  transform: scale(1.03);
+  transform: scale(1.04);
 }
 .dest-card__img {
-  transition: transform var(--dur-slow) var(--ease-standard);
+  transition: transform var(--motion-hover, 500ms) var(--ease-reveal, cubic-bezier(0.2, 0.8, 0.2, 1));
 }
 
 /* --------------------------------------------------------------------------
@@ -391,7 +391,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--dur-slow) var(--ease-standard);
+  transition: transform var(--motion-hover, 500ms) var(--ease-reveal, cubic-bezier(0.2, 0.8, 0.2, 1));
 }
 .journey-card:hover .journey-card__img {
   transform: scale(1.04);

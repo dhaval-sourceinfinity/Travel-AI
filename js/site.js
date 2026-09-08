@@ -234,7 +234,7 @@
             const el = entry.target;
 
             // For stagger containers, reveal children in sequence
-            if (el.hasAttribute("data-motion-stagger")) {
+            if (el.hasAttribute("data-motion-stagger") || el.getAttribute("data-motion") === "stagger") {
               const children = el.querySelectorAll("[data-motion]");
               children.forEach((child) => child.classList.add("is-visible"));
             }
@@ -251,12 +251,12 @@
       const motionType = el.getAttribute("data-motion");
       // Skip hero elements and children of stagger containers
       if (heroMotions.has(motionType)) return;
-      if (el.parentElement && el.parentElement.hasAttribute("data-motion-stagger")) return;
+      if (el.parentElement && (el.parentElement.hasAttribute("data-motion-stagger") || el.parentElement.getAttribute("data-motion") === "stagger")) return;
       io.observe(el);
     });
 
     // Observe stagger containers themselves
-    document.querySelectorAll("[data-motion-stagger]").forEach((container) => {
+    document.querySelectorAll('[data-motion-stagger], [data-motion="stagger"]').forEach((container) => {
       io.observe(container);
     });
   }
