@@ -105,6 +105,22 @@
   --stagger-line: 90ms;
   --stagger-char: 18ms;
 
+  /* ---- Motion: scroll-progressive editorial reveal ---------------------
+     Progress (0-1) is driven by scroll position, not by time. These shape
+     how that progress maps onto individual characters / supporting copy.
+     Values measured from the Vita reference: its muted text sits at exactly
+     rgba(255,255,255,0.4), and ~15% of characters are mid-transition at once.
+     Edge width is fade/span; span + fade = 1 so the last character finishes
+     precisely at progress 1. */
+  --motion-editorial-idle: 0.40;  /* unrevealed character intensity        */
+  --motion-editorial-span: 0.82;  /* progress span across which chars start */
+  --motion-editorial-fade: 0.18;  /* progress each character takes to light */
+  --motion-editorial-copy: 0.50;  /* progress at which supporting copy begins */
+
+  /* Editorial text entrance distance (rise from below). Vita tiers this by
+     role: 40px eyebrows, 30px headings/copy, 20px card metadata. */
+  --motion-text-rise: 28px;
+
   /* ---- Elevation ------------------------------------------------------- */
   --shadow-pill: 0 6px 13px rgba(0, 0, 0, 0.22);
 

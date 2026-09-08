@@ -15,7 +15,8 @@
 
 /* Typography, image, and parallax reveals manage their own visibility */
 .js-ready [data-motion="line-reveal"],
-.js-ready [data-motion="char-reveal"],
+.js-ready [data-motion="char-scroll"],
+.js-ready [data-motion="copy-follow"],
 .js-ready [data-motion="parallax"] {
   opacity: 1;
   will-change: auto;
@@ -65,6 +66,47 @@
   transition-delay: var(--motion-delay, 0ms);
 }
 
+/* -- Text Reveal (editorial rise from below) ------------------------------
+   The Vita entrance: text starts below its resting position and rises into
+   place as it fades in. Same mechanism and easing as fade-up, but a larger
+   amplitude tier reserved for text, so containers and cards can keep the
+   quieter 20px move. --ease-reveal has both control points inside [0,1], so
+   it decelerates without overshoot or bounce.
+
+   --text-index staggers consecutive text-reveal siblings within one block and
+   composes additively with the --motion-delay inherited from a parent
+   [data-motion-stagger], so a card's copy still cascades in that card's turn. */
+.js-ready [data-motion="text-reveal"] {
+  transform: translateY(var(--motion-text-rise));
+  transition:
+    opacity var(--motion-reveal) var(--ease-reveal),
+    transform var(--motion-reveal) var(--ease-reveal);
+  transition-delay: calc(var(--motion-delay, 0ms) + var(--text-index, 0) * var(--stagger-small));
+}
+
+/* Required: the global `[data-motion].is-visible { transform: none }` sits
+   earlier in this file, so at equal specificity it would lose to the rule
+   above and the rise would never resolve. */
+[data-motion="text-reveal"].is-visible {
+  transform: none;
+}
+
+/* Count preceding text-reveal siblings — scoped to one parent by `~` */
+[data-motion="text-reveal"] ~ [data-motion="text-reveal"] { --text-index: 1; }
+[data-motion="text-reveal"] ~ [data-motion="text-reveal"] ~ [data-motion="text-reveal"] { --text-index: 2; }
+[data-motion="text-reveal"] ~ [data-motion="text-reveal"] ~ [data-motion="text-reveal"] ~ [data-motion="text-reveal"] { --text-index: 3; }
+[data-motion="text-reveal"] ~ [data-motion="text-reveal"] ~ [data-motion="text-reveal"] ~ [data-motion="text-reveal"] ~ [data-motion="text-reveal"] { --text-index: 4; }
+
+/* Card / block interiors use the quieter tier (Vita's 20px metadata family) */
+.dest-card,
+.journey-card,
+.person-card,
+.step,
+.feature,
+.note {
+  --motion-text-rise: 18px;
+}
+
 /* -- Line Reveal (editorial masked line emergence) ----------------------- */
 .line-mask {
   display: block;
@@ -89,26 +131,83 @@
   opacity: 1;
 }
 
-/* -- Character Reveal (selective progressive editorial statements) ------- */
-.char-word {
-  display: inline-block;
-  white-space: nowrap;
+/* -- Char Scroll (scroll-progressive editorial statements) ---------------
+   Progress is written by JS as --reveal-progress (0-1) on the nearest
+   [data-motion-scope], or on the element itself. Every character reads that
+   single custom property through its own overlapping window, so the reveal
+   is driven purely by scroll position: no transition, no delay, no timer.
+
+   Characters stay display:inline — the split text occupies exactly the same
+   box as the unsplit text, so line breaking, kerning and text-wrap: balance
+   are untouched and there is no layout shift at any width. -------------- */
+
+/* Accessible text lives in .sr-only; this layer is the aria-hidden visual */
+.char-layer {
+  display: inline;
 }
 
-.js-ready [data-motion="char-reveal"] .char-unit {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(70%);
-  transition:
-    opacity var(--motion-reveal) var(--ease-cinematic),
-    transform var(--motion-reveal) var(--ease-cinematic);
-  transition-delay: calc(var(--motion-delay, 0ms) + (var(--char-index, 0) * var(--stagger-char)));
-  will-change: transform, opacity;
+/* The heading itself rises into place while its characters light up. Transform
+   only — opacity is never touched here, so the muted characters remain visible
+   for the whole entrance. The explicit .is-visible rule is required because the
+   global `[data-motion].is-visible { transform: none }` sits earlier in this
+   file and would otherwise lose at equal specificity. */
+.js-ready [data-motion="char-scroll"] {
+  transform: translateY(var(--motion-text-rise));
+  transition: transform var(--motion-reveal) var(--ease-reveal);
+}
+[data-motion="char-scroll"].is-visible {
+  transform: none;
 }
 
-[data-motion="char-reveal"].is-visible .char-unit {
-  transform: translateY(0);
+.js-ready [data-motion="char-scroll"] .char-unit {
+  /* Where this character begins lighting, along total progress */
+  --char-start: calc(var(--i, 0) / var(--char-total, 1) * var(--motion-editorial-span));
+  /* This character's own 0-1 progress */
+  --char-local: clamp(
+    0,
+    calc((var(--reveal-progress, 1) - var(--char-start)) / var(--motion-editorial-fade)),
+    1
+  );
+  opacity: calc(
+    var(--motion-editorial-idle) + (1 - var(--motion-editorial-idle)) * var(--char-local)
+  );
+}
+
+/* Whole-element fallback for headings too long to split (see prepareCharScroll) */
+.js-ready [data-motion="char-scroll"].is-whole {
+  --char-local: clamp(0, calc(var(--reveal-progress, 1) / var(--motion-editorial-fade)), 1);
+  opacity: calc(
+    var(--motion-editorial-idle) + (1 - var(--motion-editorial-idle)) * var(--char-local)
+  );
+}
+
+/* Settled: drop the per-character calc chain entirely once fully revealed */
+.js-ready [data-motion="char-scroll"].is-settled .char-unit,
+.js-ready .is-settled [data-motion="char-scroll"] .char-unit,
+.js-ready [data-motion="char-scroll"].is-settled.is-whole,
+.js-ready .is-settled [data-motion="char-scroll"].is-whole {
   opacity: 1;
+}
+
+/* -- Copy Follow (supporting description trailing an editorial heading) ---
+   Reads the same --reveal-progress as its heading via [data-motion-scope],
+   through a later window: begins around 50%, completes around 95%. ------ */
+.js-ready [data-motion="copy-follow"] {
+  --copy-local: clamp(
+    0,
+    calc((var(--reveal-progress, 1) - var(--motion-editorial-copy)) / 0.45),
+    1
+  );
+  opacity: calc(
+    var(--motion-editorial-idle) + (1 - var(--motion-editorial-idle)) * var(--copy-local)
+  );
+  transform: translateY(calc((1 - var(--copy-local)) * 4px));
+}
+
+.js-ready .is-settled [data-motion="copy-follow"],
+.js-ready [data-motion="copy-follow"].is-settled {
+  opacity: 1;
+  transform: none;
 }
 
 /* -- Fade Down (header / nav entrance) ----------------------------------- */
@@ -276,8 +375,13 @@
   }
   .line-inner,
   .char-unit,
+  .char-layer,
   .js-ready [data-motion="line-reveal"] .line-inner,
-  .js-ready [data-motion="char-reveal"] .char-unit {
+  .js-ready [data-motion="char-scroll"],
+  .js-ready [data-motion="char-scroll"].is-whole,
+  .js-ready [data-motion="char-scroll"] .char-unit,
+  .js-ready [data-motion="copy-follow"],
+  .js-ready [data-motion="text-reveal"] {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
@@ -306,9 +410,24 @@
     transform: translateY(105%);
     transition-delay: calc(var(--motion-delay, 0ms) + (var(--line-index, 0) * var(--stagger-small)));
   }
-  .js-ready [data-motion="char-reveal"] .char-unit {
-    transform: translateY(50%);
-    transition-delay: calc(var(--motion-delay, 0ms) + (var(--char-index, 0) * 14ms));
+  /* Editorial reveal: a softer, more overlapping edge than desktop (39% vs
+     22% of characters mid-transition) so small type reads calmly. The muted
+     value is unchanged — 0.40 is already legible. Layout is unchanged. */
+  :root {
+    --motion-editorial-span: 0.72;
+    --motion-editorial-fade: 0.28;
+    --motion-text-rise: 18px;
+  }
+  .dest-card,
+  .journey-card,
+  .person-card,
+  .step,
+  .feature,
+  .note {
+    --motion-text-rise: 12px;
+  }
+  .js-ready [data-motion="copy-follow"] {
+    transform: translateY(calc((1 - var(--copy-local)) * 3px));
   }
   .js-ready [data-motion="hero-image"] {
     transform: scale(1.02);
