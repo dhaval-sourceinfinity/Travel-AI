@@ -96,34 +96,34 @@
 .js-ready [data-motion="hero-image"] {
   transform: scale(1.04);
   transition:
-    opacity var(--motion-cinematic) var(--ease-cinematic),
+    opacity var(--motion-reveal) ease-out,
     transform var(--motion-cinematic) var(--ease-cinematic);
 }
 
 /* Hero title */
 .js-ready [data-motion="hero-title"] {
-  transform: translateY(30px);
+  transform: translateY(24px);
   transition:
-    opacity var(--motion-hero-title) var(--ease-reveal),
-    transform var(--motion-hero-title) var(--ease-reveal);
+    opacity var(--motion-hero-title) var(--ease-cinematic),
+    transform var(--motion-hero-title) var(--ease-cinematic);
   transition-delay: var(--motion-delay, 0ms);
 }
 
 /* Hero supporting text */
 .js-ready [data-motion="hero-text"] {
-  transform: translateY(18px);
+  transform: translateY(14px);
   transition:
-    opacity var(--motion-reveal) var(--ease-reveal),
-    transform var(--motion-reveal) var(--ease-reveal);
+    opacity var(--motion-reveal) var(--ease-cinematic),
+    transform var(--motion-reveal) var(--ease-cinematic);
   transition-delay: var(--motion-delay, 0ms);
 }
 
 /* Hero CTA button */
 .js-ready [data-motion="hero-cta"] {
-  transform: translateY(12px) scale(.96);
+  transform: translateY(10px) scale(.98);
   transition:
-    opacity var(--dur-slow) var(--ease-reveal),
-    transform var(--dur-slow) var(--ease-reveal);
+    opacity var(--dur-slow) var(--ease-cinematic),
+    transform var(--dur-slow) var(--ease-cinematic);
   transition-delay: var(--motion-delay, 0ms);
 }
 
@@ -214,14 +214,17 @@
   .js-ready [data-motion="fade-up"] {
     transform: translateY(16px);
   }
+  .js-ready [data-motion="hero-image"] {
+    transform: scale(1.02);
+  }
   .js-ready [data-motion="hero-title"] {
-    transform: translateY(18px);
+    transform: translateY(14px);
   }
   .js-ready [data-motion="hero-text"] {
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   .js-ready [data-motion="hero-cta"] {
-    transform: translateY(8px) scale(.97);
+    transform: translateY(6px) scale(.99);
   }
   .js-ready [data-motion="image-reveal"] {
     clip-path: inset(3% 0 3% 0);

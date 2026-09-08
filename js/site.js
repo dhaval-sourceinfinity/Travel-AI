@@ -281,13 +281,12 @@
       return;
     }
 
-    // Sequence: image → header → title → text → CTA
+    // Sequence: Hero image → headline → supporting text → CTA
     const sequence = [
-      { el: heroImage, delay: 100 },
-      { el: header, delay: 400 },
-      { el: heroTitle, delay: 700 },
-      { el: heroText, delay: 900 },
-      { el: heroCta, delay: 1100 },
+      { el: heroImage, delay: 50 },
+      { el: heroTitle, delay: 350 },
+      { el: heroText, delay: 650 },
+      { el: heroCta, delay: 900 },
     ];
 
     // Mark hero-content visible immediately (it manages its own scroll state)
@@ -302,8 +301,12 @@
       }, delay);
     });
 
-    // Stagger nav links
+    // Header subtly reveals in tandem without interrupting hero narrative
     if (header) {
+      setTimeout(() => {
+        header.classList.add("is-visible");
+      }, 300);
+
       const navLinks = header.querySelectorAll(".nav__link");
       navLinks.forEach((link, i) => {
         link.style.opacity = "0";
@@ -312,9 +315,14 @@
         setTimeout(() => {
           link.style.opacity = "1";
           link.style.transform = "none";
-        }, 500 + i * 80);
+        }, 400 + i * 70);
       });
     }
+
+    // Once entrance completes, clear heroImage transition so scroll parallax is 100% immediate & responsive
+    setTimeout(() => {
+      if (heroImage) heroImage.style.transition = "none";
+    }, 1600);
   }
 
   /* ---- 5d. Hero scroll effects (parallax + content recede) -------------- */
@@ -331,6 +339,10 @@
 
     function onScroll() {
       lastScrollY = window.scrollY;
+      // If user scrolls before entrance timeout finishes, clear transition immediately
+      if (heroImage && heroImage.style.transition !== "none") {
+        heroImage.style.transition = "none";
+      }
       if (!ticking) {
         ticking = true;
         requestAnimationFrame(updateHeroScroll);
@@ -349,15 +361,15 @@
 
       // Hero image: subtle parallax + scale
       if (heroImage) {
-        const imgY = scrollY * (IS_MOBILE ? 0.04 : 0.1);
-        const imgScale = 1 + progress * 0.05;
+        const imgY = scrollY * (IS_MOBILE ? 0.03 : 0.08);
+        const imgScale = 1 + progress * (IS_MOBILE ? 0.02 : 0.04);
         heroImage.style.transform = `translateY(${imgY}px) scale(${imgScale})`;
       }
 
       // Hero content: fade + recede upward
       if (heroContent) {
-        const contentOpacity = Math.max(0, 1 - progress * 1.8);
-        const contentY = -scrollY * (IS_MOBILE ? 0.15 : 0.25);
+        const contentOpacity = Math.max(0, 1 - progress * 1.6);
+        const contentY = -scrollY * (IS_MOBILE ? 0.12 : 0.2);
         heroContent.style.setProperty("--hero-scroll-opacity", contentOpacity);
         heroContent.style.setProperty("--hero-scroll-y", contentY + "px");
         heroContent.style.opacity = contentOpacity;
