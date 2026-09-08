@@ -19,7 +19,7 @@ const COLUMNS = [
   {
     head: "Travel AI",
     links: [
-      { label: "Our Story", href: "index.html#about" },
+      { label: "Our Story", href: "about-us.html" },
       { label: "How It Works", href: "index.html#how" },
       { label: "Travel AI Agents", href: "404.html" },
     ],

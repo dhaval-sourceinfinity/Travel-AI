@@ -2,7 +2,7 @@
 import { brand } from "./brand.js";
 
 const NAV_LINKS = [
-  { label: "About Us", href: "index.html#about" },
+  { label: "About Us", href: "about-us.html" },
   { label: "Packages", href: "journeys.html" },
   { label: "AI Planner", href: "index.html#how" },
   { label: "My Trips", href: "journeys.html" },

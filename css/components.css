@@ -103,12 +103,12 @@
 
 /* Accent solid pill button (e.g. Header Get Started) */
 .btn--accent {
-  background: #7b5cf0;
+  background: var(--color-accent-solid);
   color: #fff;
   border: 1px solid transparent;
 }
 .btn--accent:hover {
-  background: #8b6ff5;
+  background: var(--color-accent-solid-hover);
   color: #fff;
   box-shadow: 0 0 16px rgba(123, 92, 240, 0.35);
 }
@@ -259,7 +259,7 @@
 .nav-link-signin {
   font-size: 14px;
   font-weight: 500;
-  color: #8b8c94;
+  color: var(--color-text-body);
   letter-spacing: -0.01em;
   padding: 8px 12px;
   border-radius: var(--radius-sm);

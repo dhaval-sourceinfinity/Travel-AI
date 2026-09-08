@@ -103,7 +103,12 @@
 .person-card,
 .step,
 .feature,
-.note {
+.note,
+.about-belief,
+.about-place,
+.about-stat,
+.about-timeline__row,
+.about-join {
   --motion-text-rise: 18px;
 }
 
@@ -423,7 +428,12 @@
   .person-card,
   .step,
   .feature,
-  .note {
+  .note,
+  .about-belief,
+  .about-place,
+  .about-stat,
+  .about-timeline__row,
+  .about-join {
     --motion-text-rise: 12px;
   }
   .js-ready [data-motion="copy-follow"] {

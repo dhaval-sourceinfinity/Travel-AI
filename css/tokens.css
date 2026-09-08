@@ -31,6 +31,18 @@
   --color-accent-soft: rgba(167, 139, 250, 0.12);
   --color-accent-border: rgba(167, 139, 250, 0.30);
 
+  /* ---- Color: 2026 frame ramp (header, About) --------------------------
+     The newer Figma frames use a neutral grey ramp rather than the slightly
+     teal-tinted one above. Three of these were already hard-coded in
+     components.css by the header work; they live here now. */
+  --color-accent-solid: #7b5cf0;        /* solid violet pills, timeline years */
+  --color-accent-solid-hover: #8b6ff5;
+  --color-accent-label: #a08cff;        /* eyebrow / accent label text        */
+  --color-accent-tint: rgba(123, 92, 240, 0.10); /* icon tile fill            */
+  --color-text-body: #8b8c94;           /* editorial body copy                */
+  --color-surface-panel: #121317;       /* stats bar, belief cards, join band */
+  --color-border-panel: #1d1e23;        /* panel + row hairlines              */
+
   /* ---- Radius ---------------------------------------------------------- */
   --radius-xs: 4px;
   --radius-sm: 6px;

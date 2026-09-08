@@ -39,7 +39,7 @@
      2. Header Component
      ========================================================================== */
   const NAV_LINKS = [
-    { label: "About Us", href: "index.html#about" },
+    { label: "About Us", href: "about-us.html" },
     { label: "Packages", href: "journeys.html" },
     { label: "AI Planner", href: "index.html#how" },
     { label: "My Trips", href: "journeys.html" },
@@ -133,7 +133,7 @@
     {
       head: "Travel AI",
       links: [
-        { label: "Our Story", href: "index.html#about" },
+        { label: "Our Story", href: "about-us.html" },
         { label: "How It Works", href: "index.html#how" },
         { label: "Travel AI Agents", href: "404.html" },
       ],
