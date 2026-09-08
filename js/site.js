@@ -848,7 +848,7 @@
         <h${h} class="journey-card__title" data-motion="text-reveal">${j.title}</h${h}>
         <p class="journey-card__text" data-motion="text-reveal">${j.excerpt}</p>
         <div class="journey-card__footer">
-          <p class="journey-card__price" data-motion="text-reveal">From <strong>${j.priceFrom}</strong> per person</p>
+          <p class="journey-card__price" data-motion="text-reveal" style="--text-index: 3">From <strong>${j.priceFrom}</strong> per person</p>
           <a class="btn btn--accent-outline" href="${j.href}" aria-label="Explore ${j.title}">Explore the Journey ${arrow}</a>
         </div>
       </div>

@@ -274,7 +274,10 @@
     <!-- ===================== 08 — Testimonials ===================== -->
     <section class="section section--surface" aria-labelledby="testimonials-title">
       <div class="container">
-        <div class="testimonials-grid" data-motion="fade-in">
+        <!-- No wrapper reveal: every child animates on its own position. A reveal here
+           would make this the only editorial heading not observed directly, slaving its
+           rise to the wrapper and firing 23 elements in one instant. -->
+        <div class="testimonials-grid">
           <div class="testimonial-grid" data-motion-stagger style="--stagger-base: 80ms">
             <figure class="person-card" data-motion="fade-in">
               <img class="person-card__img" src="assets/images/portrait-james.webp"
