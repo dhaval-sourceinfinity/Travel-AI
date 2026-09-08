@@ -13,6 +13,13 @@
   will-change: opacity, transform;
 }
 
+/* Typography reveal containers manage visibility via child spans */
+.js-ready [data-motion="line-reveal"],
+.js-ready [data-motion="char-reveal"] {
+  opacity: 1;
+  will-change: auto;
+}
+
 /* --------------------------------------------------------------------------
    2. Revealed state (applied by IntersectionObserver)
    -------------------------------------------------------------------------- */
@@ -50,10 +57,50 @@
   transition-delay: var(--motion-delay, 0ms);
 }
 
-/* -- Line Reveal & Char Reveal (conventions established for later phases) -- */
-.js-ready [data-motion="line-reveal"],
-.js-ready [data-motion="char-reveal"] {
-  will-change: opacity, transform;
+/* -- Line Reveal (editorial masked line emergence) ----------------------- */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.12em; /* Protect descenders: g, j, p, q, y */
+  margin-bottom: -0.12em;
+}
+
+.js-ready [data-motion="line-reveal"] .line-inner {
+  display: block;
+  transform: translateY(115%);
+  opacity: 0;
+  transition:
+    opacity var(--motion-reveal) var(--ease-cinematic),
+    transform var(--motion-reveal) var(--ease-cinematic);
+  transition-delay: calc(var(--motion-delay, 0ms) + (var(--line-index, 0) * var(--stagger-line)));
+  will-change: transform, opacity;
+}
+
+[data-motion="line-reveal"].is-visible .line-inner {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* -- Character Reveal (selective progressive editorial statements) ------- */
+.char-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.js-ready [data-motion="char-reveal"] .char-unit {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(70%);
+  transition:
+    opacity var(--motion-reveal) var(--ease-cinematic),
+    transform var(--motion-reveal) var(--ease-cinematic);
+  transition-delay: calc(var(--motion-delay, 0ms) + (var(--char-index, 0) * var(--stagger-char)));
+  will-change: transform, opacity;
+}
+
+[data-motion="char-reveal"].is-visible .char-unit {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 /* -- Fade Down (header / nav entrance) ----------------------------------- */
@@ -195,6 +242,18 @@
     transition: none !important;
     will-change: auto !important;
   }
+  .line-mask {
+    overflow: visible !important;
+  }
+  .line-inner,
+  .char-unit,
+  .js-ready [data-motion="line-reveal"] .line-inner,
+  .js-ready [data-motion="char-reveal"] .char-unit {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
   [data-motion="hero-content"].is-visible {
     transform: none !important;
     opacity: 1 !important;
@@ -213,6 +272,14 @@
 @media (max-width: 768px) {
   .js-ready [data-motion="fade-up"] {
     transform: translateY(16px);
+  }
+  .js-ready [data-motion="line-reveal"] .line-inner {
+    transform: translateY(105%);
+    transition-delay: calc(var(--motion-delay, 0ms) + (var(--line-index, 0) * var(--stagger-small)));
+  }
+  .js-ready [data-motion="char-reveal"] .char-unit {
+    transform: translateY(50%);
+    transition-delay: calc(var(--motion-delay, 0ms) + (var(--char-index, 0) * 14ms));
   }
   .js-ready [data-motion="hero-image"] {
     transform: scale(1.02);

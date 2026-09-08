@@ -102,6 +102,8 @@
   --stagger-small: 60ms;
   --stagger-normal: 100ms;
   --stagger-large: 140ms;
+  --stagger-line: 90ms;
+  --stagger-char: 18ms;
 
   /* ---- Elevation ------------------------------------------------------- */
   --shadow-pill: 0 6px 13px rgba(0, 0, 0, 0.22);

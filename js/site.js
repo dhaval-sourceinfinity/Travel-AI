@@ -418,6 +418,140 @@
     window.addEventListener("scroll", onScroll, { passive: true });
   }
 
+  /* ---- 5f. Editorial typography reveals (line-reveal & char-reveal) ------ */
+  function prepareLineReveal(el) {
+    if (REDUCE_MOTION) return;
+    if (!el.dataset.origHtml) {
+      el.dataset.origHtml = el.innerHTML;
+    }
+    const rawHtml = el.dataset.origHtml;
+
+    // Preserve original accessible text on the semantic container
+    const temp = document.createElement("div");
+    temp.innerHTML = rawHtml;
+    const accessibleText = temp.textContent.replace(/\s+/g, " ").trim();
+    el.setAttribute("aria-label", accessibleText);
+
+    // Split words while honoring explicit <br> line breaks
+    const tokens = rawHtml
+      .replace(/<br\s*\/?>/gi, " __BR__ ")
+      .split(/\s+/)
+      .filter(Boolean);
+
+    // Pass 1: Render temporary word spans to measure offsetTop in current layout
+    el.innerHTML = tokens
+      .map((token) => {
+        if (token === "__BR__") return '<span class="motion-br" style="display:block;"></span>';
+        return `<span class="motion-measure-word" style="display:inline-block;">${token}</span>`;
+      })
+      .join(" ");
+
+    const wordSpans = el.querySelectorAll(".motion-measure-word");
+    if (!wordSpans.length) {
+      el.innerHTML = rawHtml;
+      return;
+    }
+
+    // Pass 2: Group words into lines according to rendered vertical position
+    const lines = [];
+    let currentLine = [];
+    let currentTop = null;
+
+    wordSpans.forEach((span) => {
+      const top = span.offsetTop;
+      if (currentTop === null || Math.abs(top - currentTop) <= 4) {
+        currentLine.push(span.textContent);
+        if (currentTop === null) currentTop = top;
+      } else {
+        lines.push(currentLine.join(" "));
+        currentLine = [span.textContent];
+        currentTop = top;
+      }
+    });
+    if (currentLine.length) {
+      lines.push(currentLine.join(" "));
+    }
+
+    // Pass 3: Construct masked line DOM with descender protection
+    const isAlreadyVisible = el.classList.contains("is-visible");
+    const transitionOverride = isAlreadyVisible ? "transition: none;" : "";
+
+    el.innerHTML = lines
+      .map(
+        (line, i) =>
+          `<span class="line-mask" aria-hidden="true"><span class="line-inner" style="--line-index: ${i}; ${transitionOverride}">${line}</span></span>`
+      )
+      .join("");
+  }
+
+  function prepareCharReveal(el) {
+    if (REDUCE_MOTION) return;
+    if (!el.dataset.origHtml) {
+      el.dataset.origHtml = el.innerHTML;
+    }
+    const rawHtml = el.dataset.origHtml;
+
+    // Preserve original accessible text on the semantic container
+    const temp = document.createElement("div");
+    temp.innerHTML = rawHtml;
+    const accessibleText = temp.textContent.replace(/\s+/g, " ").trim();
+    el.setAttribute("aria-label", accessibleText);
+
+    // Split text into words to prevent word-break across lines
+    const words = accessibleText.split(" ");
+    let globalCharIdx = 0;
+
+    const html = words
+      .map((word) => {
+        const chars = Array.from(word)
+          .map((char) => {
+            const idx = globalCharIdx++;
+            return `<span class="char-unit" style="--char-index: ${idx};">${char}</span>`;
+          })
+          .join("");
+        return `<span class="char-word">${chars}</span>`;
+      })
+      .join(" ");
+
+    el.innerHTML = `<span class="char-split-view" aria-hidden="true">${html}</span>`;
+  }
+
+  function initTypographyReveals() {
+    if (REDUCE_MOTION) return;
+
+    const lineEls = document.querySelectorAll('[data-motion="line-reveal"]');
+    const charEls = document.querySelectorAll('[data-motion="char-reveal"]');
+
+    lineEls.forEach(prepareLineReveal);
+    charEls.forEach(prepareCharReveal);
+
+    // If fonts load after boot, re-evaluate lines once with exact font metrics
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        lineEls.forEach(prepareLineReveal);
+      });
+    }
+
+    // Debounced resize handler to re-calculate lines if viewport width changes
+    let resizeTimer = null;
+    let lastWidth = window.innerWidth;
+
+    window.addEventListener(
+      "resize",
+      () => {
+        const currentWidth = window.innerWidth;
+        if (currentWidth === lastWidth) return; // Ignore mobile height-only scroll resizes
+        lastWidth = currentWidth;
+
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          lineEls.forEach(prepareLineReveal);
+        }, 180);
+      },
+      { passive: true }
+    );
+  }
+
   /* ==========================================================================
      6. Journeys Data & Journey Card Component
      ========================================================================== */
@@ -712,6 +846,9 @@
     initContactForm();
 
     // ---- Motion system ----
+    // Initialize typography reveals (line-reveal and char-reveal)
+    initTypographyReveals();
+
     // Legacy .reveal for non-homepage pages
     initReveal();
 
