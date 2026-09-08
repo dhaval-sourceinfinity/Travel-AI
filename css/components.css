@@ -31,6 +31,15 @@
   letter-spacing: -0.02em;
   color: var(--color-text);
   white-space: nowrap;
+  flex: none;
+}
+
+.brand__logo-svg {
+  display: block;
+  width: 109px;
+  height: 34px;
+  max-width: 100%;
+  flex: none;
 }
 
 .brand__mark {
@@ -90,6 +99,29 @@
 .btn--accent-outline:hover {
   background: var(--color-accent-soft);
   border-color: var(--color-accent);
+}
+
+/* Accent solid pill button (e.g. Header Get Started) */
+.btn--accent {
+  background: #7b5cf0;
+  color: #fff;
+  border: 1px solid transparent;
+}
+.btn--accent:hover {
+  background: #8b6ff5;
+  color: #fff;
+  box-shadow: 0 0 16px rgba(123, 92, 240, 0.35);
+}
+
+.btn--pill {
+  border-radius: var(--radius-pill);
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+  min-height: 41px;
+  line-height: 1.2;
 }
 
 /* Ghost outline — light hairline (view all, secondary) */
@@ -166,7 +198,7 @@
   background: var(--color-surface-nav);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
-  border-bottom: 0.8px solid var(--color-border-faint);
+  border-bottom: 1px solid var(--color-border-nav, #1d1e23);
 }
 
 .site-header__inner {
@@ -174,22 +206,25 @@
   align-items: center;
   justify-content: space-between;
   min-height: var(--header-h);
-  gap: var(--space-4);
+  gap: clamp(16px, 3vw, 32px);
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: clamp(20px, 3vw, 34px);
+  gap: clamp(16px, 2.5vw, 32px);
 }
 
 .nav__link {
   position: relative;
   font-size: 12px;
+  line-height: 17px;
+  font-weight: 500;
   color: var(--color-text-secondary);
   letter-spacing: -0.005em;
   padding-block: 4px;
   transition: color var(--dur-fast) var(--ease-standard);
+  text-decoration: none;
 }
 .nav__link::after {
   content: "";
@@ -208,6 +243,35 @@
 .nav__link:hover::after,
 .nav__link:focus-visible::after {
   width: 100%;
+}
+
+.nav__mobile-actions {
+  display: none;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: none;
+}
+
+.nav-link-signin {
+  font-size: 14px;
+  font-weight: 500;
+  color: #8b8c94;
+  letter-spacing: -0.01em;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  transition: color var(--dur-fast) var(--ease-standard);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+}
+.nav-link-signin:hover,
+.nav-link-signin:focus-visible {
+  color: #ffffff;
 }
 
 /* Hamburger toggle (mobile only) */

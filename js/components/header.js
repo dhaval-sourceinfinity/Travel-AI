@@ -3,8 +3,9 @@ import { brand } from "./brand.js";
 
 const NAV_LINKS = [
   { label: "About Us", href: "index.html#about" },
-  { label: "How it Works", href: "index.html#how" },
-  { label: "For Advisors", href: "index.html#advisors" },
+  { label: "Packages", href: "journeys.html" },
+  { label: "AI Planner", href: "index.html#how" },
+  { label: "My Trips", href: "journeys.html" },
   { label: "Blog", href: "404.html" },
 ];
 
@@ -17,7 +18,15 @@ export function renderHeader() {
     ${brand()}
     <nav class="nav" id="primary-nav" aria-label="Primary">
       ${links}
+      <div class="nav__mobile-actions">
+        <a class="nav-link-signin" href="contact.html">Sign In</a>
+        <a class="btn btn--pill btn--accent" href="index.html#destinations">Get Started</a>
+      </div>
     </nav>
+    <div class="nav-actions">
+      <a class="nav-link-signin" href="contact.html">Sign In</a>
+      <a class="btn btn--pill btn--accent nav-cta-btn" href="index.html#destinations">Get Started</a>
+    </div>
     <button class="nav-toggle" type="button" aria-expanded="false"
             aria-controls="primary-nav" aria-label="Open menu">
       <span class="nav-toggle__box" aria-hidden="true"><span></span><span></span><span></span></span>
@@ -42,7 +51,7 @@ export function initHeader(header) {
   );
 
   nav.addEventListener("click", (e) => {
-    if (e.target.closest(".nav__link")) setOpen(false);
+    if (e.target.closest(".nav__link, .nav-link-signin, .btn")) setOpen(false);
   });
 
   document.addEventListener("keydown", (e) => {
