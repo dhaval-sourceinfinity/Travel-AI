@@ -388,6 +388,7 @@
 
     function updateScrollMotion() {
       ticking = false;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const scrollY = lastScrollY;
       const viewportH = window.innerHeight;
       const isMobile = window.innerWidth <= 768;

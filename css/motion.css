@@ -37,6 +37,12 @@
 .btn-hero[data-motion].is-visible:hover {
   transform: translateY(-1px);
 }
+.btn-hero[data-motion].is-visible:active {
+  transform: translateY(0);
+}
+.btn[data-motion].is-visible:active {
+  transform: translateY(1px);
+}
 
 /* --------------------------------------------------------------------------
    3. Motion primitives — initial transforms + transitions
