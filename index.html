@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/home.css" />
+  <link rel="stylesheet" href="css/motion.css" />
   <link rel="stylesheet" href="css/responsive.css" />
 
   <script defer src="js/site.js"></script>
@@ -41,15 +42,15 @@
     <!-- ===================== Hero ===================== -->
     <section class="hero" aria-labelledby="hero-title">
       <img class="hero__bg" src="assets/images/hero.webp" alt=""
-           fetchpriority="high" decoding="async" width="2200" height="1467" />
+           fetchpriority="high" decoding="async" width="2200" height="1467" data-motion="hero-image" />
       <div class="hero__overlay" aria-hidden="true"></div>
-      <div class="hero__inner">
-        <h1 class="hero__title" id="hero-title">Travel, made personal.</h1>
-        <div class="hero__text">
+      <div class="hero__inner" data-motion="hero-content">
+        <h1 class="hero__title" id="hero-title" data-motion="hero-title">Travel, made personal.</h1>
+        <div class="hero__text" data-motion="hero-text">
           <p>Some journeys begin with a destination. Others begin with a feeling.</p>
           <p>Tell us what you're looking for, and discover a more thoughtful way to experience Dubai and Japan.</p>
         </div>
-        <a class="btn-hero hero__cta" href="#destinations">
+        <a class="btn-hero hero__cta" href="#destinations" data-motion="hero-cta">
           Discover
           <span class="btn-hero__icon" aria-hidden="true">
             <svg class="icon icon--arrow" viewBox="0 0 9 9" focusable="false"><path d="M2.25 6.75 6.75 2.25M6.75 5.76V2.25H3.24" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -61,13 +62,13 @@
     <!-- ===================== 02 — Introduction ===================== -->
     <section class="section section--deep" aria-labelledby="intro-title">
       <div class="container">
-        <div class="split reveal">
+        <div class="split">
           <div class="section-head">
-            <p class="eyebrow">02 — Introduction</p>
-            <p class="label">Destinations</p>
-            <h2 class="section-title" id="intro-title">Two destinations.<br />So much to discover.</h2>
+            <p class="eyebrow" data-motion="fade-up">02 — Introduction</p>
+            <p class="label" data-motion="fade-up" style="--motion-delay: 60ms">Destinations</p>
+            <h2 class="section-title" id="intro-title" data-motion="fade-up" style="--motion-delay: 140ms">Two destinations.<br />So much to discover.</h2>
           </div>
-          <div class="stack-3 lede measure">
+          <div class="stack-3 lede measure" data-motion="fade-up" style="--motion-delay: 240ms">
             <p>For now, we've chosen to focus on two extraordinary parts of the world — Dubai and Japan.</p>
             <p>Not simply to show you where to stay or what to see, but to help you understand each destination, discover experiences worth your time, and find a journey that feels right for you.</p>
           </div>
@@ -78,11 +79,11 @@
     <!-- ===================== 03 — Explore / Destinations ===================== -->
     <section class="section section--surface" id="destinations" aria-labelledby="dest-heading">
       <div class="container">
-        <p class="eyebrow reveal">03 — Explore</p>
+        <p class="eyebrow" data-motion="fade-up">03 — Explore</p>
         <h2 class="sr-only" id="dest-heading">Explore our destinations</h2>
-        <div class="destinations reveal">
+        <div class="destinations" data-motion-stagger>
 
-          <article class="dest-card">
+          <article class="dest-card" data-motion="fade-up">
             <img class="dest-card__img" src="assets/images/explore-dubai.webp"
                  alt="Dubai skyline under a dramatic dusk sky" loading="lazy" decoding="async" />
             <div class="dest-card__scrim" aria-hidden="true"></div>
@@ -96,7 +97,7 @@
             </div>
           </article>
 
-          <article class="dest-card">
+          <article class="dest-card" data-motion="fade-up">
             <img class="dest-card__img" src="assets/images/explore-japan.webp"
                  alt="Traditional pagoda in Kyoto at golden hour" loading="lazy" decoding="async" />
             <div class="dest-card__scrim" aria-hidden="true"></div>
@@ -117,13 +118,13 @@
     <!-- ===================== 04 — About ===================== -->
     <section class="section section--surface" id="about" aria-labelledby="about-title">
       <div class="container">
-        <div class="split split--top reveal">
+        <div class="split split--top">
           <div class="section-head">
-            <p class="eyebrow">About</p>
-            <p class="label">About Travel AI</p>
-            <h2 class="section-title" id="about-title">Technology can find a place.<br />People make it a journey.</h2>
+            <p class="eyebrow" data-motion="fade-up">About</p>
+            <p class="label" data-motion="fade-up" style="--motion-delay: 60ms">About Travel AI</p>
+            <h2 class="section-title" id="about-title" data-motion="fade-up" style="--motion-delay: 140ms">Technology can find a place.<br />People make it a journey.</h2>
           </div>
-          <div class="stack-3 lede">
+          <div class="stack-3 lede" data-motion="fade-up" style="--motion-delay: 240ms">
             <p>Travel AI was created around a simple idea: planning a meaningful holiday should feel personal.</p>
             <p>Explore freely. Ask questions. Learn about the places that interest you. And when you're ready to travel, discover carefully considered journeys created by people who understand the destination.</p>
             <p>Behind every journey is a Travel AI Agent — a real travel professional who can listen, advise and help you take the next step.</p>
@@ -132,8 +133,8 @@
 
         <hr class="divider divider--section" />
 
-        <div class="features reveal">
-          <div class="feature">
+        <div class="features" data-motion-stagger>
+          <div class="feature" data-motion="fade-up">
             <svg class="feature__icon" viewBox="0 0 36 36" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 33C26.28 33 33 26.28 33 18 33 9.72 26.28 3 18 3 9.72 3 3 9.72 3 18 3 26.28 9.72 33 18 33Z"/>
               <path d="M12 18H24M18 12V24"/>
@@ -144,7 +145,7 @@
             <p class="feature__text">Ask about neighbourhoods, culture, experiences, seasons, food or simply what a place feels like. Travel AI helps you explore naturally.</p>
           </div>
 
-          <div class="feature">
+          <div class="feature" data-motion="fade-up">
             <svg class="feature__icon" viewBox="0 0 36 36" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 20C21.31 20 24 17.31 24 14 24 10.69 21.31 8 18 8 14.69 8 12 10.69 12 14 12 17.31 14.69 20 18 20Z"/>
               <path d="M6 30C7.8 24.8 12 22 18 22 24 22 28.2 24.8 30 30"/>
@@ -155,25 +156,25 @@
           </div>
         </div>
 
-        <p class="quote about-quote reveal">Because great travel should never feel automated.</p>
+        <p class="quote about-quote" data-motion="fade-up">Because great travel should never feel automated.</p>
       </div>
     </section>
 
     <!-- ===================== 05 — Packages / Journeys ===================== -->
     <section class="section section--deep" id="journeys" aria-labelledby="journeys-title">
       <div class="container">
-        <div class="split split--bordered reveal">
+        <div class="split split--bordered">
           <div class="section-head">
-            <p class="eyebrow">05 — Packages</p>
-            <p class="label">Our Journeys</p>
-            <h2 class="section-title" id="journeys-title">Journeys worth taking.</h2>
+            <p class="eyebrow" data-motion="fade-up">05 — Packages</p>
+            <p class="label" data-motion="fade-up" style="--motion-delay: 60ms">Our Journeys</p>
+            <h2 class="section-title" id="journeys-title" data-motion="fade-up" style="--motion-delay: 140ms">Journeys worth taking.</h2>
           </div>
-          <p class="lede">We don't believe in showing you hundreds of holidays and leaving you to choose. Instead, our Travel AI Agents bring together a considered collection of journeys across Dubai and Japan — each with its own character, pace and way of experiencing the destination.</p>
+          <p class="lede" data-motion="fade-up" style="--motion-delay: 240ms">We don't believe in showing you hundreds of holidays and leaving you to choose. Instead, our Travel AI Agents bring together a considered collection of journeys across Dubai and Japan — each with its own character, pace and way of experiencing the destination.</p>
         </div>
 
-        <div class="journeys reveal" data-journeys="featured"></div>
+        <div class="journeys" data-journeys="featured" data-motion-stagger></div>
 
-        <div class="reveal center-row">
+        <div class="center-row" data-motion="fade-up">
           <a class="btn btn--ghost btn--pill" href="journeys.html">View all Journeys
             <svg class="icon icon--arrow" viewBox="0 0 9 9" aria-hidden="true" focusable="false"><path d="M2.25 6.75 6.75 2.25M6.75 5.76V2.25H3.24" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -184,24 +185,24 @@
     <!-- ===================== 06 — Deep Exploration / Map ===================== -->
     <section class="section section--surface" id="explore" aria-labelledby="explore-title">
       <div class="container">
-        <div class="split split--top reveal">
+        <div class="split split--top">
           <div>
             <div class="section-head">
-              <p class="eyebrow">06 — Deep Exploration / Map</p>
-              <p class="label">Explore</p>
-              <h2 class="section-title" id="explore-title">Get to know a place<br />before you arrive.</h2>
+              <p class="eyebrow" data-motion="fade-up">06 — Deep Exploration / Map</p>
+              <p class="label" data-motion="fade-up" style="--motion-delay: 60ms">Explore</p>
+              <h2 class="section-title" id="explore-title" data-motion="fade-up" style="--motion-delay: 140ms">Get to know a place<br />before you arrive.</h2>
             </div>
-            <div class="stack-3 lede measure mt-5">
+            <div class="stack-3 lede measure mt-5" data-motion="fade-up" style="--motion-delay: 240ms">
               <p>Sometimes the best part of travelling begins long before the flight.</p>
               <p>Explore neighbourhoods, landmarks, traditions, experiences and stories from Dubai and Japan — and ask Travel AI whenever something catches your curiosity.</p>
             </div>
 
-            <div class="explore-tabs" data-region-tabs role="group" aria-label="Choose a region">
+            <div class="explore-tabs" data-region-tabs role="group" aria-label="Choose a region" data-motion="fade-up" style="--motion-delay: 320ms">
               <button class="chip" type="button" aria-pressed="false">Dubai</button>
               <button class="chip" type="button" aria-pressed="true">Japan</button>
             </div>
 
-            <div class="explore-places" data-places aria-label="Places in Japan">
+            <div class="explore-places" data-places aria-label="Places in Japan" data-motion="fade-up" style="--motion-delay: 380ms">
               <a class="place" href="#" aria-current="false">Tokyo</a>
               <a class="place" href="#" aria-current="true">Kyoto</a>
               <a class="place" href="#" aria-current="false">Osaka</a>
@@ -210,10 +211,10 @@
             </div>
           </div>
 
-          <article class="place-card">
+          <article class="place-card" data-motion="fade-up" style="--motion-delay: 200ms">
             <div class="place-card__media">
               <img class="place-card__img" src="assets/images/map-kyoto.webp"
-                   alt="Traditional pagoda and townscape at golden hour in Kyoto" loading="lazy" decoding="async" />
+                   alt="Traditional pagoda and townscape at golden hour in Kyoto" loading="lazy" decoding="async" data-motion="image-reveal" />
             </div>
             <div class="place-card__body">
               <h3 class="place-card__title">Kyoto</h3>
@@ -231,35 +232,35 @@
     <!-- ===================== 07 — How It Works ===================== -->
     <section class="section section--deep" id="how" aria-labelledby="how-title">
       <div class="container">
-        <div class="section-head section-head--full reveal">
-          <p class="eyebrow">07 — How It Works</p>
-          <p class="label">How Travel AI Works</p>
-          <h2 class="section-title" id="how-title">From an idea to somewhere unforgettable.</h2>
+        <div class="section-head section-head--full">
+          <p class="eyebrow" data-motion="fade-up">07 — How It Works</p>
+          <p class="label" data-motion="fade-up" style="--motion-delay: 60ms">How Travel AI Works</p>
+          <h2 class="section-title" id="how-title" data-motion="fade-up" style="--motion-delay: 140ms">From an idea to somewhere unforgettable.</h2>
         </div>
 
-        <ol class="steps reveal" role="list">
-          <li class="step">
+        <ol class="steps" role="list" data-motion-stagger>
+          <li class="step" data-motion="fade-up">
             <p class="step__num">01</p>
             <div class="step__rule" aria-hidden="true"></div>
             <h3 class="step__title">Start with a conversation</h3>
             <p class="step__cue">Tell us what's on your mind.</p>
             <p class="step__text">A destination, an occasion, something you've always wanted to experience — or simply a question. There's no form you need to figure out first.</p>
           </li>
-          <li class="step">
+          <li class="step" data-motion="fade-up">
             <p class="step__num">02</p>
             <div class="step__rule" aria-hidden="true"></div>
             <h3 class="step__title">Discover what feels right</h3>
             <p class="step__cue">Explore at your own pace.</p>
             <p class="step__text">Learn about the destination and discover curated journeys that reflect the way you'd like to travel.</p>
           </li>
-          <li class="step">
+          <li class="step" data-motion="fade-up">
             <p class="step__num">03</p>
             <div class="step__rule" aria-hidden="true"></div>
             <h3 class="step__title">Meet the person behind your journey</h3>
             <p class="step__cue">Human expertise, when you're ready.</p>
             <p class="step__text">Connect with a Travel AI Agent who can understand what matters to you, answer the practical questions and help with your journey.</p>
           </li>
-          <li class="step">
+          <li class="step" data-motion="fade-up">
             <p class="step__num">04</p>
             <div class="step__rule" aria-hidden="true"></div>
             <h3 class="step__title">Leave the rest to us</h3>
@@ -273,7 +274,7 @@
     <!-- ===================== 08 — Testimonials ===================== -->
     <section class="section section--surface" aria-labelledby="testimonials-title">
       <div class="container">
-        <div class="testimonials-grid reveal">
+        <div class="testimonials-grid" data-motion="fade-up">
           <div class="testimonial-grid">
             <figure class="person-card">
               <img class="person-card__img" src="assets/images/portrait-james.webp"
@@ -337,18 +338,18 @@
 
     <!-- ===================== CTA ===================== -->
     <section class="cta" aria-labelledby="cta-title">
-      <img class="cta__bg" src="assets/images/cta.webp" alt="" loading="lazy" decoding="async" />
+      <img class="cta__bg" src="assets/images/cta.webp" alt="" loading="lazy" decoding="async" data-motion="parallax" />
       <div class="cta__overlay" aria-hidden="true"></div>
-      <div class="reveal">
-        <p class="cta__kicker">Perhaps it's time</p>
-        <h2 class="cta__title" id="cta-title">to go somewhere extraordinary.</h2>
-        <p class="cta__sub">Dubai and Japan are waiting.</p>
-        <a class="btn btn--glass btn--pill btn--lg cta__btn" href="#destinations">Discover</a>
+      <div>
+        <p class="cta__kicker" data-motion="fade-up">Perhaps it's time</p>
+        <h2 class="cta__title" id="cta-title" data-motion="fade-up" style="--motion-delay: 120ms">to go somewhere extraordinary.</h2>
+        <p class="cta__sub" data-motion="fade-up" style="--motion-delay: 240ms">Dubai and Japan are waiting.</p>
+        <a class="btn btn--glass btn--pill btn--lg cta__btn" href="#destinations" data-motion="fade-up" style="--motion-delay: 360ms">Discover</a>
       </div>
     </section>
 
   </main>
 
-  <footer id="site-footer" class="site-footer"></footer>
+  <footer id="site-footer" class="site-footer" data-motion="fade-in"></footer>
 </body>
 </html>

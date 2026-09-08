@@ -181,14 +181,18 @@
   }
 
   /* ==========================================================================
-     5. Reveal On Scroll
+     5. Motion System — Cinematic Editorial Scroll Choreography
      ========================================================================== */
+
+  const REDUCE_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const IS_MOBILE = window.matchMedia("(max-width: 768px)").matches;
+
+  /* ---- 5a. Legacy .reveal support (for journeys, contact, detail pages) -- */
   function initReveal(root = document) {
     const els = root.querySelectorAll(".reveal");
     if (!els.length) return;
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || !("IntersectionObserver" in window)) {
+    if (REDUCE_MOTION || !("IntersectionObserver" in window)) {
       els.forEach((el) => el.classList.add("is-visible"));
       return;
     }
@@ -206,6 +210,200 @@
     );
 
     els.forEach((el) => io.observe(el));
+  }
+
+  /* ---- 5b. Data-motion reveal system ------------------------------------ */
+  function initMotionReveal() {
+    const els = document.querySelectorAll("[data-motion]");
+    if (!els.length) return;
+
+    if (REDUCE_MOTION || !("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
+
+    // Exclude hero elements — they are revealed by the hero entrance sequence
+    const heroMotions = new Set([
+      "hero-image", "hero-title", "hero-text", "hero-cta", "hero-content"
+    ]);
+
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+
+            // For stagger containers, reveal children in sequence
+            if (el.hasAttribute("data-motion-stagger")) {
+              const children = el.querySelectorAll("[data-motion]");
+              children.forEach((child) => child.classList.add("is-visible"));
+            }
+
+            el.classList.add("is-visible");
+            obs.unobserve(el);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0.08 }
+    );
+
+    els.forEach((el) => {
+      const motionType = el.getAttribute("data-motion");
+      // Skip hero elements and children of stagger containers
+      if (heroMotions.has(motionType)) return;
+      if (el.parentElement && el.parentElement.hasAttribute("data-motion-stagger")) return;
+      io.observe(el);
+    });
+
+    // Observe stagger containers themselves
+    document.querySelectorAll("[data-motion-stagger]").forEach((container) => {
+      io.observe(container);
+    });
+  }
+
+  /* ---- 5c. Hero entrance choreography ----------------------------------- */
+  function initHeroEntrance() {
+    const hero = document.querySelector(".hero");
+    if (!hero) return;
+
+    const heroImage = hero.querySelector('[data-motion="hero-image"]');
+    const heroTitle = hero.querySelector('[data-motion="hero-title"]');
+    const heroText = hero.querySelector('[data-motion="hero-text"]');
+    const heroCta = hero.querySelector('[data-motion="hero-cta"]');
+    const heroContent = hero.querySelector('[data-motion="hero-content"]');
+    const header = document.getElementById("site-header");
+
+    if (REDUCE_MOTION) {
+      [heroImage, heroTitle, heroText, heroCta, heroContent].forEach((el) => {
+        if (el) el.classList.add("is-visible");
+      });
+      if (header) header.classList.add("is-visible");
+      return;
+    }
+
+    // Sequence: image → header → title → text → CTA
+    const sequence = [
+      { el: heroImage, delay: 100 },
+      { el: header, delay: 400 },
+      { el: heroTitle, delay: 700 },
+      { el: heroText, delay: 900 },
+      { el: heroCta, delay: 1100 },
+    ];
+
+    // Mark hero-content visible immediately (it manages its own scroll state)
+    if (heroContent) {
+      heroContent.classList.add("is-visible");
+    }
+
+    sequence.forEach(({ el, delay }) => {
+      if (!el) return;
+      setTimeout(() => {
+        el.classList.add("is-visible");
+      }, delay);
+    });
+
+    // Stagger nav links
+    if (header) {
+      const navLinks = header.querySelectorAll(".nav__link");
+      navLinks.forEach((link, i) => {
+        link.style.opacity = "0";
+        link.style.transform = "translateY(-6px)";
+        link.style.transition = `opacity 400ms var(--ease-reveal, cubic-bezier(.2,.8,.2,1)), transform 400ms var(--ease-reveal, cubic-bezier(.2,.8,.2,1))`;
+        setTimeout(() => {
+          link.style.opacity = "1";
+          link.style.transform = "none";
+        }, 500 + i * 80);
+      });
+    }
+  }
+
+  /* ---- 5d. Hero scroll effects (parallax + content recede) -------------- */
+  function initHeroScroll() {
+    const hero = document.querySelector(".hero");
+    if (!hero || REDUCE_MOTION) return;
+
+    const heroImage = hero.querySelector('[data-motion="hero-image"]');
+    const heroContent = hero.querySelector('[data-motion="hero-content"]');
+    const heroHeight = () => hero.offsetHeight;
+
+    let ticking = false;
+    let lastScrollY = 0;
+
+    function onScroll() {
+      lastScrollY = window.scrollY;
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateHeroScroll);
+      }
+    }
+
+    function updateHeroScroll() {
+      ticking = false;
+      const scrollY = lastScrollY;
+      const hHeight = heroHeight();
+
+      // Only process while hero is potentially in view
+      if (scrollY > hHeight * 1.2) return;
+
+      const progress = Math.min(scrollY / hHeight, 1);
+
+      // Hero image: subtle parallax + scale
+      if (heroImage) {
+        const imgY = scrollY * (IS_MOBILE ? 0.04 : 0.1);
+        const imgScale = 1 + progress * 0.05;
+        heroImage.style.transform = `translateY(${imgY}px) scale(${imgScale})`;
+      }
+
+      // Hero content: fade + recede upward
+      if (heroContent) {
+        const contentOpacity = Math.max(0, 1 - progress * 1.8);
+        const contentY = -scrollY * (IS_MOBILE ? 0.15 : 0.25);
+        heroContent.style.setProperty("--hero-scroll-opacity", contentOpacity);
+        heroContent.style.setProperty("--hero-scroll-y", contentY + "px");
+        heroContent.style.opacity = contentOpacity;
+        heroContent.style.transform = `translateY(${contentY}px)`;
+      }
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+
+  /* ---- 5e. Image parallax (large editorial images) ---------------------- */
+  function initParallax() {
+    if (REDUCE_MOTION || IS_MOBILE) return;
+
+    const els = document.querySelectorAll('[data-motion="parallax"]');
+    if (!els.length) return;
+
+    let ticking = false;
+
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateParallax);
+      }
+    }
+
+    function updateParallax() {
+      ticking = false;
+      const viewportH = window.innerHeight;
+      const scrollY = window.scrollY;
+
+      els.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        // Only process elements near the viewport
+        if (rect.bottom < -100 || rect.top > viewportH + 100) return;
+
+        // Center of element relative to viewport center
+        const center = rect.top + rect.height / 2;
+        const offset = (center - viewportH / 2) / viewportH;
+        const translateY = offset * -30; // ±30px max
+
+        el.style.transform = `translateY(${translateY}px)`;
+      });
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
   }
 
   /* ==========================================================================
@@ -299,7 +497,7 @@
   function journeyCard(j, { lazy = true, headingLevel = 3 } = {}) {
     const loading = lazy ? ' loading="lazy"' : ' fetchpriority="high"';
     const h = Math.min(4, Math.max(2, headingLevel));
-    return `<article class="journey-card">
+    return `<article class="journey-card" data-motion="fade-up">
       <div class="journey-card__media">
         <img class="journey-card__img" src="${j.image.src}" alt="${j.image.alt}"${loading} decoding="async" />
         <span class="journey-card__tag">${j.tag}</span>
@@ -476,7 +674,7 @@
     // Shared chrome
     mountShell();
 
-    // Home: featured journeys
+    // Home: featured journeys (render before motion init so cards exist in DOM)
     const featuredGrid = document.querySelector('[data-journeys="featured"]');
     if (featuredGrid) {
       featuredGrid.innerHTML = journeysFeatured
@@ -501,8 +699,21 @@
     // Contact form (contact page)
     initContactForm();
 
-    // Scroll reveal observer
+    // ---- Motion system ----
+    // Legacy .reveal for non-homepage pages
     initReveal();
+
+    // New cinematic motion (data-motion attributes)
+    initMotionReveal();
+
+    // Hero entrance animation (sequenced page-load)
+    initHeroEntrance();
+
+    // Hero scroll effects (parallax + content recede)
+    initHeroScroll();
+
+    // Large image parallax
+    initParallax();
   }
 
   if (document.readyState === "loading") {
@@ -511,3 +722,4 @@
     boot();
   }
 })();
+

@@ -1,0 +1,214 @@
+/* ==========================================================================
+   motion.css — cinematic editorial motion system
+   Reusable animation primitives for premium scroll-driven reveals.
+   Load after components.css, before responsive.css.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Default hidden state (only when JS is confirmed ready)
+   Without .js-ready, all content remains fully visible.
+   -------------------------------------------------------------------------- */
+.js-ready [data-motion] {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+/* --------------------------------------------------------------------------
+   2. Revealed state (applied by IntersectionObserver)
+   -------------------------------------------------------------------------- */
+[data-motion].is-visible {
+  opacity: 1;
+  transform: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. Motion primitives — initial transforms + transitions
+   -------------------------------------------------------------------------- */
+
+/* -- Fade Up (default section reveal) ------------------------------------ */
+.js-ready [data-motion="fade-up"] {
+  transform: translateY(30px);
+  transition:
+    opacity var(--motion-reveal) var(--ease-reveal),
+    transform var(--motion-reveal) var(--ease-reveal);
+  transition-delay: var(--motion-delay, 0ms);
+}
+
+/* -- Fade In (opacity only) ---------------------------------------------- */
+.js-ready [data-motion="fade-in"] {
+  transform: none;
+  transition:
+    opacity var(--motion-reveal) var(--ease-reveal);
+  transition-delay: var(--motion-delay, 0ms);
+}
+
+/* -- Fade Down (header / nav entrance) ----------------------------------- */
+.js-ready [data-motion="fade-down"] {
+  transform: translateY(-8px);
+  transition:
+    opacity var(--motion-normal) var(--ease-reveal),
+    transform var(--motion-normal) var(--ease-reveal);
+  transition-delay: var(--motion-delay, 0ms);
+}
+
+/* -- Scale Reveal (maps, subtle containers) ------------------------------ */
+.js-ready [data-motion="scale-reveal"] {
+  transform: scale(.98);
+  transition:
+    opacity var(--motion-slow) var(--ease-cinematic),
+    transform var(--motion-slow) var(--ease-cinematic);
+  transition-delay: var(--motion-delay, 0ms);
+}
+
+/* -- Image Reveal (cinematic image entrance) ----------------------------- */
+.js-ready [data-motion="image-reveal"] {
+  transform: scale(1.06);
+  clip-path: inset(6% 0 6% 0);
+  transition:
+    opacity var(--motion-cinematic) var(--ease-cinematic),
+    transform var(--motion-cinematic) var(--ease-cinematic),
+    clip-path var(--motion-cinematic) var(--ease-cinematic);
+  transition-delay: var(--motion-delay, 0ms);
+}
+[data-motion="image-reveal"].is-visible {
+  clip-path: inset(0 0 0 0) !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. Hero entrance choreography (CSS states, toggled by JS)
+   -------------------------------------------------------------------------- */
+
+/* Hero image — cinematic scale entrance */
+.js-ready [data-motion="hero-image"] {
+  transform: scale(1.04);
+  transition:
+    opacity var(--motion-cinematic) var(--ease-cinematic),
+    transform var(--motion-cinematic) var(--ease-cinematic);
+}
+
+/* Hero title */
+.js-ready [data-motion="hero-title"] {
+  transform: translateY(30px);
+  transition:
+    opacity 900ms var(--ease-reveal),
+    transform 900ms var(--ease-reveal);
+  transition-delay: var(--motion-delay, 0ms);
+}
+
+/* Hero supporting text */
+.js-ready [data-motion="hero-text"] {
+  transform: translateY(18px);
+  transition:
+    opacity 700ms var(--ease-reveal),
+    transform 700ms var(--ease-reveal);
+  transition-delay: var(--motion-delay, 0ms);
+}
+
+/* Hero CTA button */
+.js-ready [data-motion="hero-cta"] {
+  transform: translateY(12px) scale(.96);
+  transition:
+    opacity 600ms var(--ease-reveal),
+    transform 600ms var(--ease-reveal);
+  transition-delay: var(--motion-delay, 0ms);
+}
+
+/* Hero content wrapper — scroll-driven fade (transform set by JS) */
+.js-ready [data-motion="hero-content"] {
+  transition: none; /* JS controls this directly */
+}
+[data-motion="hero-content"].is-visible {
+  /* Override: don't force transform:none on hero-content, JS manages it */
+  transform: translateY(var(--hero-scroll-y, 0px)) !important;
+  opacity: var(--hero-scroll-opacity, 1) !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Stagger system
+   Elements inside a [data-motion-stagger] container receive auto-delays.
+   -------------------------------------------------------------------------- */
+[data-motion-stagger] > [data-motion]:nth-child(1) { --motion-delay: 0ms; }
+[data-motion-stagger] > [data-motion]:nth-child(2) { --motion-delay: var(--stagger-normal); }
+[data-motion-stagger] > [data-motion]:nth-child(3) { --motion-delay: calc(var(--stagger-normal) * 2); }
+[data-motion-stagger] > [data-motion]:nth-child(4) { --motion-delay: calc(var(--stagger-normal) * 3); }
+[data-motion-stagger] > [data-motion]:nth-child(5) { --motion-delay: calc(var(--stagger-normal) * 4); }
+[data-motion-stagger] > [data-motion]:nth-child(6) { --motion-delay: calc(var(--stagger-normal) * 5); }
+
+/* --------------------------------------------------------------------------
+   6. Card image hover — photographic zoom
+   -------------------------------------------------------------------------- */
+.dest-card,
+.journey-card,
+.person-card,
+.place-card {
+  overflow: hidden;
+}
+.dest-card__img,
+.journey-card__img,
+.person-card__img,
+.place-card__img {
+  transition: transform 500ms var(--ease-reveal);
+}
+.dest-card:hover .dest-card__img,
+.journey-card:hover .journey-card__img,
+.person-card:hover .person-card__img,
+.place-card:hover .place-card__img {
+  transform: scale(1.04);
+}
+
+/* --------------------------------------------------------------------------
+   7. Parallax elements — no CSS transition (JS scroll-driven)
+   -------------------------------------------------------------------------- */
+[data-motion="parallax"] {
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------------------
+   8. Reduced motion — respect user preference
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  [data-motion],
+  .js-ready [data-motion] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+  [data-motion="hero-content"].is-visible {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .dest-card__img,
+  .journey-card__img,
+  .person-card__img,
+  .place-card__img {
+    transition: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   9. Mobile — lighter animation
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .js-ready [data-motion="fade-up"] {
+    transform: translateY(16px);
+  }
+  .js-ready [data-motion="hero-title"] {
+    transform: translateY(18px);
+  }
+  .js-ready [data-motion="hero-text"] {
+    transform: translateY(10px);
+  }
+  .js-ready [data-motion="hero-cta"] {
+    transform: translateY(8px) scale(.97);
+  }
+  .js-ready [data-motion="image-reveal"] {
+    clip-path: inset(3% 0 3% 0);
+    transform: scale(1.03);
+  }
+  /* Reduce stagger on mobile */
+  [data-motion-stagger] > [data-motion]:nth-child(n+4) {
+    --motion-delay: calc(var(--stagger-small) * 3) !important;
+  }
+}
