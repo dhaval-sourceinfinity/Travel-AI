@@ -776,19 +776,22 @@
 
 /* --------------------------------------------------------------------------
    Reveal-on-scroll (progressive enhancement)
+   Default: visible. Hidden only when JS is confirmed ready and reduced motion is not requested.
    -------------------------------------------------------------------------- */
-.reveal {
+.js-ready .reveal {
   opacity: 0;
   transform: translateY(18px);
   transition: opacity var(--dur-slow) var(--ease-standard),
     transform var(--dur-slow) var(--ease-standard);
 }
-.reveal.is-visible {
+.reveal.is-visible,
+.js-ready .reveal.is-visible {
   opacity: 1;
   transform: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .reveal,
+  .js-ready .reveal {
     opacity: 1;
     transform: none;
     transition: none;
