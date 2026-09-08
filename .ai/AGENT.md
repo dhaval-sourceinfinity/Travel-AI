@@ -60,22 +60,48 @@ migration.
 
 ------------------------------------------------------------------------
 
-# 3. Source-of-Truth Hierarchy
+# 3. Source-of-Truth Hierarchy & Project Contracts
+
+## Core Project Contracts
+
+The project is governed by three primary contracts with distinct responsibilities:
+
+-   **`AGENT.md`**: How the AI agent should work, engineer, and implement the product (workflow, architecture, code standards, and constraints).
+-   **`DESIGN.md`**: What the product should look like (visual language, aesthetic direction, color, typography, layout rhythm, and component styling).
+-   **`MOTION.md`**: How motion and animation should be selected, structured, implemented, and validated (the authoritative motion implementation contract).
+
+For any motion-specific decisions, **`MOTION.md` is the authoritative source of truth**. Do not invent ad-hoc animations, keyframes, or external animation libraries outside its catalog.
+
+## Source-of-Truth Priority
 
 When implementing a screen, use this priority:
 
-1.  Approved Figma design and Figma variables/components
-2.  `DESIGN.md`
-3.  Product requirements / functional requirements
-4.  Supplied screenshots
-5.  Existing implementation conventions
-6.  Developer judgement
+1.  Approved Figma design and Figma variables/components (defines page-specific visual and motion intent)
+2.  `DESIGN.md` (defines visual language and design system)
+3.  `MOTION.md` (defines motion architecture, selection rules, and primitive catalog when motion is involved)
+4.  Existing implementation conventions (`css/`, `js/` — defines what is actually supported in the browser)
+5.  Product requirements / functional requirements
+6.  Supplied screenshots
+7.  Developer judgement
 
-If two sources conflict, preserve the **design intent and responsive
-behavior**, not a literal pixel measurement.
+If two sources conflict, preserve the **design intent and responsive behavior**, not a literal pixel measurement.
 
-Never reproduce an accidental Figma overflow, clipped element, or
-desktop-only constraint.
+Never reproduce an accidental Figma overflow, clipped element, or desktop-only constraint.
+
+## Document & Implementation Workflow
+
+Adhere to this sequential workflow:
+
+``` text
+Figma MCP
+→ AGENT.md (engineering rules & constraints)
+→ DESIGN.md (visual system & styling)
+→ MOTION.md (when motion/animation is involved)
+→ Inspect existing implementation (tokens.css, motion.css, components.css, site.js)
+→ Motion Map (mandatory before coding motion)
+→ Implementation (semantic HTML, scoped CSS, modular JS)
+→ Responsive / Accessibility / Performance QA
+```
 
 ------------------------------------------------------------------------
 
@@ -100,6 +126,7 @@ Use Figma MCP to inspect the relevant frame and determine:
 -   Hover/focus/active/disabled states
 -   Modal/chat states
 -   Content hierarchy
+-   Motion and interaction intent (transitions, reveals, scroll-linked behaviors)
 
 ## Implementation sequence
 
@@ -110,9 +137,23 @@ Use Figma MCP to inspect the relevant frame and determine:
 5.  Build desktop composition.
 6.  Add responsive composition.
 7.  Add interaction states.
-8.  Validate against Figma.
-9.  Test real viewport sizes.
-10. Fix visual differences without introducing fragile CSS.
+8.  If the page involves motion or animation:
+    -   Read `.ai/MOTION.md`.
+    -   Inspect the existing motion implementation in `css/motion.css` and `js/site.js` before inventing anything new.
+    -   Create a Motion Map following the mandatory schema defined in `MOTION.md`.
+    -   Implement motion derived from approved Figma intent using the canonical `[data-motion]` system defined in `MOTION.md`.
+9.  Validate against Figma.
+10. Test real viewport sizes.
+11. Fix visual differences without introducing fragile CSS.
+
+## Motion in the Figma Workflow
+
+When a page or component contains meaningful motion:
+
+-   **Read `.ai/MOTION.md`**: Consult `MOTION.md` as the authoritative contract before choosing any animation.
+-   **Inspect Code First**: Verify existing primitives and tokens in `css/motion.css`, `css/tokens.css`, and `js/site.js` to reuse supported behaviors.
+-   **Draft a Motion Map**: Before writing animation markup or CSS, create a Motion Map adhering to the mandatory structure specified in `MOTION.md` (Element, Primitive, Trigger, Priority, Desktop/Mobile/Reduced-motion behavior).
+-   **Canonical Implementation**: Apply approved Figma motion intent exclusively via the canonical `[data-motion]` primitives defined in `MOTION.md`.
 
 ## Important
 
@@ -180,7 +221,8 @@ travel-ai/
 │   └── journeys.js
 │
 ├── AGENT.md
-└── DESIGN.md
+├── DESIGN.md
+└── MOTION.md
 ```
 
 The exact file count may change as the project evolves, but
@@ -232,6 +274,16 @@ Avoid deeply nested selectors tied to page structure.
 -   Do not inject unsanitized API/AI HTML.
 -   Handle loading, success, empty, and error states.
 -   Do not expose API keys/secrets in frontend code.
+
+## Motion & Animation
+
+All animation and motion implementation is governed strictly by `.ai/MOTION.md`:
+
+-   **Canonical System**: New pages and components must use the canonical `[data-motion]` system defined in `MOTION.md`. If a page uses `[data-motion]`, ensure the shared `css/motion.css` stylesheet is loaded once in the page's stylesheet chain.
+-   **Legacy Preservation**: Existing legacy `.reveal` implementations (e.g. on `journeys.html`) must not be broken or refactored during unrelated page work. Migration of legacy `.reveal` usage is a separate controlled task.
+-   **Reuse Over Invention**: Reuse existing motion primitives catalogued in `MOTION.md` before creating anything new. Do not create ad-hoc animation systems, arbitrary `@keyframes`, or introduce external animation libraries (such as GSAP or Lenis) when an existing primitive satisfies the approved design intent.
+-   **Uncovered Requirements**: If Figma requires motion that the existing system cannot support, flag the gap for explicit implementation review instead of inventing an unsupported solution.
+-   **No Inline Timing Styles**: Define timing offsets and stagger variables (`--motion-delay`, `--stagger-base`) in component or page CSS stylesheets, never via inline `style="..."` attributes in HTML.
 
 ------------------------------------------------------------------------
 
@@ -819,6 +871,19 @@ A page is not complete until:
 -   [ ] JS deferred/code-split where useful
 -   [ ] Lighthouse checked
 -   [ ] No console errors
+
+### Motion (for pages using motion)
+
+Follow the motion QA requirements in `.ai/MOTION.md` (see Section 13 checklist):
+
+-   [ ] Reduced-motion behavior verified (`prefers-reduced-motion: reduce` stops animation and displays content immediately)
+-   [ ] Responsive motion tuning verified (reduced translate distances and capped staggers on mobile)
+-   [ ] No layout shift (CLS) caused by transforms or opacity reveals
+-   [ ] No horizontal overflow introduced by motion translations across all viewports (320px–2560px)
+-   [ ] Touch safety (hover zooms disabled on touch devices via `@media (hover: hover)`)
+-   [ ] Accessibility and semantic integrity (screen-reader safe typography splitting, normal heading tags)
+-   [ ] Performance verified (GPU-accelerated transforms/opacity, zero forced reflows, single rAF loop)
+-   [ ] Zero console errors from motion observers or element queries
 
 ------------------------------------------------------------------------
 
