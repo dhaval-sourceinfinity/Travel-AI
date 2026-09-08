@@ -333,97 +333,130 @@
     }, 1600);
   }
 
-  /* ---- 5d. Hero scroll effects (parallax + content recede) -------------- */
-  function initHeroScroll() {
-    const hero = document.querySelector(".hero");
-    if (!hero || REDUCE_MOTION) return;
+  /* ---- 5d. Scroll-linked motion (Hero + subtle editorial parallax) ------- */
+  function initScrollMotion() {
+    if (REDUCE_MOTION) return;
 
-    const heroImage = hero.querySelector('[data-motion="hero-image"]');
-    const heroContent = hero.querySelector('[data-motion="hero-content"]');
-    const heroHeight = () => hero.offsetHeight;
+    // Hero elements
+    const hero = document.querySelector(".hero");
+    const heroImage = hero ? hero.querySelector('[data-motion="hero-image"]') : null;
+    const heroContent = hero ? hero.querySelector('[data-motion="hero-content"]') : null;
+
+    // Editorial parallax elements (CTA background + Kyoto place card)
+    const parallaxEls = Array.from(
+      document.querySelectorAll('[data-motion="parallax"], [data-parallax]')
+    );
+
+    if (!hero && !parallaxEls.length) return;
+
+    let heroHeight = hero ? hero.offsetHeight : 0;
+    let cachedParallax = [];
+
+    function cachePositions() {
+      const isMobile = window.innerWidth <= 768;
+      if (hero) {
+        heroHeight = hero.offsetHeight;
+      }
+      cachedParallax = parallaxEls.map((el) => {
+        const rect = el.getBoundingClientRect();
+        const isCta = el.classList.contains("cta__bg") || Boolean(el.closest(".cta"));
+        return {
+          el,
+          isCta,
+          docTop: rect.top + window.scrollY,
+          height: rect.height,
+          maxShift: isCta ? (isMobile ? 4 : 12) : (isMobile ? 0 : 8),
+        };
+      });
+    }
+
+    cachePositions();
 
     let ticking = false;
-    let lastScrollY = 0;
+    let lastScrollY = window.scrollY;
 
     function onScroll() {
       lastScrollY = window.scrollY;
-      // If user scrolls before entrance timeout finishes, clear transition immediately
       if (heroImage && heroImage.style.transition !== "none") {
         heroImage.style.transition = "none";
       }
       if (!ticking) {
         ticking = true;
-        requestAnimationFrame(updateHeroScroll);
+        requestAnimationFrame(updateScrollMotion);
       }
     }
 
-    function updateHeroScroll() {
+    function updateScrollMotion() {
       ticking = false;
       const scrollY = lastScrollY;
-      const hHeight = heroHeight();
-
-      // Only process while hero is potentially in view
-      if (scrollY > hHeight * 1.2) return;
-
-      const progress = Math.min(scrollY / hHeight, 1);
-
-      // Hero image: subtle parallax + scale
-      if (heroImage) {
-        const imgY = scrollY * (IS_MOBILE ? 0.03 : 0.08);
-        const imgScale = 1 + progress * (IS_MOBILE ? 0.02 : 0.04);
-        heroImage.style.transform = `translateY(${imgY}px) scale(${imgScale})`;
-      }
-
-      // Hero content: fade + recede upward
-      if (heroContent) {
-        const contentOpacity = Math.max(0, 1 - progress * 1.6);
-        const contentY = -scrollY * (IS_MOBILE ? 0.12 : 0.2);
-        heroContent.style.setProperty("--hero-scroll-opacity", contentOpacity);
-        heroContent.style.setProperty("--hero-scroll-y", contentY + "px");
-        heroContent.style.opacity = contentOpacity;
-        heroContent.style.transform = `translateY(${contentY}px)`;
-      }
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-  }
-
-  /* ---- 5e. Image parallax (large editorial images) ---------------------- */
-  function initParallax() {
-    if (REDUCE_MOTION || IS_MOBILE) return;
-
-    const els = document.querySelectorAll('[data-motion="parallax"]');
-    if (!els.length) return;
-
-    let ticking = false;
-
-    function onScroll() {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(updateParallax);
-      }
-    }
-
-    function updateParallax() {
-      ticking = false;
       const viewportH = window.innerHeight;
-      const scrollY = window.scrollY;
+      const isMobile = window.innerWidth <= 768;
 
-      els.forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        // Only process elements near the viewport
-        if (rect.bottom < -100 || rect.top > viewportH + 100) return;
+      // 1. Hero scroll effects (only while hero is in/near view)
+      if (hero && scrollY <= heroHeight * 1.2) {
+        const progress = Math.min(scrollY / heroHeight, 1);
 
-        // Center of element relative to viewport center
-        const center = rect.top + rect.height / 2;
-        const offset = (center - viewportH / 2) / viewportH;
-        const translateY = offset * -30; // ±30px max
+        if (heroImage) {
+          const imgY = scrollY * (isMobile ? 0.03 : 0.08);
+          const imgScale = 1 + progress * (isMobile ? 0.02 : 0.04);
+          heroImage.style.transform = `translateY(${imgY}px) scale(${imgScale})`;
+        }
 
-        el.style.transform = `translateY(${translateY}px)`;
-      });
+        if (heroContent) {
+          const contentOpacity = Math.max(0, 1 - progress * 1.6);
+          const contentY = -scrollY * (isMobile ? 0.12 : 0.2);
+          heroContent.style.setProperty("--hero-scroll-opacity", contentOpacity);
+          heroContent.style.setProperty("--hero-scroll-y", contentY + "px");
+          heroContent.style.opacity = contentOpacity;
+          heroContent.style.transform = `translateY(${contentY}px)`;
+        }
+      }
+
+      // 2. Editorial parallax elements (zero forced reflow during scroll)
+      if (cachedParallax.length) {
+        for (let i = 0; i < cachedParallax.length; i++) {
+          const item = cachedParallax[i];
+          const currentTop = item.docTop - scrollY;
+
+          // Only process while element is in or near viewport
+          if (currentTop + item.height < -60 || currentTop > viewportH + 60) continue;
+
+          if (item.maxShift === 0) {
+            item.el.style.setProperty("--parallax-y", "0px");
+            continue;
+          }
+
+          // Center of element relative to viewport center (-1 to +1)
+          const center = currentTop + item.height / 2;
+          const offset = (center - viewportH / 2) / viewportH;
+          const translateY = Math.round(offset * -item.maxShift * 10) / 10;
+
+          item.el.style.setProperty("--parallax-y", `${translateY}px`);
+          if (item.el.getAttribute("data-motion") === "parallax") {
+            item.el.style.transform = `translateY(${translateY}px)`;
+          }
+        }
+      }
     }
 
     window.addEventListener("scroll", onScroll, { passive: true });
+
+    // Debounced resize to update cached document coordinates
+    let resizeTimer;
+    window.addEventListener(
+      "resize",
+      () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          cachePositions();
+          updateScrollMotion();
+        }, 150);
+      },
+      { passive: true }
+    );
+
+    // Initial update in case page loaded pre-scrolled
+    updateScrollMotion();
   }
 
   /* ---- 5f. Editorial typography reveals (line-reveal & char-reveal) ------ */
@@ -866,11 +899,8 @@
     // Hero entrance animation (sequenced page-load)
     initHeroEntrance();
 
-    // Hero scroll effects (parallax + content recede)
-    initHeroScroll();
-
-    // Large image parallax
-    initParallax();
+    // Scroll-linked motion (Hero + subtle editorial parallax)
+    initScrollMotion();
   }
 
   if (document.readyState === "loading") {

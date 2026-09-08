@@ -229,8 +229,24 @@
 /* --------------------------------------------------------------------------
    7. Parallax elements — no CSS transition (JS scroll-driven)
    -------------------------------------------------------------------------- */
-[data-motion="parallax"] {
+[data-motion="parallax"],
+[data-parallax] {
   will-change: transform;
+}
+
+/* Editorial place-card parallax integration */
+.place-card__img[data-parallax] {
+  height: calc(100% + 24px);
+  margin-top: -12px;
+  transform: translateY(var(--parallax-y, 0px));
+}
+[data-motion="image-reveal"].is-visible[data-parallax] {
+  transform: translateY(var(--parallax-y, 0px)) scale(1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .place-card:hover .place-card__img[data-parallax] {
+    transform: translateY(var(--parallax-y, 0px)) scale(1.035);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -238,12 +254,16 @@
    -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   [data-motion],
+  [data-parallax],
+  .place-card__img[data-parallax],
   .js-ready [data-motion] {
     opacity: 1 !important;
     transform: none !important;
     clip-path: none !important;
     transition: none !important;
     will-change: auto !important;
+    margin-top: 0 !important;
+    height: 100% !important;
   }
   .line-mask {
     overflow: visible !important;
