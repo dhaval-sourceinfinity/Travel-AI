@@ -100,7 +100,7 @@
 
   /* ---- Motion: stagger spacing ----------------------------------------- */
   --stagger-small: 60ms;
-  --stagger-normal: 100ms;
+  --stagger-normal: 80ms;
   --stagger-large: 140ms;
   --stagger-line: 90ms;
   --stagger-char: 18ms;
