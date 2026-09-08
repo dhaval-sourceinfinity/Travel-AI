@@ -13,11 +13,16 @@
   will-change: opacity, transform;
 }
 
-/* Typography reveal containers manage visibility via child spans */
+/* Typography, image, and parallax reveals manage their own visibility */
 .js-ready [data-motion="line-reveal"],
-.js-ready [data-motion="char-reveal"] {
+.js-ready [data-motion="char-reveal"],
+.js-ready [data-motion="parallax"] {
   opacity: 1;
   will-change: auto;
+}
+.js-ready [data-motion="image-reveal"] {
+  opacity: 0.9;
+  will-change: transform, opacity;
 }
 
 /* --------------------------------------------------------------------------
@@ -29,9 +34,6 @@
 }
 
 /* Allow interactive component hover lifts once revealed */
-.journey-card[data-motion].is-visible:hover {
-  transform: translateY(-3px);
-}
 .btn-hero[data-motion].is-visible:hover {
   transform: translateY(-1px);
 }
@@ -42,7 +44,7 @@
 
 /* -- Fade Up (default section reveal) ------------------------------------ */
 .js-ready [data-motion="fade-up"] {
-  transform: translateY(30px);
+  transform: translateY(20px);
   transition:
     opacity var(--motion-reveal) var(--ease-reveal),
     transform var(--motion-reveal) var(--ease-reveal);
@@ -115,24 +117,25 @@
 /* -- Scale Reveal (maps, subtle containers) ------------------------------ */
 .js-ready [data-motion="scale-reveal"] {
   transform: scale(.98);
+  opacity: 0.85;
   transition:
-    opacity var(--motion-slow) var(--ease-cinematic),
+    opacity var(--dur-slow) var(--ease-reveal),
     transform var(--motion-slow) var(--ease-cinematic);
   transition-delay: var(--motion-delay, 0ms);
 }
 
 /* -- Image Reveal (cinematic image entrance) ----------------------------- */
 .js-ready [data-motion="image-reveal"] {
-  transform: scale(1.06);
-  clip-path: inset(6% 0 6% 0);
+  transform: scale(1.03);
+  opacity: 0.9;
   transition:
-    opacity var(--motion-cinematic) var(--ease-cinematic),
-    transform var(--motion-cinematic) var(--ease-cinematic),
-    clip-path var(--motion-cinematic) var(--ease-cinematic);
+    opacity var(--dur-slow) var(--ease-reveal),
+    transform var(--motion-reveal) var(--ease-cinematic);
   transition-delay: var(--motion-delay, 0ms);
 }
 [data-motion="image-reveal"].is-visible {
-  clip-path: inset(0 0 0 0) !important;
+  opacity: 1;
+  transform: scale(1);
 }
 
 /* --------------------------------------------------------------------------
@@ -202,7 +205,7 @@
 [data-motion-stagger] > [data-motion]:nth-child(6) { --motion-delay: calc(var(--stagger-normal) * 5); }
 
 /* --------------------------------------------------------------------------
-   6. Card image hover — photographic zoom
+   6. Card image hover — photographic zoom (consolidated single source of truth)
    -------------------------------------------------------------------------- */
 .dest-card,
 .journey-card,
@@ -212,15 +215,15 @@
 }
 .dest-card__img,
 .journey-card__img,
-.person-card__img,
 .place-card__img {
   transition: transform var(--motion-hover) var(--ease-reveal);
 }
-.dest-card:hover .dest-card__img,
-.journey-card:hover .journey-card__img,
-.person-card:hover .person-card__img,
-.place-card:hover .place-card__img {
-  transform: scale(1.04);
+@media (hover: hover) and (pointer: fine) {
+  .dest-card:hover .dest-card__img,
+  .journey-card:hover .journey-card__img,
+  .place-card:hover .place-card__img {
+    transform: scale(1.035);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -271,7 +274,7 @@
    -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
   .js-ready [data-motion="fade-up"] {
-    transform: translateY(16px);
+    transform: translateY(14px);
   }
   .js-ready [data-motion="line-reveal"] .line-inner {
     transform: translateY(105%);
@@ -294,8 +297,8 @@
     transform: translateY(6px) scale(.99);
   }
   .js-ready [data-motion="image-reveal"] {
-    clip-path: inset(3% 0 3% 0);
-    transform: scale(1.03);
+    transform: scale(1.02);
+    opacity: 0.95;
   }
   /* Reduce stagger on mobile */
   [data-motion="stagger"] > [data-motion]:nth-child(n+4),

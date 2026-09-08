@@ -239,6 +239,12 @@
               children.forEach((child) => child.classList.add("is-visible"));
             }
 
+            // Cascade visibility to any nested motion elements (e.g. card images)
+            const nested = el.querySelectorAll("[data-motion]");
+            if (nested.length) {
+              nested.forEach((child) => child.classList.add("is-visible"));
+            }
+
             el.classList.add("is-visible");
             obs.unobserve(el);
           }
@@ -252,6 +258,8 @@
       // Skip hero elements and children of stagger containers
       if (heroMotions.has(motionType)) return;
       if (el.parentElement && (el.parentElement.hasAttribute("data-motion-stagger") || el.parentElement.getAttribute("data-motion") === "stagger")) return;
+      // Skip nested motion elements whose ancestor already has [data-motion] (parent cascades reveal)
+      if (el.parentElement && el.parentElement.closest("[data-motion]")) return;
       io.observe(el);
     });
 
@@ -645,7 +653,7 @@
     const h = Math.min(4, Math.max(2, headingLevel));
     return `<article class="journey-card" data-motion="fade-up">
       <div class="journey-card__media">
-        <img class="journey-card__img" src="${j.image.src}" alt="${j.image.alt}"${loading} decoding="async" />
+        <img class="journey-card__img" src="${j.image.src}" alt="${j.image.alt}"${loading} decoding="async" data-motion="image-reveal" />
         <span class="journey-card__tag">${j.tag}</span>
       </div>
       <div class="journey-card__body">
