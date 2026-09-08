@@ -43,6 +43,17 @@
   --color-surface-panel: #121317;       /* stats bar, belief cards, join band */
   --color-border-panel: #1d1e23;        /* panel + row hairlines              */
 
+  /* ---- Color: status ---------------------------------------------------
+     The project's first semantic state palette. Status is always paired with
+     text (AGENT.md §15 — never communicate state through colour alone). */
+  --color-accent-bg: #1e1830;           /* violet badge fill                 */
+  --color-success: #34d399;
+  --color-success-bg: #0d2418;
+  --color-success-border: #1a4d32;
+  --color-danger: #f87171;
+  --color-danger-bg: #241115;
+  --color-danger-border: #4a1a1e;
+
   /* ---- Radius ---------------------------------------------------------- */
   --radius-xs: 4px;
   --radius-sm: 6px;

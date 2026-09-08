@@ -42,14 +42,24 @@
     { label: "About Us", href: "about-us.html" },
     { label: "Packages", href: "journeys.html" },
     { label: "AI Planner", href: "index.html#how" },
-    { label: "My Trips", href: "journeys.html" },
+    { label: "My Trips", href: "my-trips.html" },
     { label: "Blog", href: "404.html" },
   ];
 
+  // Current document, as a bare filename. "/" and "/index.html" both resolve
+  // to index.html so the home link highlights either way.
+  function currentPage() {
+    const last = window.location.pathname.split("/").pop();
+    return (last || "index.html").toLowerCase();
+  }
+
   function renderHeader() {
-    const links = NAV_LINKS.map(
-      (l) => `<a class="nav__link" href="${l.href}">${l.label}</a>`
-    ).join("");
+    const here = currentPage();
+    const links = NAV_LINKS.map((l) => {
+      const target = l.href.split("#")[0].toLowerCase();
+      const current = target === here ? ' aria-current="page"' : "";
+      return `<a class="nav__link" href="${l.href}"${current}>${l.label}</a>`;
+    }).join("");
 
     return `<div class="container site-header__inner">
       ${brand()}
@@ -907,6 +917,67 @@
     }
   }
 
+  // My Trips Page: status filter over statically-rendered trip cards
+  function initMyTrips() {
+    const grid = document.querySelector("[data-trips]");
+    if (!grid) return;
+
+    const filter = document.querySelector("[data-trip-filter]");
+    const emptyEl = document.querySelector("[data-trips-empty]");
+    const statusEl = document.querySelector("[data-trips-status]");
+    const cards = [...grid.querySelectorAll("[data-trip-status]")];
+
+    // A card hidden before the motion observer reached it would never
+    // intersect, so it would stay at opacity 0 when a filter reveals it
+    // later. Settle it the same way initMotionReveal's cascade does.
+    function settleMotion(el) {
+      el.classList.add("is-visible");
+      el.querySelectorAll("[data-motion]").forEach((child) => {
+        if (child.getAttribute("data-motion") !== "copy-follow") {
+          child.classList.add("is-visible");
+        }
+      });
+    }
+
+    function apply(value) {
+      let shown = 0;
+      cards.forEach((card) => {
+        const match = value === "all" || card.dataset.tripStatus === value;
+        card.hidden = !match;
+        if (match) {
+          shown += 1;
+          settleMotion(card);
+        }
+      });
+
+      if (emptyEl) emptyEl.hidden = shown > 0;
+      if (statusEl) {
+        statusEl.textContent =
+          shown === 0
+            ? "No trips match this filter."
+            : `Showing ${shown} ${shown === 1 ? "trip" : "trips"}.`;
+      }
+    }
+
+    // Keep any tab count honest against the markup it describes.
+    document.querySelectorAll("[data-count-for]").forEach((el) => {
+      const status = el.getAttribute("data-count-for");
+      const n = cards.filter((c) => c.dataset.tripStatus === status).length;
+      el.textContent = `(${n})`;
+    });
+
+    if (filter) {
+      filter.addEventListener("click", (e) => {
+        const tab = e.target.closest(".trip-filter__tab");
+        if (!tab) return;
+        filter
+          .querySelectorAll(".trip-filter__tab")
+          .forEach((t) => t.setAttribute("aria-pressed", String(t === tab)));
+        apply(tab.dataset.filter || "all");
+      });
+    }
+  }
+
   // Journey Details Page: Sidebar scrollspy
   function initScrollspy() {
     const links = [...document.querySelectorAll(".pkg__nav a")];
@@ -1055,6 +1126,9 @@
 
     // Explore chips (home)
     initExplore();
+
+    // My Trips: status filter
+    initMyTrips();
 
     // Scrollspy (detail page)
     initScrollspy();

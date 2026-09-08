@@ -113,6 +113,30 @@
   box-shadow: 0 0 16px rgba(123, 92, 240, 0.35);
 }
 
+/* Subtle fill — no border. Sits between --ghost (border, no fill) and
+   --glass (both). Used for secondary card actions. */
+.btn--subtle {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid transparent;
+  color: var(--color-text-secondary);
+}
+.btn--subtle:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-text);
+}
+
+/* Compact control for dense card footers. */
+.btn--sm {
+  min-height: 32px;
+  padding: 8px 14px;
+  letter-spacing: 0.06em;
+}
+@media (pointer: coarse) {
+  .btn--sm {
+    min-height: 44px;
+  }
+}
+
 .btn--pill {
   border-radius: var(--radius-pill);
   padding: 10px 22px;
@@ -189,6 +213,86 @@
 }
 
 /* --------------------------------------------------------------------------
+   Badge — pill label. Status variants are keyed off [data-status], matching
+   the project's existing state convention ([data-state], [aria-pressed]).
+   The label text always carries the status; colour is never the only signal.
+   -------------------------------------------------------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  border: 0.8px solid var(--color-accent-strong);
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.badge--sm {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+.badge[data-status="completed"] {
+  background: var(--color-success-bg);
+  border-color: var(--color-success-border);
+  color: var(--color-success);
+}
+.badge[data-status="cancelled"] {
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger-border);
+  color: var(--color-danger);
+}
+
+/* --------------------------------------------------------------------------
+   Empty state — shared "nothing here yet" panel (AGENT.md §21)
+   -------------------------------------------------------------------------- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: clamp(40px, 7vw, 56px) var(--space-6);
+  text-align: center;
+  background: var(--color-surface-card);
+  border: 0.8px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+.empty-state__icon {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--color-text-muted);
+}
+.empty-state__icon svg {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+.empty-state__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+.empty-state__text {
+  max-width: 46ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+.empty-state__cta {
+  margin-top: var(--space-2);
+  border-radius: var(--radius-md);
+}
+
+/* --------------------------------------------------------------------------
    Site header / navigation
    -------------------------------------------------------------------------- */
 .site-header {
@@ -243,6 +347,16 @@
 .nav__link:hover::after,
 .nav__link:focus-visible::after {
   width: 100%;
+}
+/* Current page — the hover underline, pinned open in the accent colour. */
+.nav__link[aria-current="page"] {
+  color: var(--color-text);
+  font-weight: 600;
+}
+.nav__link[aria-current="page"]::after {
+  width: 100%;
+  height: 1.5px;
+  background: var(--color-accent);
 }
 
 .nav__mobile-actions {
@@ -503,6 +617,49 @@
 .journey-card__price strong {
   color: var(--color-text);
   font-weight: 600;
+}
+
+/* ---- Trip variant (my-trips) --------------------------------------------
+   A booked journey. Reuses the whole block; only the cover ratio, the title
+   scale and the footer contents differ. */
+.journey-card--trip .journey-card__media {
+  aspect-ratio: 9 / 5;
+}
+.journey-card--trip .journey-card__title {
+  font-size: clamp(16px, 1.6vw, 18px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+/* Status pill over the cover — same anchor as __tag, colour from .badge. */
+.journey-card__status {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 1;
+}
+.journey-card__date {
+  margin-top: var(--space-2);
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+.journey-card__paid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.journey-card__paid-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+.journey-card__paid-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.journey-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
 /* --------------------------------------------------------------------------

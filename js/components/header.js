@@ -5,14 +5,22 @@ const NAV_LINKS = [
   { label: "About Us", href: "about-us.html" },
   { label: "Packages", href: "journeys.html" },
   { label: "AI Planner", href: "index.html#how" },
-  { label: "My Trips", href: "journeys.html" },
+  { label: "My Trips", href: "my-trips.html" },
   { label: "Blog", href: "404.html" },
 ];
 
+function currentPage() {
+  const last = window.location.pathname.split("/").pop();
+  return (last || "index.html").toLowerCase();
+}
+
 export function renderHeader() {
-  const links = NAV_LINKS.map(
-    (l) => `<a class="nav__link" href="${l.href}">${l.label}</a>`
-  ).join("");
+  const here = currentPage();
+  const links = NAV_LINKS.map((l) => {
+    const target = l.href.split("#")[0].toLowerCase();
+    const current = target === here ? ' aria-current="page"' : "";
+    return `<a class="nav__link" href="${l.href}"${current}>${l.label}</a>`;
+  }).join("");
 
   return `<div class="container site-header__inner">
     ${brand()}
