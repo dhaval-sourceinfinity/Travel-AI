@@ -318,7 +318,13 @@
    ========================================================================== */
 @media (max-width: 768px) {
   .planner-section {
-    padding-block: var(--space-8);
+    padding-top: calc(var(--header-h) + var(--space-6));
+    padding-bottom: var(--space-8);
+  }
+
+  .planner-section--compact {
+    padding-top: calc(var(--header-h) + var(--space-4));
+    padding-bottom: var(--space-4);
   }
 
   .planner__header {

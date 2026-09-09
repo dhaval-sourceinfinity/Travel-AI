@@ -1476,9 +1476,9 @@
 
       cardsContainer.innerHTML = dayData.activities
         .map((act) => {
-          return `<article class="result__card">
+          return `<article class="result__card" data-motion="fade-up">
             <div class="result__card-media">
-              <img class="result__card-img" src="${act.image}" alt="${act.alt}" width="88" height="88" loading="lazy" decoding="async" />
+              <img class="result__card-img" src="${act.image}" alt="${act.alt}" width="96" height="96" loading="lazy" decoding="async" data-motion="image-reveal" />
             </div>
             <div class="result__card-content">
               <span class="result__card-time">${act.timeOfDay}</span>
@@ -1513,8 +1513,11 @@
           tab.setAttribute("aria-pressed", "true");
           cardsContainer.setAttribute("aria-labelledby", tab.id);
 
-          // Subtle crossfade transition
-          if (REDUCE_MOTION) {
+          // Smooth transition between days using TravelMotion
+          if (root.TravelMotion && typeof root.TravelMotion.animateDynamicGrid === "function") {
+            renderDayActivities(day);
+            root.TravelMotion.animateDynamicGrid(cardsContainer);
+          } else if (REDUCE_MOTION) {
             renderDayActivities(day);
           } else {
             cardsContainer.classList.add("result__cards--fade-out");

@@ -23,7 +23,7 @@
 }
 
 .planner-container {
-  width: min(100% - (var(--container-pad) * 2), 820px);
+  width: min(100% - (var(--container-pad) * 2), 900px);
   margin-inline: auto;
   display: flex;
   flex-direction: column;
@@ -35,25 +35,25 @@
    2. Headings & Typography
    -------------------------------------------------------------------------- */
 .planner__header {
-  max-width: 680px;
+  max-width: 900px;
   margin-inline: auto;
   margin-bottom: var(--space-6);
 }
 
 .planner__title {
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 700;
+  font-size: clamp(32px, 4vw, 38px);
+  font-weight: 800;
   letter-spacing: -0.03em;
-  line-height: 1.15;
-  color: var(--color-text);
+  line-height: 1.2;
+  color: #F3F4F6;
   margin-bottom: var(--space-4);
 }
 
 .planner__desc {
   font-size: clamp(14px, 1.8vw, 15px);
-  line-height: 1.55;
+  line-height: 1.6;
   color: var(--color-text-body);
-  max-width: 620px;
+  max-width: 680px;
   margin-inline: auto;
 }
 
@@ -68,11 +68,11 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  background-color: #121518;
+  background-color: #121317;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
   padding: 4px;
-  gap: 2px;
+  gap: 4px;
 }
 
 .planner__toggle-btn {
@@ -115,20 +115,20 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px 10px;
-  max-width: 760px;
+  max-width: 900px;
   margin-bottom: var(--space-6);
   min-height: 82px; /* Prevent layout shift during destination switch */
 }
 
 .planner__chip {
   appearance: none;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border);
+  background: #121317;
   color: var(--color-text-secondary);
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 500;
-  padding: 8px 18px;
+  padding: 8px 16px;
   border-radius: var(--radius-pill);
   cursor: pointer;
   transition:
@@ -144,7 +144,7 @@
   background-color: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.22);
   color: #ffffff;
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .planner__chip:active {
@@ -167,11 +167,11 @@
    -------------------------------------------------------------------------- */
 .planner__card {
   width: 100%;
-  max-width: 760px;
-  background-color: #0e1215;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: var(--radius-lg);
-  padding: 22px 24px 18px 24px;
+  max-width: 900px;
+  background-color: #121317;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 24px;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
@@ -237,8 +237,8 @@
   font-weight: 600;
   border: 0;
   border-radius: var(--radius-pill);
-  padding: 9px 26px;
-  min-height: 38px;
+  padding: 10px 24px;
+  min-height: 41px;
   cursor: pointer;
   transition:
     background-color var(--dur-fast) var(--ease-standard),
