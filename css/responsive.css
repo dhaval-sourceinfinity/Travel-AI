@@ -241,3 +241,74 @@
   }
 }
 
+
+/* ==========================================================================
+   Blog Detail Page Responsive Rules (Figma 208:5617)
+   Breakpoints match the blog listing work: 1024 / 768 / 640.
+   The related-story grid reuses .blog-cards__grid, so its rules above already
+   take it from 3 → 2 → 1 columns; nothing is repeated here.
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  /* The rail stops being a rail: one column, TOC and share side by side.
+     DOM order is already aside → prose, so no ordering hacks are needed. */
+  .article-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+  .article-aside {
+    position: static;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--color-border-panel);
+  }
+  .author-card {
+    gap: 24px;
+    padding: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .article-aside {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+  .article-quote {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    padding-left: 20px;
+  }
+  /* Keep the subject of each photograph visible as the frame narrows. */
+  .article-cover__img {
+    aspect-ratio: 3 / 2;
+  }
+  .article-figure__img {
+    aspect-ratio: 16 / 10;
+  }
+  .author-card {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+  }
+  .author-card__cta {
+    grid-column: 1 / -1;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .article-hero__inner {
+    gap: 20px;
+  }
+  .author-card {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+    gap: 20px;
+  }
+  .author-card__cta {
+    grid-column: auto;
+  }
+}

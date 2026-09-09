@@ -29,7 +29,13 @@
 /* --------------------------------------------------------------------------
    2. Revealed state (applied by IntersectionObserver)
    -------------------------------------------------------------------------- */
-[data-motion].is-visible {
+/* `.js-ready` is required here, not decorative: without it this selector is
+   (0,2,0), which ties with every hidden-state rule below — `.js-ready
+   [data-motion="fade-up"]`, the `hero-*` rules, `image-reveal`, and their
+   mobile overrides — and loses on source order, so a revealed element never
+   returned to its resting position (fade-up stayed 20px low, images stayed at
+   scale(1.03), and on mobile at opacity .95). At (0,3,0) the reset wins. */
+.js-ready [data-motion].is-visible {
   opacity: 1;
   transform: none;
 }
@@ -131,7 +137,12 @@
   will-change: transform, opacity;
 }
 
-[data-motion="line-reveal"].is-visible .line-inner {
+/* `.js-ready` for the same reason as §2: at (0,3,0) this ties with both the
+   hidden-state rule above and its `@media (max-width: 768px)` override, and
+   loses to whichever comes later — so on phones the mobile override pinned
+   every line at translateY(105%) behind its own mask and the heading never
+   appeared at all. (0,4,0) settles it. */
+.js-ready [data-motion="line-reveal"].is-visible .line-inner {
   transform: translateY(0);
   opacity: 1;
 }

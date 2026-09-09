@@ -753,6 +753,10 @@
   align-items: center;
   gap: var(--space-4);
   max-width: 800px;
+  /* .blog-container is 1280px wide, so the capped content needs auto margins
+     to actually sit in the middle of it — align-items only centres its own
+     children. Without this the CTA reads left-aligned against the Figma frame. */
+  margin-inline: auto;
 }
 
 .blog-cta__eyebrow {
