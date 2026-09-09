@@ -2259,8 +2259,13 @@
     // Legacy .reveal for non-homepage pages
     initReveal();
 
-    // New cinematic motion (data-motion attributes)
-    initMotionReveal();
+    // GSAP centralized motion engine if available, with native fallback
+    if (window.TravelMotion && window.TravelMotion.isReady()) {
+      window.TravelMotion.init();
+    } else {
+      // Native fallback (data-motion attributes)
+      initMotionReveal();
+    }
 
     // Hero entrance animation (sequenced page-load)
     initHeroEntrance();

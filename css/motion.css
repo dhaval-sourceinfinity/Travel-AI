@@ -52,6 +52,27 @@
 }
 
 /* --------------------------------------------------------------------------
+   2b. GSAP Motion Engine Active
+   When the centralized GSAP motion engine initializes (.gsap-active on <html>),
+   disable CSS entrance transitions so the browser does not fight GSAP's
+   per-frame updates, while preserving CSS :hover transitions.
+   -------------------------------------------------------------------------- */
+.gsap-active [data-motion="fade-up"],
+.gsap-active [data-motion="fade-in"],
+.gsap-active [data-motion="fade-down"],
+.gsap-active [data-motion="fade-left"],
+.gsap-active [data-motion="fade-right"],
+.gsap-active [data-motion="text-reveal"],
+.gsap-active [data-motion="scale-reveal"],
+.gsap-active [data-motion="image-reveal"],
+.gsap-active [data-motion="line-reveal"] .line-inner,
+.gsap-active [data-motion="char-reveal"] .char-unit,
+.gsap-active [data-motion="divider"],
+.gsap-active [data-motion="border-reveal"] {
+  transition: none !important;
+}
+
+/* --------------------------------------------------------------------------
    3. Motion primitives — initial transforms + transitions
    -------------------------------------------------------------------------- */
 
@@ -233,6 +254,30 @@
     opacity var(--motion-normal) var(--ease-reveal),
     transform var(--motion-normal) var(--ease-reveal);
   transition-delay: var(--motion-delay, 0ms);
+}
+
+/* -- Fade Left / Fade Right (directional reveals) ------------------------- */
+.js-ready [data-motion="fade-left"] {
+  transform: translateX(20px);
+  transition:
+    opacity var(--motion-reveal) var(--ease-reveal),
+    transform var(--motion-reveal) var(--ease-reveal);
+  transition-delay: var(--motion-delay, 0ms);
+}
+
+.js-ready [data-motion="fade-right"] {
+  transform: translateX(-20px);
+  transition:
+    opacity var(--motion-reveal) var(--ease-reveal),
+    transform var(--motion-reveal) var(--ease-reveal);
+  transition-delay: var(--motion-delay, 0ms);
+}
+
+/* -- Divider / Border reveal --------------------------------------------- */
+.js-ready [data-motion="divider"],
+.js-ready [data-motion="border-reveal"] {
+  transform-origin: left center;
+  will-change: transform;
 }
 
 /* -- Scale Reveal (maps, subtle containers) ------------------------------ */
@@ -421,6 +466,12 @@
 @media (max-width: 768px) {
   .js-ready [data-motion="fade-up"] {
     transform: translateY(14px);
+  }
+  .js-ready [data-motion="fade-left"] {
+    transform: translateX(14px);
+  }
+  .js-ready [data-motion="fade-right"] {
+    transform: translateX(-14px);
   }
   .js-ready [data-motion="line-reveal"] .line-inner {
     transform: translateY(105%);

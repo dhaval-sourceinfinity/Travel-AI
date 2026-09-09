@@ -85,24 +85,26 @@ Do not add independent animation, ad-hoc keyframes, or unique delay offsets to e
 
 ## 3. Architecture Overview
 
-The codebase contains two motion systems:
+The codebase contains the centralized GSAP motion engine and legacy fallbacks:
 
-### 3a. Canonical System: `[data-motion]` + `motion.css` `[ACTIVE]`
+### 3a. Canonical System: `[data-motion]` + GSAP Motion Engine `[ACTIVE]`
 
-- **CSS**: `css/motion.css` — Contains all canonical animation primitives, hidden states, revealed states, stagger cascades, parallax styling, responsive overrides, and reduced-motion enforcement.
-- **JS**: `js/site.js` — Coordinates observers and scroll drivers:
-  - `initTypographyReveals()`: Splits text for `char-scroll` and `line-reveal`.
-  - `initMotionReveal()`: `IntersectionObserver` that reveals `[data-motion]` elements.
-  - `initHeroEntrance()`: Timed hero page-load choreography.
-  - `initScrollMotion()`: Single `requestAnimationFrame` loop for hero and parallax motion.
-- **Used by**: `index.html` (Home page) and all future pages.
-- **Loading Rule**: *If a page uses the canonical `[data-motion]` system, ensure the shared `motion.css` stylesheet is loaded once in the page's stylesheet chain.* (Do not duplicate imports).
+- **Engine**: GSAP 3.x + ScrollTrigger (pinned CDN @ 3.14.1 loaded before `site.js` using `defer`).
+- **Modules**:
+  - `js/motion/gsap-presets.js`: Shared tokens, easings, timings, responsive distances, and primitive configs.
+  - `js/motion/gsap-text.js`: Accessible text splitters for masked line reveals (`line-reveal`) and character reveals (`char-reveal`).
+  - `js/motion/gsap-engine.js`: Central coordinator managing ScrollTriggers, section choreography, dynamic grids, and reduced motion.
+- **CSS**: `css/motion.css` — Contains all canonical animation primitives, initial hidden states, stagger cascades, mobile overrides, and reduced-motion enforcement. When `.gsap-active` is present on `<html>`, CSS transitions on animated properties are disabled (`transition: none !important`) so GSAP drives them without conflict.
+- **Fallback**: If GSAP CDN fails to load or in test environments, the system gracefully falls back to native CSS transitions toggled via `.is-visible`.
+- **JS Boot**: `js/site.js` initializes `window.TravelMotion.init()`, coordinates hero page-load sequences, and manages legacy observers.
+- **Used by**: All Travel AI pages.
+- **Loading Rule**: *If a page uses the canonical `[data-motion]` system, ensure the shared `motion.css` stylesheet and GSAP scripts are loaded.*
 
 ### 3b. Legacy System: `.reveal` + `initReveal()` `[LEGACY]`
 
 - **CSS**: `css/components.css` (lines 765–787) — Simple `opacity + translateY(18px)` fade-up driven by `--dur-slow`.
 - **JS**: `js/site.js` (`initReveal()`) — Separate `IntersectionObserver` (`rootMargin: "0px 0px -8% 0px"`, `threshold: 0.08`).
-- **Used by**: `journeys.html` (the journey cards list wrapper).
+- **Used by**: Existing pages with legacy `.reveal` wrappers.
 - **Rule for Future Work**:
   > **Existing pages using `.reveal` must not be broken or refactored during normal page implementation. New pages should use the canonical `[data-motion]` system. Migration of legacy `.reveal` usage is a separate controlled task.**
 
@@ -110,12 +112,12 @@ The codebase contains two motion systems:
 
 ```text
 1. mountShell()            — Mounts global Header & Footer, sets .js-ready on <html>
-2. Render Dynamic Data     — Injects journey cards into the DOM before observers run
+2. Render Dynamic Data     — Injects cards/data into the DOM before engine initializes
 3. initTypographyReveals() — Splits line-reveal and char-scroll elements
-4. initReveal()            — Starts legacy .reveal observer (for existing pages)
-5. initMotionReveal()      — Starts canonical [data-motion] observer
+4. initReveal()            — Starts legacy .reveal observer (for backward compatibility)
+5. TravelMotion.init()     — Initializes GSAP + ScrollTrigger (falls back to initMotionReveal)
 6. initHeroEntrance()      — Runs sequenced hero page-load choreography
-7. initScrollMotion()      — Starts single rAF scroll loop (hero, parallax, char-scroll)
+7. initScrollMotion()      — Runs rAF scroll loop for hero and char-scroll progress
 ```
 
 Execution order constraints:
@@ -461,15 +463,19 @@ The motion system enforces accessibility across three integrated tiers:
 Keep performance focused on browser hardware acceleration:
 
 ### Allowed & Preferred
-- Animate only `transform` and `opacity`.
-- Control dynamic values via CSS custom properties (`--reveal-progress`, `--parallax-y`).
-- Use `IntersectionObserver` for one-time trigger reveals.
-- Use a **single global** `requestAnimationFrame` loop for continuous scroll calculations.
+- **Centralized GSAP 3.x + ScrollTrigger** loaded via pinned CDN (`https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/...`) using `defer`.
+- Animate strictly `transform` and `opacity`.
+- Clean up inline styles upon animation completion (`clearProps: "transform,opacity"`) so CSS `:hover` states remain fully functional.
+- Control dynamic scroll values via CSS custom properties (`--reveal-progress`, `--parallax-y`).
+- Use single-pass ScrollTriggers and section timelines for orchestrated reveals.
+- Use a **single global** `requestAnimationFrame` loop for continuous scroll calculations where appropriate.
 - Clean up calculation overhead: `[data-motion-scope]` receives `.is-settled` at progress `1.0` to drop character calc overhead.
+- Native CSS transitions for micro-interactions (buttons, hover effects, focus outlines).
 
 ### Strictly Prohibited
-- **No wheel hijacking or custom smooth scrollbars** (e.g. Lenis, Locomotive). Native scroll must remain intact.
-- **No heavy external animation libraries** (e.g. GSAP, Framer Motion).
+- **No wheel hijacking or custom smooth scrollbars** (e.g. Lenis, Locomotive, ScrollSmoother). Native scroll must remain intact.
+- **No unauthorized animation libraries or plugins** (e.g. Anime.js, Framer Motion, ScrollToPlugin, SplitText unless strictly justified). Only GSAP Core and ScrollTrigger are approved.
+- **No local vendoring of GSAP** (e.g. `js/vendor/gsap.min.js`). Use pinned CDN only.
 - **No scroll locking** for decorative storytelling.
 - **No continuous layout thrashing** (never read `getBoundingClientRect()` inside tight loops without rAF batching).
 - **No per-character setTimeout loops**.
@@ -534,8 +540,8 @@ The Motion Map must define these mandatory columns:
 | Nesting multiple `data-motion-stagger` containers | Keep stagger containers strictly one level deep. |
 | Adding independent animations and delays to every nested child node | For a component, use one primary entrance mechanism per hierarchy level. |
 | Adding CSS `@keyframes` animations to `motion.css` | Use transition-based reveals toggled via `.is-visible`. |
-| Adding external animation libraries (GSAP, Lenis) | Stick entirely to native CSS transitions, `IntersectionObserver`, and rAF. |
-| Animating decorative lines, borders, or dividers | Motion is reserved strictly for storytelling content and photography. |
+| Adding unauthorized animation libraries or smooth-scroll hijackers (Lenis, ScrollSmoother, Anime.js) | Use only approved GSAP Core + ScrollTrigger loaded via pinned CDN; micro-interactions remain native CSS. |
+| Animating decorative lines, borders, or dividers without purpose | Motion is reserved strictly for storytelling content, photography, and structural section dividers. |
 | Removing the `.js-ready` gating class | Content must remain 100% visible if JavaScript fails to execute. |
 
 ---
@@ -564,13 +570,17 @@ Before shipping any page featuring motion, verify each check:
 | File | Status | Motion System Responsibility |
 | --- | --- | --- |
 | `css/tokens.css` | `[ACTIVE]` | Defines timing (`--dur-*`, `--motion-*`), easings (`--ease-*`), and stagger tokens. |
-| `css/motion.css` | `[ACTIVE]` | Canonical stylesheet containing all `[data-motion]` rules, state transforms, stagger cascades, mobile overrides, and reduced-motion enforcement. |
+| `css/motion.css` | `[ACTIVE]` | Canonical stylesheet containing all `[data-motion]` rules, state transforms, stagger cascades, mobile overrides, `.gsap-active` transition suppression, and reduced-motion enforcement. |
 | `css/components.css` | `[LEGACY / ACTIVE]` | Contains legacy `.reveal` styles (§ Reveal-on-scroll) as well as standard micro-interaction hover transitions. |
+| `js/motion/gsap-presets.js` | `[ACTIVE]` | Shared tokens, easings, timings, responsive distances, and primitive GSAP configs. |
+| `js/motion/gsap-text.js` | `[ACTIVE]` | Text measuring and DOM splitting for `line-reveal` and `char-reveal` with accessible screen reader layers. |
+| `js/motion/gsap-engine.js` | `[ACTIVE]` | Central GSAP + ScrollTrigger coordinator, reduced motion handler, dynamic grid animator, and section choreography orchestrator. |
 | `js/site.js` (§5a) | `[LEGACY]` | `initReveal()` — Legacy `.reveal` `IntersectionObserver`. |
-| `js/site.js` (§5b) | `[ACTIVE]` | `initMotionReveal()` — Canonical `[data-motion]` `IntersectionObserver`. |
+| `js/site.js` (§5b) | `[ACTIVE / FALLBACK]` | `initMotionReveal()` — Native `[data-motion]` `IntersectionObserver` fallback when GSAP is inactive. |
 | `js/site.js` (§5c) | `[RESERVED]` | `initHeroEntrance()` — Page-load timed hero entrance sequence. |
 | `js/site.js` (§5d) | `[ACTIVE]` | `initScrollMotion()` — Single rAF loop managing scroll-linked hero, parallax, and `char-scroll` progress. |
 | `js/site.js` (§5f) | `[ACTIVE]` | `prepareLineReveal()`, `prepareCharScroll()`, `initTypographyReveals()` — Typography measuring and DOM splitting. |
+| `js/journeys.js` | `[ACTIVE]` | Dynamically renders journey cards and invokes `TravelMotion.animateDynamicGrid()`. |
 
 ---
 

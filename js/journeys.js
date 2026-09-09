@@ -71,15 +71,19 @@ function renderGrid(packages) {
     .map((p, i) => packageCard(p, { lazy: i >= 2 }))
     .join("");
 
-  // Dynamically injected [data-motion] elements aren't observed by site.js IO.
-  // Double-rAF lets the browser paint the hidden state before we trigger transitions.
-  requestAnimationFrame(() => {
+  // When GSAP engine is active, animate dynamically injected cards cleanly.
+  // Otherwise, use graceful double-rAF fallback for native environments.
+  if (window.TravelMotion && window.TravelMotion.isReady()) {
+    window.TravelMotion.animateDynamicGrid(grid);
+  } else {
     requestAnimationFrame(() => {
-      grid.querySelectorAll("[data-motion]").forEach((el) => {
-        el.classList.add("is-visible");
+      requestAnimationFrame(() => {
+        grid.querySelectorAll("[data-motion]").forEach((el) => {
+          el.classList.add("is-visible");
+        });
       });
     });
-  });
+  }
 }
 
 function updateCount(shown, total) {
