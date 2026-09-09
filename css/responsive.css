@@ -171,3 +171,73 @@
     padding-block: calc(var(--header-h) + var(--space-16)) var(--space-16);
   }
 }
+
+/* ==========================================================================
+   Blog Listing Page Responsive Rules (Figma 208:5107)
+   ========================================================================== */
+
+/* Laptop / Desktop medium: 3-column cards to 2-column cards */
+@media (max-width: 1024px) {
+  .blog-cards__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .featured-article {
+    gap: 36px;
+  }
+}
+
+/* Tablet: Stack featured article & newsletter */
+@media (max-width: 768px) {
+  .featured-article {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .featured-article__media {
+    aspect-ratio: 16 / 9;
+  }
+  .newsletter {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 28px 20px;
+  }
+  .newsletter__form-wrap {
+    max-width: 100%;
+  }
+  .newsletter__form {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .newsletter__btn {
+    width: 100%;
+  }
+  .favourite-row {
+    padding: 20px 18px;
+    gap: 20px;
+  }
+}
+
+/* Mobile: Single-column cards, wrap favourites meta, fluid padding */
+@media (max-width: 640px) {
+  .blog-cards__grid {
+    grid-template-columns: 1fr;
+  }
+  .favourite-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    min-height: auto;
+  }
+  .favourite-row__rank {
+    min-width: auto;
+  }
+  .favourite-row__meta {
+    text-align: left;
+    margin-top: 4px;
+  }
+  .blog-hero {
+    min-height: 420px;
+  }
+}
+

@@ -19,6 +19,13 @@
   stroke-width: 1.26;
 }
 
+.icon--arrow-right {
+  width: 14px;
+  height: 14px;
+  stroke-width: 1.8;
+  flex: none;
+}
+
 /* --------------------------------------------------------------------------
    Brand lockup (reused in header + footer)
    -------------------------------------------------------------------------- */

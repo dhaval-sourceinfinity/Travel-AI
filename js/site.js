@@ -43,7 +43,7 @@
     { label: "Packages", href: "journeys.html" },
     { label: "AI Planner", href: "index.html#how" },
     { label: "My Trips", href: "my-trips.html" },
-    { label: "Blog", href: "404.html" },
+    { label: "Blog", href: "blog-listing.html" },
   ];
 
   // Current document, as a bare filename. "/" and "/index.html" both resolve
