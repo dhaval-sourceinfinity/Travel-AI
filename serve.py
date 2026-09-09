@@ -44,6 +44,11 @@ class NotFoundHandler(SimpleHTTPRequestHandler):
             self.send_header("Location", "/privacy-policy.html")
             self.end_headers()
             return None
+        if clean_path in ("profile", "my-profile", "my profile"):
+            self.send_response(301)
+            self.send_header("Location", "/profile.html")
+            self.end_headers()
+            return None
 
         # Resolve the requested path (query stripped by SimpleHTTPRequestHandler).
         path = self.translate_path(self.path)

@@ -488,5 +488,93 @@
   }
 }
 
+/* ==========================================================================
+   Profile Page Responsive Rules
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 
+  .prefs-row-3 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
 
+@media (max-width: 768px) {
+  .profile-section {
+    padding-top: calc(var(--header-h) + 36px);
+    padding-bottom: 64px;
+  }
+
+  .profile-container {
+    gap: 32px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .btn-edit-profile {
+    align-self: flex-start;
+  }
+
+  .form-grid-row-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .prefs-row-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .empty-activity-card {
+    padding: 48px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-section {
+    padding-top: calc(var(--header-h) + 24px);
+    padding-bottom: 48px;
+  }
+
+  .profile-container {
+    gap: 24px;
+  }
+
+  .profile-title {
+    font-size: 26px;
+    line-height: 32px;
+  }
+
+  .personal-info-card .card-header-bar,
+  .profile-form-body,
+  .travel-prefs-card .card-header-bar,
+  .prefs-body {
+    padding-inline: 16px;
+  }
+
+  .card-header-bar {
+    padding-inline: 16px;
+  }
+
+  .account-info-row {
+    padding-inline: 16px;
+  }
+
+  .empty-activity-card {
+    padding: 36px 16px;
+  }
+
+  .btn-edit-profile {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-browse-packages {
+    width: 100%;
+  }
+}

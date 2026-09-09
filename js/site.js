@@ -44,6 +44,7 @@
     { label: "AI Planner", href: "ai-planner.html" },
     { label: "My Trips", href: "my-trips.html" },
     { label: "Blog", href: "blog-listing.html" },
+    { label: "Profile", href: "profile.html" },
   ];
 
   // Current document, as a bare filename. "/" and "/index.html" both resolve
@@ -1546,6 +1547,254 @@
     }
   }
 
+  /* --------------------------------------------------------------------------
+     Profile Page Interactions
+     -------------------------------------------------------------------------- */
+  function initProfile() {
+    const profileSection = document.querySelector(".profile-section");
+    if (!profileSection) return;
+
+    // Location tag chips dismissal
+    profileSection.addEventListener("click", (e) => {
+      const dismissBtn = e.target.closest(".pref-chip__dismiss");
+      if (!dismissBtn) return;
+      const chip = dismissBtn.closest(".pref-chip");
+      if (!chip) return;
+
+      chip.style.transition = "opacity 160ms var(--ease-standard), transform 160ms var(--ease-standard)";
+      chip.style.opacity = "0";
+      chip.style.transform = "scale(0.8)";
+      setTimeout(() => chip.remove(), 160);
+    });
+
+    // Edit profile toggle
+    const editBtn = document.getElementById("btn-edit-profile");
+    const firstNameInput = document.getElementById("field-first-name");
+    if (editBtn && firstNameInput) {
+      editBtn.addEventListener("click", () => {
+        firstNameInput.focus();
+        firstNameInput.select();
+      });
+    }
+
+    // Initialize custom themed select dropdowns
+    initCustomSelects(profileSection);
+  }
+
+  /* --------------------------------------------------------------------------
+     Custom Themed Select Component (Replaces native OS dropdown popup)
+     -------------------------------------------------------------------------- */
+  function initCustomSelects(container = document) {
+    const wrappers = container.querySelectorAll(".select-wrapper");
+    if (!wrappers.length) return;
+
+    wrappers.forEach((wrapper) => {
+      const select = wrapper.querySelector("select");
+      if (!select || wrapper.querySelector(".custom-select__trigger")) return;
+
+      // Hide original select visually but keep in DOM for form submission & accessibility
+      select.classList.add("custom-select__native");
+      select.setAttribute("tabindex", "-1");
+      select.setAttribute("aria-hidden", "true");
+
+      // Hide static SVG icon in wrapper if present
+      const staticIcon = wrapper.querySelector(".select-wrapper__icon");
+      if (staticIcon) staticIcon.style.display = "none";
+
+      const selectId = select.id || `select-${Math.random().toString(36).slice(2, 8)}`;
+      const options = Array.from(select.options);
+
+      // Custom Trigger Button
+      const trigger = document.createElement("button");
+      trigger.type = "button";
+      trigger.className = "custom-select__trigger";
+      trigger.setAttribute("aria-haspopup", "listbox");
+      trigger.setAttribute("aria-expanded", "false");
+      trigger.setAttribute("aria-controls", `${selectId}-menu`);
+
+      const label = document.createElement("span");
+      label.className = "custom-select__label";
+
+      const updateLabel = () => {
+        const selectedOpt = select.options[select.selectedIndex];
+        label.textContent = selectedOpt ? selectedOpt.text : "";
+        if (!select.value || select.value === "") {
+          label.classList.add("is-placeholder");
+        } else {
+          label.classList.remove("is-placeholder");
+        }
+      };
+      updateLabel();
+
+      const chevronSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      chevronSvg.setAttribute("class", "custom-select__chevron");
+      chevronSvg.setAttribute("viewBox", "0 0 32 32");
+      chevronSvg.setAttribute("fill", "none");
+      chevronSvg.setAttribute("aria-hidden", "true");
+      chevronSvg.innerHTML = '<path d="M8 12L16 20L24 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>';
+
+      trigger.appendChild(label);
+      trigger.appendChild(chevronSvg);
+
+      // Custom Menu
+      const menu = document.createElement("div");
+      menu.id = `${selectId}-menu`;
+      menu.className = "custom-select__menu";
+      menu.setAttribute("role", "listbox");
+      menu.setAttribute("tabindex", "-1");
+
+      const optionEls = options.map((opt, idx) => {
+        const item = document.createElement("div");
+        item.className = "custom-select__option";
+        item.setAttribute("role", "option");
+        item.setAttribute("data-value", opt.value);
+        item.setAttribute("data-index", String(idx));
+        item.setAttribute("aria-selected", opt.selected ? "true" : "false");
+        if (opt.selected) item.classList.add("is-selected");
+        if (!opt.value) item.classList.add("is-placeholder-option");
+
+        const itemText = document.createElement("span");
+        itemText.className = "custom-select__option-text";
+        itemText.textContent = opt.text;
+
+        const checkSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        checkSvg.setAttribute("class", "custom-select__check");
+        checkSvg.setAttribute("viewBox", "0 0 14 14");
+        checkSvg.setAttribute("fill", "none");
+        checkSvg.setAttribute("aria-hidden", "true");
+        checkSvg.innerHTML = '<path d="M2.5 7L5.5 10L11.5 4" stroke="#7B5CF0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+
+        item.appendChild(itemText);
+        item.appendChild(checkSvg);
+
+        item.addEventListener("click", (e) => {
+          e.stopPropagation();
+          select.selectedIndex = idx;
+          select.dispatchEvent(new Event("change", { bubbles: true }));
+          close();
+          trigger.focus();
+        });
+
+        return item;
+      });
+
+      optionEls.forEach((el) => menu.appendChild(el));
+
+      wrapper.appendChild(trigger);
+      wrapper.appendChild(menu);
+
+      // Open / Close management
+      let isOpen = false;
+      let highlightedIndex = select.selectedIndex;
+
+      const open = () => {
+        document.querySelectorAll(".select-wrapper.is-open").forEach((w) => {
+          if (w !== wrapper && w.__closeSelect) w.__closeSelect();
+        });
+
+        isOpen = true;
+        wrapper.classList.add("is-open");
+        const card = wrapper.closest(".profile-card");
+        if (card) card.classList.add("has-dropdown-open");
+        const grid = wrapper.closest(".profile-grid");
+        if (grid) grid.classList.add("has-dropdown-open");
+        trigger.classList.add("is-open");
+        menu.classList.add("is-open");
+        trigger.setAttribute("aria-expanded", "true");
+        highlightedIndex = select.selectedIndex >= 0 ? select.selectedIndex : 0;
+        updateHighlight();
+      };
+
+      const close = () => {
+        isOpen = false;
+        wrapper.classList.remove("is-open");
+        const card = wrapper.closest(".profile-card");
+        if (card) card.classList.remove("has-dropdown-open");
+        const grid = wrapper.closest(".profile-grid");
+        if (grid) grid.classList.remove("has-dropdown-open");
+        trigger.classList.remove("is-open");
+        menu.classList.remove("is-open");
+        trigger.setAttribute("aria-expanded", "false");
+      };
+
+      wrapper.__closeSelect = close;
+
+      const updateHighlight = () => {
+        optionEls.forEach((el, idx) => {
+          if (idx === highlightedIndex) {
+            el.classList.add("is-highlighted");
+            el.scrollIntoView({ block: "nearest" });
+          } else {
+            el.classList.remove("is-highlighted");
+          }
+        });
+      };
+
+      trigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (isOpen) {
+          close();
+        } else {
+          open();
+        }
+      });
+
+      // Keyboard support
+      trigger.addEventListener("keydown", (e) => {
+        if (!isOpen) {
+          if (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            open();
+          }
+          return;
+        }
+
+        if (e.key === "Escape") {
+          e.preventDefault();
+          close();
+          trigger.focus();
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          highlightedIndex = Math.min(optionEls.length - 1, highlightedIndex + 1);
+          updateHighlight();
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          highlightedIndex = Math.max(0, highlightedIndex - 1);
+          updateHighlight();
+        } else if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          if (highlightedIndex >= 0 && highlightedIndex < optionEls.length) {
+            select.selectedIndex = highlightedIndex;
+            select.dispatchEvent(new Event("change", { bubbles: true }));
+            close();
+            trigger.focus();
+          }
+        } else if (e.key === "Tab") {
+          close();
+        }
+      });
+
+      // Sync on select change
+      select.addEventListener("change", () => {
+        updateLabel();
+        optionEls.forEach((el, idx) => {
+          const isSel = idx === select.selectedIndex;
+          el.classList.toggle("is-selected", isSel);
+          el.setAttribute("aria-selected", isSel ? "true" : "false");
+        });
+      });
+    });
+
+    // Close on click outside
+    document.addEventListener("click", (e) => {
+      document.querySelectorAll(".select-wrapper.is-open").forEach((w) => {
+        if (!w.contains(e.target) && w.__closeSelect) {
+          w.__closeSelect();
+        }
+      });
+    });
+  }
+
   /* ==========================================================================
      8. Application Boot
      ========================================================================== */
@@ -1584,6 +1833,9 @@
     // AI Planner & Result (planner pages)
     initAIPlanner();
     initAIPlannerResult();
+
+    // Profile page (profile.html)
+    initProfile();
 
     // ---- Motion system ----
     // Split editorial typography (char-scroll) before the scroll engine registers it
