@@ -99,11 +99,16 @@
   font-family: inherit;
   letter-spacing: -0.2px;
   cursor: pointer;
-  transition: background var(--dur-normal) var(--ease-standard);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.25);
+  transition: background var(--dur-normal) var(--ease-standard),
+              box-shadow var(--dur-normal) var(--ease-standard),
+              transform var(--dur-normal) var(--ease-standard);
 }
 
 .pkg-reset-btn:hover {
   background: var(--color-accent-solid-hover);
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.35);
+  transform: translateY(-1px);
 }
 
 .pkg-reset-btn:focus-visible {
@@ -156,16 +161,26 @@
   margin-top: var(--space-8);
 }
 
-/* --------------------------------------------------------------------------
-   Package card extensions (layer on top of base .journey-card)
-   -------------------------------------------------------------------------- */
 .pkg-grid .journey-card {
   background: #0b0f11;
+  border-radius: 10px;
+  border: 0.8px solid rgba(255, 255, 255, 0.09);
+  transition: transform var(--dur-normal) var(--ease-standard),
+              border-color var(--dur-normal) var(--ease-standard),
+              box-shadow var(--dur-normal) var(--ease-standard);
+}
+
+.pkg-grid .journey-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
 }
 
 .pkg-grid .journey-card__media {
   height: 220px;
   aspect-ratio: unset;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
 }
 
 /* Trip badge — bottom-left overlay on image */
@@ -360,11 +375,16 @@
   font-family: inherit;
   text-decoration: none;
   cursor: pointer;
-  transition: background var(--dur-normal) var(--ease-standard);
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.2);
+  transition: background var(--dur-normal) var(--ease-standard),
+              box-shadow var(--dur-normal) var(--ease-standard),
+              transform var(--dur-normal) var(--ease-standard);
 }
 
 .journey-card__cta:hover {
   background: var(--color-accent-solid-hover);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+  transform: translateY(-1px);
   color: #fff;
 }
 
@@ -417,11 +437,17 @@
   border: 1px solid #101112;
   text-decoration: none;
   color: var(--color-text);
-  transition: background var(--dur-normal) var(--ease-standard);
+  transition: background var(--dur-normal) var(--ease-standard),
+              color var(--dur-normal) var(--ease-standard);
 }
 
 .pkg-nav-row:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.pkg-nav-row:hover .pkg-nav-row__chevron {
+  color: var(--color-text);
+  transform: translateX(3px);
 }
 
 .pkg-nav-row__left {
@@ -448,4 +474,6 @@
   height: 12px;
   flex-shrink: 0;
   color: var(--color-text-muted);
+  transition: transform var(--dur-normal) var(--ease-standard),
+              color var(--dur-normal) var(--ease-standard);
 }

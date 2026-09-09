@@ -26,13 +26,13 @@ function packageCard(pkg, { lazy = true } = {}) {
       : "(No reviews)";
   const ratingLabel = pkg.reviewCount > 0 ? `${pkg.rating}.0` : "New";
 
-  return `<article class="journey-card" data-motion="fade-in">
+  return `<article class="journey-card" data-motion="fade-up">
     <div class="journey-card__media">
       <img class="journey-card__img" src="${pkg.image.src}" alt="${pkg.image.alt}"${loading} decoding="async" data-motion="image-reveal" />
       <span class="journey-card__tag">${pkg.tag}</span>
       <span class="journey-card__badge">${clockSvg} ${pkg.costTier} · ${pkg.days}</span>
     </div>
-    <div class="journey-card__body">
+    <div class="journey-card__body" data-motion="fade-in">
       <div class="journey-card__rating">
         <span class="journey-card__stars">${stars}</span>
         <span class="journey-card__rating-label">${ratingLabel}</span>
@@ -67,6 +67,22 @@ function packageCard(pkg, { lazy = true } = {}) {
 let allPackages = [...packagesAll];
 
 function renderGrid(packages) {
+  // Kill active tweens on outgoing cards to prevent memory leaks or animation conflicts
+  if (window.gsap) {
+    const oldCards = grid.querySelectorAll(".journey-card, [data-motion]");
+    if (oldCards.length) {
+      window.gsap.killTweensOf(oldCards);
+    }
+  }
+
+  if (packages.length === 0) {
+    grid.innerHTML = `<div class="pkg-empty" style="grid-column: 1 / -1; text-align: center; padding: 48px 24px; color: var(--color-text-secondary);">
+      <p style="font-size: 18px; font-weight: 600; color: var(--color-text); margin-bottom: 8px;">No packages match your selected filters.</p>
+      <p style="font-size: 14px; margin-bottom: 16px;">Try adjusting your destination, consultant, or cost criteria.</p>
+    </div>`;
+    return;
+  }
+
   grid.innerHTML = packages
     .map((p, i) => packageCard(p, { lazy: i >= 2 }))
     .join("");
