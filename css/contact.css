@@ -36,6 +36,8 @@
 }
 .contact-eyebrow {
   font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   color: var(--color-text-secondary);
 }
 .contact-heading {
@@ -121,13 +123,22 @@ textarea.field__input {
   gap: var(--space-5);
   flex-wrap: wrap;
 }
-.contact-form__actions .btn-hero { text-transform: uppercase; letter-spacing: 0.02em; }
+.contact-form__actions .btn-hero {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
 
 /* Submit states */
-.btn-hero[aria-busy="true"] { opacity: 0.75; pointer-events: none; }
+.btn-hero[aria-busy="true"] {
+  opacity: 0.75;
+  pointer-events: none;
+  cursor: wait;
+}
 
 .form-status {
   font-size: 13px;
+  font-weight: 500;
   color: var(--color-text-secondary);
 }
 .form-status[data-state="success"] { color: #8fd6a6; }

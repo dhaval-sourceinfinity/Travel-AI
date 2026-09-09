@@ -273,7 +273,8 @@
     // Exclude hero elements — they are revealed by the hero entrance sequence
     const heroMotions = new Set([
       "hero-image", "hero-title", "hero-text", "hero-cta", "hero-content",
-      "about-hero-image", "about-hero-title", "about-hero-eyebrow", "about-hero-lede"
+      "about-hero-image", "about-hero-title", "about-hero-eyebrow", "about-hero-lede",
+      "contact-image", "contact-title", "contact-eyebrow", "contact-sub", "contact-form"
     ]);
 
     // copy-follow is driven entirely by --reveal-progress, so a one-shot

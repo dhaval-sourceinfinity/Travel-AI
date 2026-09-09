@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/home.css" />
   <link rel="stylesheet" href="css/contact.css" />
+  <link rel="stylesheet" href="css/motion.css" />
   <link rel="stylesheet" href="css/responsive.css" />
 
   <!-- Motion Foundation: GSAP 3.x + ScrollTrigger (pinned CDN) & Motion Engine -->
@@ -34,6 +35,7 @@
   <script defer src="js/motion/gsap-text.js"></script>
   <script defer src="js/motion/gsap-engine.js"></script>
   <script defer src="js/site.js"></script>
+  <script type="module" src="js/contact.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -44,7 +46,7 @@
     <section class="container contact-top" aria-labelledby="contact-heading">
       <div class="contact-grid">
 
-        <div class="contact-media">
+        <div class="contact-media" data-motion="contact-image">
           <img class="contact-media__img" src="assets/images/contact-kyoto.webp"
                width="1150" height="767"
                alt="A woman in a kimono walking a historic Kyoto street at sunset, with a pagoda in the distance"
@@ -52,11 +54,11 @@
         </div>
 
         <div class="contact-form-wrap">
-          <p class="contact-eyebrow">Contacts</p>
-          <h1 class="contact-heading" id="contact-heading">Get in touch</h1>
-          <p class="contact-sub">Contact the Travel AI team today!</p>
+          <p class="contact-eyebrow" data-motion="contact-eyebrow">Contacts</p>
+          <h1 class="contact-heading" id="contact-heading" data-motion="contact-title">Get in touch</h1>
+          <p class="contact-sub" data-motion="contact-sub">Contact the Travel AI team today!</p>
 
-          <form class="contact-form" novalidate aria-describedby="form-status">
+          <form class="contact-form" novalidate aria-describedby="form-status" data-motion="contact-form">
             <div class="form-row">
               <div class="field">
                 <label class="field__label" for="cf-name">Name</label>

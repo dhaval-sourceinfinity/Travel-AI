@@ -17,7 +17,8 @@
 .js-ready [data-motion="line-reveal"],
 .js-ready [data-motion="char-scroll"],
 .js-ready [data-motion="copy-follow"],
-.js-ready [data-motion="parallax"] {
+.js-ready [data-motion="parallax"],
+.js-ready [data-motion="contact-title"] {
   opacity: 1;
   will-change: auto;
 }
@@ -79,7 +80,14 @@
 .gsap-active [data-motion="about-hero-lede"],
 .gsap-active [data-motion="about-hero-title"] .line-inner,
 .gsap-active .about-hero__img,
-.gsap-active .about-hero__inner {
+.gsap-active .about-hero__inner,
+.gsap-active [data-motion="contact-image"],
+.gsap-active [data-motion="contact-title"],
+.gsap-active [data-motion="contact-eyebrow"],
+.gsap-active [data-motion="contact-sub"],
+.gsap-active [data-motion="contact-form"],
+.gsap-active [data-motion="contact-title"] .line-inner,
+.gsap-active .contact-media__img {
   transition: none !important;
 }
 
@@ -89,7 +97,10 @@
    -------------------------------------------------------------------------- */
 
 /* -- Fade Up (default section reveal) ------------------------------------ */
-.js-ready [data-motion="fade-up"] {
+.js-ready [data-motion="fade-up"],
+.js-ready [data-motion="contact-eyebrow"],
+.js-ready [data-motion="contact-sub"],
+.js-ready [data-motion="contact-form"] {
   transform: translateY(20px);
   transition:
     opacity var(--motion-reveal) var(--ease-reveal),
@@ -433,13 +444,14 @@
 @media (prefers-reduced-motion: reduce) {
   [data-motion],
   [data-parallax],
-  .place-card__img[data-parallax],
   .js-ready [data-motion] {
     opacity: 1 !important;
     transform: none !important;
     clip-path: none !important;
     transition: none !important;
     will-change: auto !important;
+  }
+  .place-card__img[data-parallax] {
     margin-top: 0 !important;
     height: 100% !important;
   }
