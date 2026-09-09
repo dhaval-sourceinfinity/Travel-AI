@@ -1339,17 +1339,44 @@
       submitting = true;
       submitBtn.setAttribute("aria-busy", "true");
       const label = submitBtn.childNodes[0];
-      const original = label.textContent;
-      label.textContent = "Sending… ";
+      const original = label ? label.textContent : "Submit";
+      if (label) label.textContent = "Sending… ";
 
-      window.setTimeout(() => {
-        submitting = false;
-        submitBtn.removeAttribute("aria-busy");
-        label.textContent = original;
-        form.reset();
-        statusEl.setAttribute("data-state", "success");
-        statusEl.textContent = "Thanks — we'll be in touch soon.";
-      }, 900);
+      const payload = {
+        name: fieldEl("name") ? fieldEl("name").value.trim() : "",
+        email: fieldEl("email") ? fieldEl("email").value.trim() : "",
+        message: fieldEl("message") ? fieldEl("message").value.trim() : "",
+        timestamp: new Date().toISOString()
+      };
+
+      if (window.TravelServices && window.TravelServices.contact) {
+        window.TravelServices.contact.submitContact(payload)
+          .then((res) => {
+            if (res && res.success) {
+              form.reset();
+              statusEl.setAttribute("data-state", "success");
+              statusEl.textContent = res.message || "Thanks — we'll be in touch soon.";
+            }
+          })
+          .catch((err) => {
+            statusEl.setAttribute("data-state", "error");
+            statusEl.textContent = err.message || "Unable to send your message.";
+          })
+          .finally(() => {
+            submitting = false;
+            submitBtn.removeAttribute("aria-busy");
+            if (label) label.textContent = original;
+          });
+      } else {
+        window.setTimeout(() => {
+          submitting = false;
+          submitBtn.removeAttribute("aria-busy");
+          if (label) label.textContent = original;
+          form.reset();
+          statusEl.setAttribute("data-state", "success");
+          statusEl.textContent = "Thanks — we'll be in touch soon.";
+        }, 900);
+      }
     });
   }
 
@@ -1676,6 +1703,14 @@
 
       sessionStorage.setItem("planner_dest", currentDest);
       sessionStorage.setItem("planner_query", promptText);
+      sessionStorage.setItem(
+        "planner_request",
+        JSON.stringify({
+          destination: currentDest,
+          prompt: promptText,
+          timestamp: new Date().toISOString()
+        })
+      );
 
       window.setTimeout(() => {
         window.location.href = `ai-planner-result.html?dest=${encodeURIComponent(currentDest)}`;
@@ -1701,7 +1736,14 @@
     let dest = urlParams.get("dest") || sessionStorage.getItem("planner_dest") || "dubai";
     if (!plannerMockData[dest]) dest = "dubai";
 
-    const itinerary = plannerMockData[dest];
+    const itineraryRaw = (window.TravelServices && window.TravelServices.planner && window.TravelServices.planner.MOCK_ITINERARIES && window.TravelServices.planner.MOCK_ITINERARIES[dest])
+      ? window.TravelServices.planner.MOCK_ITINERARIES[dest]
+      : (plannerMockData[dest] || plannerMockData.dubai);
+
+    const itinerary = (window.TravelServices && window.TravelServices.planner && typeof window.TravelServices.planner.normalizePlannerResult === "function")
+      ? window.TravelServices.planner.normalizePlannerResult(itineraryRaw)
+      : itineraryRaw;
+
     const statusLabel = document.getElementById("result-status-label");
     const titleEl = document.getElementById("result-title");
     const metaEl = document.getElementById("result-meta");
@@ -1717,7 +1759,15 @@
     // Render cards for a given day
     function renderDayActivities(dayNumber) {
       const dayData = itinerary.days.find((d) => d.day === dayNumber) || itinerary.days[0];
-      if (!dayData || !cardsContainer) return;
+      if (!cardsContainer) return;
+
+      if (!dayData || !dayData.activities || dayData.activities.length === 0) {
+        cardsContainer.innerHTML = `<div class="result__empty" role="status" style="grid-column: 1 / -1; text-align: center; padding: 48px 24px; color: var(--color-text-secondary);">
+          <p style="font-size: 18px; font-weight: 600; color: var(--color-text); margin-bottom: 8px;">No scheduled activities found for this day.</p>
+          <p style="font-size: 14px; margin-bottom: 16px;">Try selecting another day or refine your travel vision above.</p>
+        </div>`;
+        return;
+      }
 
       cardsContainer.innerHTML = dayData.activities
         .map((act) => {

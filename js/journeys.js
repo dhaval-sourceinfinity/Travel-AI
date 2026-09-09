@@ -1,6 +1,5 @@
-// journeys.js — Packages listing page (Figma 208:3819).
-// Loaded as type="module"; site.js (defer) handles shell mounting.
 import { packagesAll } from "../data/journeys.js";
+import { fetchPackages, extractFilterFacets } from "./services/journeys-service.js";
 
 /* ---- Inline SVG fragments ----------------------------------------------- */
 const starSvg = `<svg class="journey-card__star" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
@@ -140,17 +139,14 @@ function applyFiltersAndSort() {
 
 /* ---- Populate filter options from data ---------------------------------- */
 function populateFilters() {
-  const destinations = [...new Set(allPackages.map((p) => p.location))];
-  const consultants = [...new Set(allPackages.map((p) => p.consultant.name))];
-  const costTypes = [...new Set(allPackages.map((p) => p.costType))];
-
-  destinations.forEach((d) => {
+  const facets = extractFilterFacets(allPackages);
+  facets.destinations.forEach((d) => {
     filterDest.appendChild(new Option(d, d));
   });
-  consultants.forEach((c) => {
+  facets.consultants.forEach((c) => {
     filterConsultant.appendChild(new Option(c, c));
   });
-  costTypes.forEach((t) => {
+  facets.costTypes.forEach((t) => {
     filterCost.appendChild(new Option(t, t));
   });
 }

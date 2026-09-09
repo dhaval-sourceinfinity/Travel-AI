@@ -5,6 +5,7 @@
  * interaction, real-time validation, and submission feedback.
  */
 import { mountShell } from "./shell.js";
+import { submitContact } from "./services/contact-service.js";
 
 // Ensure shell header/footer are mounted if site.js has not already mounted them.
 const headerEl = document.getElementById("site-header");
@@ -273,7 +274,7 @@ function initContactForm() {
       return;
     }
 
-    // Simulate submission
+    // Async service submission boundary
     submitting = true;
     if (submitBtn) submitBtn.setAttribute("aria-busy", "true");
 
@@ -281,16 +282,36 @@ function initContactForm() {
     const originalText = label ? label.textContent : "Submit";
     if (label) label.textContent = "Sending… ";
 
-    window.setTimeout(() => {
-      submitting = false;
-      if (submitBtn) submitBtn.removeAttribute("aria-busy");
-      if (label) label.textContent = originalText;
-      form.reset();
-      if (statusEl) {
-        statusEl.setAttribute("data-state", "success");
-        statusEl.textContent = "Thanks — we'll be in touch soon.";
-      }
-    }, 900);
+    const payload = {
+      name: fieldEl("name") ? fieldEl("name").value.trim() : "",
+      email: fieldEl("email") ? fieldEl("email").value.trim() : "",
+      message: fieldEl("message") ? fieldEl("message").value.trim() : "",
+      timestamp: new Date().toISOString()
+    };
+
+    submitContact(payload)
+      .then((response) => {
+        if (response && response.success) {
+          form.reset();
+          if (statusEl) {
+            statusEl.setAttribute("data-state", "success");
+            statusEl.textContent = response.message || "Thanks — we'll be in touch soon.";
+          }
+        } else {
+          throw new Error((response && response.message) || "Submission failed.");
+        }
+      })
+      .catch((err) => {
+        if (statusEl) {
+          statusEl.setAttribute("data-state", "error");
+          statusEl.textContent = err.message || "Unable to send your message. Please try again.";
+        }
+      })
+      .finally(() => {
+        submitting = false;
+        if (submitBtn) submitBtn.removeAttribute("aria-busy");
+        if (label) label.textContent = originalText;
+      });
   });
 }
 
