@@ -344,18 +344,128 @@
       return;
     }
 
-    // Sequence: Hero image → headline → supporting text → CTA
+    // Mark hero-content visible immediately (it manages its own scroll state)
+    if (heroContent) {
+      heroContent.classList.add("is-visible");
+    }
+
+    // GSAP cinematic hero choreography when motion engine is loaded
+    if (window.gsap && window.TravelMotion && window.TravelMotion.isReady()) {
+      const gsap = window.gsap;
+      const ease = "travelEase";
+      const tl = gsap.timeline({ defaults: { ease: ease } });
+
+      // Split hero title into lines if TravelMotionText is available
+      let titleLines = [];
+      if (window.TravelMotionText && heroTitle) {
+        titleLines = window.TravelMotionText.prepareLineReveal(heroTitle);
+      }
+
+      // 1. Header nav enters smoothly
+      if (header) {
+        header.classList.add("is-visible");
+        tl.fromTo(
+          header,
+          { opacity: 0, y: -8 },
+          { opacity: 1, y: 0, duration: 0.35, clearProps: "transform" },
+          0.0
+        );
+      }
+
+      // 2. Hero background image settles scale 1.04 -> 1.00
+      if (heroImage) {
+        tl.fromTo(
+          heroImage,
+          { opacity: 0, scale: 1.04 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1.1,
+            ease: "power2.out",
+            clearProps: "transform,opacity",
+            onComplete: () => heroImage.classList.add("is-visible"),
+          },
+          0.05
+        );
+      }
+
+      // 3. Hero title lines rise through overflow mask
+      if (titleLines && titleLines.length) {
+        tl.fromTo(
+          titleLines,
+          { opacity: 0, yPercent: 115 },
+          {
+            opacity: 1,
+            yPercent: 0,
+            duration: 0.85,
+            stagger: 0.08,
+            ease: ease,
+            clearProps: "transform,opacity",
+            onComplete: () => heroTitle.classList.add("is-visible"),
+          },
+          0.2
+        );
+      } else if (heroTitle) {
+        tl.fromTo(
+          heroTitle,
+          { opacity: 0, y: 24 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.85,
+            ease: ease,
+            clearProps: "transform,opacity",
+            onComplete: () => heroTitle.classList.add("is-visible"),
+          },
+          0.2
+        );
+      }
+
+      // 4. Hero supporting text
+      if (heroText) {
+        tl.fromTo(
+          heroText,
+          { opacity: 0, y: 14 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.65,
+            ease: ease,
+            clearProps: "transform,opacity",
+            onComplete: () => heroText.classList.add("is-visible"),
+          },
+          0.45
+        );
+      }
+
+      // 5. Hero CTA button
+      if (heroCta) {
+        tl.fromTo(
+          heroCta,
+          { opacity: 0, y: 10, scale: 0.98 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.55,
+            ease: ease,
+            clearProps: "transform,opacity",
+            onComplete: () => heroCta.classList.add("is-visible"),
+          },
+          0.6
+        );
+      }
+
+      return;
+    }
+
+    // Sequence: Hero image → headline → supporting text → CTA (Native CSS Fallback)
     const sequence = [
       { el: heroImage, delay: 50 },
       { el: heroTitle, delay: 350 },
       { el: heroText, delay: 650 },
       { el: heroCta, delay: 900 },
     ];
-
-    // Mark hero-content visible immediately (it manages its own scroll state)
-    if (heroContent) {
-      heroContent.classList.add("is-visible");
-    }
 
     sequence.forEach(({ el, delay }) => {
       if (!el) return;

@@ -71,7 +71,7 @@
         <div class="split" data-motion-scope>
           <div class="section-head">
             <p class="eyebrow" data-motion="text-reveal">02 — Introduction</p>
-            <p class="label" data-motion="text-reveal" style="--motion-delay: 30ms">Destinations</p>
+            <p class="label" data-motion="text-reveal">Destinations</p>
             <h2 class="section-title" id="intro-title" data-motion="char-scroll">Two destinations.<br />So much to discover.</h2>
           </div>
           <div class="stack-3 lede measure" data-motion="copy-follow">
@@ -87,7 +87,7 @@
       <div class="container">
         <p class="eyebrow" data-motion="text-reveal">03 — Explore</p>
         <h2 class="sr-only" id="dest-heading">Explore our destinations</h2>
-        <div class="destinations" data-motion-stagger style="--stagger-base: 80ms">
+        <div class="destinations" data-motion-stagger>
 
           <article class="dest-card" data-motion="fade-in">
             <img class="dest-card__img" src="assets/images/explore-dubai.webp"
@@ -127,7 +127,7 @@
         <div class="split split--top" data-motion-scope>
           <div class="section-head">
             <p class="eyebrow" data-motion="text-reveal">About</p>
-            <p class="label" data-motion="text-reveal" style="--motion-delay: 30ms">About Travel AI</p>
+            <p class="label" data-motion="text-reveal">About Travel AI</p>
             <h2 class="section-title" id="about-title" data-motion="char-scroll">Technology can find a place.<br />People make it a journey.</h2>
           </div>
           <div class="stack-3 lede" data-motion="copy-follow">
@@ -137,7 +137,7 @@
           </div>
         </div>
 
-        <hr class="divider divider--section" />
+        <hr class="divider divider--section" data-motion="divider" />
 
         <div class="features" data-motion-stagger>
           <div class="feature" data-motion="fade-in">
@@ -169,18 +169,18 @@
     <!-- ===================== 05 — Packages / Journeys ===================== -->
     <section class="section section--deep" id="journeys" aria-labelledby="journeys-title">
       <div class="container">
-        <div class="split split--bordered" data-motion-scope>
+        <div class="split split--bordered">
           <div class="section-head">
             <p class="eyebrow" data-motion="text-reveal">05 — Packages</p>
-            <p class="label" data-motion="text-reveal" style="--motion-delay: 30ms">Our Journeys</p>
-            <h2 class="section-title" id="journeys-title" data-motion="char-scroll">Journeys worth taking.</h2>
+            <p class="label" data-motion="text-reveal">Our Journeys</p>
+            <h2 class="section-title" id="journeys-title" data-motion="line-reveal">Journeys worth taking.</h2>
           </div>
-          <p class="lede" data-motion="copy-follow">We don't believe in showing you hundreds of holidays and leaving you to choose. Instead, our Travel AI Agents bring together a considered collection of journeys across Dubai and Japan — each with its own character, pace and way of experiencing the destination.</p>
+          <p class="lede" data-motion="fade-up">We don't believe in showing you hundreds of holidays and leaving you to choose. Instead, our Travel AI Agents bring together a considered collection of journeys across Dubai and Japan — each with its own character, pace and way of experiencing the destination.</p>
         </div>
 
-        <div class="journeys" data-journeys="featured" data-motion-stagger style="--stagger-base: 100ms"></div>
+        <div class="journeys" data-journeys="featured" data-motion-stagger></div>
 
-        <div class="center-row" data-motion="fade-up" style="--motion-delay: 180ms">
+        <div class="center-row" data-motion="fade-up">
           <a class="btn btn--ghost btn--pill" href="journeys.html">View all Journeys
             <svg class="icon icon--arrow" viewBox="0 0 9 9" aria-hidden="true" focusable="false"><path d="M2.25 6.75 6.75 2.25M6.75 5.76V2.25H3.24" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -192,23 +192,23 @@
     <section class="section section--surface" id="explore" aria-labelledby="explore-title">
       <div class="container">
         <div class="split split--top">
-          <div data-motion-scope>
+          <div>
             <div class="section-head">
               <p class="eyebrow" data-motion="text-reveal">06 — Deep Exploration / Map</p>
-              <p class="label" data-motion="text-reveal" style="--motion-delay: 30ms">Explore</p>
-              <h2 class="section-title" id="explore-title" data-motion="char-scroll">Get to know a place<br />before you arrive.</h2>
+              <p class="label" data-motion="text-reveal">Explore</p>
+              <h2 class="section-title" id="explore-title" data-motion="line-reveal">Get to know a place<br />before you arrive.</h2>
             </div>
-            <div class="stack-3 lede measure mt-5" data-motion="copy-follow">
+            <div class="stack-3 lede measure mt-5" data-motion="fade-up">
               <p>Sometimes the best part of travelling begins long before the flight.</p>
               <p>Explore neighbourhoods, landmarks, traditions, experiences and stories from Dubai and Japan — and ask Travel AI whenever something catches your curiosity.</p>
             </div>
 
-            <div class="explore-tabs" data-region-tabs role="group" aria-label="Choose a region" data-motion="fade-up" style="--motion-delay: 220ms">
+            <div class="explore-tabs" data-region-tabs role="group" aria-label="Choose a region" data-motion="fade-up">
               <button class="chip" type="button" aria-pressed="false">Dubai</button>
               <button class="chip" type="button" aria-pressed="true">Japan</button>
             </div>
 
-            <div class="explore-places" data-places aria-label="Places in Japan" data-motion="fade-up" style="--motion-delay: 280ms">
+            <div class="explore-places" data-places aria-label="Places in Japan" data-motion="fade-up">
               <a class="place" href="#" aria-current="false">Tokyo</a>
               <a class="place" href="#" aria-current="true">Kyoto</a>
               <a class="place" href="#" aria-current="false">Osaka</a>
@@ -217,7 +217,7 @@
             </div>
           </div>
 
-          <article class="place-card" data-motion="scale-reveal" style="--motion-delay: 160ms">
+          <article class="place-card" data-motion="scale-reveal">
             <div class="place-card__media">
               <img class="place-card__img" src="assets/images/map-kyoto.webp"
                    alt="Traditional pagoda and townscape at golden hour in Kyoto" loading="lazy" decoding="async" data-motion="image-reveal" data-parallax="editorial" />
@@ -240,11 +240,11 @@
       <div class="container">
         <div class="section-head section-head--full">
           <p class="eyebrow" data-motion="text-reveal">07 — How It Works</p>
-          <p class="label" data-motion="text-reveal" style="--motion-delay: 30ms">How Travel AI Works</p>
-          <h2 class="section-title" id="how-title" data-motion="char-scroll">From an idea to somewhere unforgettable.</h2>
+          <p class="label" data-motion="text-reveal">How Travel AI Works</p>
+          <h2 class="section-title" id="how-title" data-motion="line-reveal">From an idea to somewhere unforgettable.</h2>
         </div>
 
-        <ol class="steps" role="list" data-motion-stagger style="--stagger-base: 160ms">
+        <ol class="steps" role="list" data-motion-stagger>
           <li class="step" data-motion="fade-in">
             <p class="step__num" data-motion="text-reveal">01</p>
             <div class="step__rule" aria-hidden="true"></div>
@@ -284,7 +284,7 @@
            would make this the only editorial heading not observed directly, slaving its
            rise to the wrapper and firing 23 elements in one instant. -->
         <div class="testimonials-grid">
-          <div class="testimonial-grid" data-motion-stagger style="--stagger-base: 80ms">
+          <div class="testimonial-grid" data-motion-stagger>
             <figure class="person-card" data-motion="fade-in">
               <img class="person-card__img" src="assets/images/portrait-james.webp"
                    alt="Portrait of James R." loading="lazy" decoding="async" data-motion="image-reveal" />
@@ -323,13 +323,13 @@
             </figure>
           </div>
 
-          <div class="testimonials-copy" data-motion-scope>
+          <div class="testimonials-copy">
             <div class="section-head">
               <p class="eyebrow" data-motion="text-reveal">08 — Testimonials</p>
               <p class="label" data-motion="text-reveal">What Travellers Say</p>
-              <h2 class="section-title" id="testimonials-title" data-motion="char-scroll">Words from the people who've travelled.</h2>
+              <h2 class="section-title" id="testimonials-title" data-motion="line-reveal">Words from the people who've travelled.</h2>
             </div>
-            <div class="notes">
+            <div class="notes" data-motion="fade-up">
               <div class="note">
                 <p class="note__plus" aria-hidden="true">+</p>
                 <h3 class="note__title" data-motion="text-reveal">Real journeys, real people.</h3>
@@ -353,9 +353,10 @@
         <p class="cta__kicker" data-motion="text-reveal">Perhaps it's time</p>
         <h2 class="cta__title" id="cta-title" data-motion="char-scroll">to go somewhere extraordinary.</h2>
         <p class="cta__sub" data-motion="copy-follow">Dubai and Japan are waiting.</p>
-        <a class="btn btn--glass btn--pill btn--lg cta__btn" href="#destinations" data-motion="fade-up" style="--motion-delay: 240ms">Discover</a>
+        <a class="btn btn--glass btn--pill btn--lg cta__btn" href="#destinations" data-motion="fade-up">Discover</a>
       </div>
     </section>
+
 
   </main>
 

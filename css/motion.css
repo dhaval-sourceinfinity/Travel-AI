@@ -68,9 +68,14 @@
 .gsap-active [data-motion="line-reveal"] .line-inner,
 .gsap-active [data-motion="char-reveal"] .char-unit,
 .gsap-active [data-motion="divider"],
-.gsap-active [data-motion="border-reveal"] {
+.gsap-active [data-motion="border-reveal"],
+.gsap-active [data-motion="hero-image"],
+.gsap-active [data-motion="hero-title"],
+.gsap-active [data-motion="hero-text"],
+.gsap-active [data-motion="hero-cta"] {
   transition: none !important;
 }
+
 
 /* --------------------------------------------------------------------------
    3. Motion primitives — initial transforms + transitions

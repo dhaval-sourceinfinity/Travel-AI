@@ -45,6 +45,7 @@
   flex-direction: column;
   align-items: center;
   max-width: 1148px;
+  text-align: center;
 }
 .hero__title {
   font-size: var(--fs-hero);
@@ -53,12 +54,22 @@
   letter-spacing: -0.055em;
   color: #fff;
   text-wrap: balance;
+  margin: 0 auto;
+}
+.hero__title .line-mask {
+  overflow: hidden;
+  display: block;
+}
+.hero__title .line-inner {
+  display: block;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
 }
 .hero__text {
   margin-top: var(--space-4);
-  max-width: 42ch;
+  max-width: min(330px, 100%);
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 20px;
   color: rgba(255, 255, 255, 0.88);
 }
 .hero__text p + p { margin-top: 0.75em; }
@@ -95,6 +106,8 @@
   margin-top: var(--space-14);
   padding-top: var(--space-8);
   border-top: 0.8px solid var(--color-border);
+  color: #7C8689;
+  font-size: 14px;
 }
 
 /* --------------------------------------------------------------------------
@@ -129,7 +142,7 @@
 }
 .cta__kicker {
   font-style: italic;
-  font-size: clamp(14px, 2.4vw, 15.5px);
+  font-size: clamp(14px, 2.4vw, 16px);
   letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.5);
 }
@@ -170,3 +183,38 @@
   letter-spacing: -0.035em;
   margin-top: var(--space-8);
 }
+
+/* --------------------------------------------------------------------------
+   Centralized Motion Delays & Staggers (Removing inline styles from HTML)
+   -------------------------------------------------------------------------- */
+.section-head .label {
+  --motion-delay: 30ms;
+}
+.destinations {
+  --stagger-base: 80ms;
+}
+.journeys[data-journeys="featured"] {
+  --stagger-base: 100ms;
+}
+.center-row {
+  --motion-delay: 180ms;
+}
+.explore-tabs {
+  --motion-delay: 220ms;
+}
+.explore-places {
+  --motion-delay: 280ms;
+}
+.place-card {
+  --motion-delay: 160ms;
+}
+.steps {
+  --stagger-base: 160ms;
+}
+.testimonial-grid {
+  --stagger-base: 80ms;
+}
+.cta__btn {
+  --motion-delay: 240ms;
+}
+
