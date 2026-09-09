@@ -11,6 +11,9 @@
 
   let isInitialized = false;
   let isReducedMotion = false;
+  let lenisInstance = null;
+  let tickerCallback = null;
+  let anchorListenerAttached = false;
   const activeTriggers = [];
 
   // Excluded from standard standalone scroll-trigger reveals (managed by hero page-load sequences)
@@ -87,6 +90,9 @@
 
       this.watchReducedMotion();
 
+      // Initialize smooth scrolling (desktop / fine pointer only, disabled for reduced motion)
+      this.initSmoothScroll();
+
       // Initialize all motion categories
       this.initChoreographedSections();
       this.initStaggerContainers();
@@ -104,10 +110,130 @@
     },
 
     /**
+     * Initializes Lenis smooth scrolling and synchronizes it with GSAP ScrollTrigger.
+     * Respects prefers-reduced-motion, avoids mobile touch hijacking, and keeps native scroll
+     * on touch/coarse pointers.
+     */
+    initSmoothScroll: function () {
+      if (isReducedMotion || typeof root.Lenis === "undefined") return null;
+
+      // Clean up any existing instance first
+      this.destroySmoothScroll();
+
+      const presets = root.TravelMotionPresets;
+      const config = (presets && presets.smoothScroll) || {
+        duration: 1.15,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        syncTouch: false,
+      };
+
+      try {
+        lenisInstance = new root.Lenis({
+          duration: config.duration,
+          easing: config.easing,
+          smoothWheel: config.smoothWheel,
+          touchMultiplier: 0, // completely bypass touch on mobile (preserves native kinetic scroll)
+          infinite: false,
+        });
+
+        // Synchronize Lenis scroll events directly with GSAP ScrollTrigger
+        if (root.ScrollTrigger) {
+          lenisInstance.on("scroll", root.ScrollTrigger.update);
+        }
+
+        // Drive Lenis from GSAP's central requestAnimationFrame ticker
+        if (root.gsap && root.gsap.ticker) {
+          tickerCallback = (time) => {
+            if (lenisInstance) {
+              lenisInstance.raf(time * 1000);
+            }
+          };
+          root.gsap.ticker.add(tickerCallback);
+          root.gsap.ticker.lagSmoothing(0);
+        }
+
+        // Programmatic smooth scrolling for anchor links (e.g. #destinations)
+        this.bindAnchorLinks();
+
+        return lenisInstance;
+      } catch (err) {
+        console.warn("[TravelMotion] Error initializing smooth scrolling:", err);
+        return null;
+      }
+    },
+
+    /**
+     * Destroys the smooth scroll instance and cleans up ticker listeners.
+     */
+    destroySmoothScroll: function () {
+      if (tickerCallback && root.gsap && root.gsap.ticker) {
+        root.gsap.ticker.remove(tickerCallback);
+        tickerCallback = null;
+      }
+      if (lenisInstance) {
+        if (root.ScrollTrigger && lenisInstance.off) {
+          lenisInstance.off("scroll", root.ScrollTrigger.update);
+        }
+        if (typeof lenisInstance.destroy === "function") {
+          lenisInstance.destroy();
+        }
+        lenisInstance = null;
+      }
+    },
+
+    /**
+     * Binds internal anchor links so they smoothly scroll using Lenis or native behavior,
+     * maintaining accessibility focus rings on navigation targets.
+     */
+    bindAnchorLinks: function () {
+      if (anchorListenerAttached || typeof document === "undefined") return;
+      anchorListenerAttached = true;
+
+      document.addEventListener("click", (e) => {
+        const link = e.target.closest('a[href^="#"]');
+        if (!link) return;
+        const hash = link.getAttribute("href");
+        if (!hash || hash === "#") return;
+        try {
+          const target = document.querySelector(hash);
+          if (target && lenisInstance && !isReducedMotion) {
+            e.preventDefault();
+            lenisInstance.scrollTo(target, {
+              offset: 0,
+              duration: 1.15,
+              onComplete: () => {
+                if (
+                  target.getAttribute("tabindex") === null &&
+                  target.tagName !== "A" &&
+                  target.tagName !== "BUTTON" &&
+                  target.tagName !== "INPUT"
+                ) {
+                  target.setAttribute("tabindex", "-1");
+                }
+                target.focus({ preventScroll: true });
+              },
+            });
+          }
+        } catch (err) {
+          // Ignore invalid selector queries
+        }
+      });
+    },
+
+    /**
+     * Returns the active smooth scroll instance.
+     */
+    getSmoother: function () {
+      return lenisInstance;
+    },
+
+    /**
      * Instantly makes all animated elements visible for reduced-motion users.
      */
     applyReducedMotion: function () {
       if (typeof document === "undefined") return;
+      this.destroySmoothScroll();
       const els = document.querySelectorAll("[data-motion], .reveal, [data-motion-stagger]");
       els.forEach((el) => {
         el.classList.add("is-visible");
@@ -634,9 +760,12 @@
     },
 
     /**
-     * Refreshes all ScrollTriggers on demand.
+     * Refreshes all ScrollTriggers and smooth scroll on demand.
      */
     refresh: function () {
+      if (!isReducedMotion && !lenisInstance && typeof root.Lenis !== "undefined") {
+        this.initSmoothScroll();
+      }
       if (root.ScrollTrigger) {
         root.ScrollTrigger.refresh();
       }

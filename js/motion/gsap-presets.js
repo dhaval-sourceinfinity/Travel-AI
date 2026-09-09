@@ -56,6 +56,16 @@
       once: true,
     },
 
+    // Smooth scrolling tokens (Lenis + GSAP ScrollTrigger)
+    smoothScroll: {
+      duration: 1.15,
+      easing: function (t) {
+        return Math.min(1, 1.001 - Math.pow(2, -10 * t));
+      },
+      smoothWheel: true,
+      syncTouch: false,
+    },
+
     /**
      * Determines whether an element is inside a card/metadata container
      * to apply the quieter text rise tier (18px/12px vs 28px/18px).

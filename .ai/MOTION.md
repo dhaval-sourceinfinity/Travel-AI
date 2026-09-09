@@ -469,12 +469,13 @@ Keep performance focused on browser hardware acceleration:
 - Control dynamic scroll values via CSS custom properties (`--reveal-progress`, `--parallax-y`).
 - Use single-pass ScrollTriggers and section timelines for orchestrated reveals.
 - Use a **single global** `requestAnimationFrame` loop for continuous scroll calculations where appropriate.
+- **GSAP-Synced Smooth Scrolling**: Pinned Lenis (@1.1.20) coordinated directly with `ScrollTrigger.update` via `gsap.ticker` for desktop wheel smoothing. Bypasses touch on mobile (`touchMultiplier: 0`) and completely destroys/disables under `prefers-reduced-motion: reduce`.
 - Clean up calculation overhead: `[data-motion-scope]` receives `.is-settled` at progress `1.0` to drop character calc overhead.
 - Native CSS transitions for micro-interactions (buttons, hover effects, focus outlines).
 
 ### Strictly Prohibited
-- **No wheel hijacking or custom smooth scrollbars** (e.g. Lenis, Locomotive, ScrollSmoother). Native scroll must remain intact.
-- **No unauthorized animation libraries or plugins** (e.g. Anime.js, Framer Motion, ScrollToPlugin, SplitText unless strictly justified). Only GSAP Core and ScrollTrigger are approved.
+- **No mobile touch hijacking or custom scrollbars** (touch devices retain 100% native kinetic scroll).
+- **No unauthorized animation libraries or ad-hoc plugins** (e.g. Anime.js, Framer Motion, Locomotive). Only approved GSAP Core + ScrollTrigger + Lenis loaded via pinned CDN.
 - **No local vendoring of GSAP** (e.g. `js/vendor/gsap.min.js`). Use pinned CDN only.
 - **No scroll locking** for decorative storytelling.
 - **No continuous layout thrashing** (never read `getBoundingClientRect()` inside tight loops without rAF batching).
@@ -540,7 +541,7 @@ The Motion Map must define these mandatory columns:
 | Nesting multiple `data-motion-stagger` containers | Keep stagger containers strictly one level deep. |
 | Adding independent animations and delays to every nested child node | For a component, use one primary entrance mechanism per hierarchy level. |
 | Adding CSS `@keyframes` animations to `motion.css` | Use transition-based reveals toggled via `.is-visible`. |
-| Adding unauthorized animation libraries or smooth-scroll hijackers (Lenis, ScrollSmoother, Anime.js) | Use only approved GSAP Core + ScrollTrigger loaded via pinned CDN; micro-interactions remain native CSS. |
+| Adding unauthorized animation libraries or uncoordinated scroll hijackers (e.g. Locomotive, Anime.js) | Use only approved GSAP Core + ScrollTrigger + Lenis synced via gsap.ticker; micro-interactions remain native CSS. |
 | Animating decorative lines, borders, or dividers without purpose | Motion is reserved strictly for storytelling content, photography, and structural section dividers. |
 | Removing the `.js-ready` gating class | Content must remain 100% visible if JavaScript fails to execute. |
 
