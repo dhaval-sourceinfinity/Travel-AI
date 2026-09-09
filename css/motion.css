@@ -18,7 +18,9 @@
 .js-ready [data-motion="char-scroll"],
 .js-ready [data-motion="copy-follow"],
 .js-ready [data-motion="parallax"],
-.js-ready [data-motion="contact-title"] {
+.js-ready [data-motion="contact-title"],
+.js-ready [data-motion="hero-title"],
+.js-ready [data-motion="hero-text"] {
   opacity: 1;
   will-change: auto;
 }
@@ -71,9 +73,16 @@
 .gsap-active [data-motion="divider"],
 .gsap-active [data-motion="border-reveal"],
 .gsap-active [data-motion="hero-image"],
+.gsap-active [data-motion="hero-overlay"],
 .gsap-active [data-motion="hero-title"],
+.gsap-active [data-motion="hero-title"] .line-inner,
 .gsap-active [data-motion="hero-text"],
+.gsap-active [data-motion="hero-text"] p,
 .gsap-active [data-motion="hero-cta"],
+.gsap-active .site-header .brand,
+.gsap-active .site-header .nav__link,
+.gsap-active .site-header .nav-link-signin,
+.gsap-active .site-header .nav-cta-btn,
 .gsap-active [data-motion="about-hero-image"],
 .gsap-active [data-motion="about-hero-title"],
 .gsap-active [data-motion="about-hero-eyebrow"],
@@ -333,37 +342,82 @@
 
 /* Hero image — cinematic scale entrance */
 .js-ready [data-motion="hero-image"] {
-  transform: scale(1.04);
+  opacity: 0;
+  transform: scale(1.06) translateY(10px);
   transition:
     opacity var(--motion-reveal) ease-out,
     transform var(--motion-cinematic) var(--ease-cinematic);
 }
 
-/* Hero title */
-.js-ready [data-motion="hero-title"] {
-  transform: translateY(24px);
+/* Hero overlay — gradual darkness reveal */
+.js-ready [data-motion="hero-overlay"] {
+  opacity: 0;
+  transition: opacity 1.0s ease-out;
+}
+
+/* Hero title line reveal */
+.hero__title .line-mask {
+  overflow: hidden;
+  display: block;
+}
+.hero__title .line-inner {
+  display: block;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+  will-change: transform, opacity;
+}
+.js-ready [data-motion="hero-title"] .line-inner {
+  opacity: 0;
+  transform: translateY(100%);
   transition:
     opacity var(--motion-hero-title) var(--ease-cinematic),
     transform var(--motion-hero-title) var(--ease-cinematic);
-  transition-delay: var(--motion-delay, 0ms);
+}
+.js-ready [data-motion="hero-title"].is-visible .line-inner,
+.js-ready .is-visible [data-motion="hero-title"] .line-inner,
+.js-ready [data-motion="hero-title"] .line-inner.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Hero supporting text */
-.js-ready [data-motion="hero-text"] {
-  transform: translateY(14px);
+.js-ready [data-motion="hero-text"] p {
+  opacity: 0;
+  transform: translateY(28px);
   transition:
     opacity var(--motion-reveal) var(--ease-cinematic),
     transform var(--motion-reveal) var(--ease-cinematic);
-  transition-delay: var(--motion-delay, 0ms);
+}
+.js-ready [data-motion="hero-text"].is-visible p,
+.js-ready .is-visible [data-motion="hero-text"] p,
+.js-ready [data-motion="hero-text"] p.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Hero CTA button */
 .js-ready [data-motion="hero-cta"] {
-  transform: translateY(10px) scale(.98);
+  opacity: 0;
+  transform: translateY(25px) scale(0.96);
   transition:
     opacity var(--dur-slow) var(--ease-cinematic),
     transform var(--dur-slow) var(--ease-cinematic);
-  transition-delay: var(--motion-delay, 0ms);
+}
+
+/* Header initial entrance state */
+.js-ready .site-header .brand,
+.js-ready .site-header .nav__link,
+.js-ready .site-header .nav-link-signin,
+.js-ready .site-header .nav-cta-btn {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+.js-ready .site-header.is-visible .brand,
+.js-ready .site-header.is-visible .nav__link,
+.js-ready .site-header.is-visible .nav-link-signin,
+.js-ready .site-header.is-visible .nav-cta-btn {
+  opacity: 1;
+  transform: none;
 }
 
 /* Hero content wrapper — scroll-driven fade (transform set by JS) */
@@ -462,6 +516,13 @@
   .char-unit,
   .char-layer,
   .js-ready [data-motion="line-reveal"] .line-inner,
+  .js-ready [data-motion="hero-title"] .line-inner,
+  .js-ready [data-motion="hero-overlay"],
+  .js-ready [data-motion="hero-text"] p,
+  .js-ready .site-header .brand,
+  .js-ready .site-header .nav__link,
+  .js-ready .site-header .nav-link-signin,
+  .js-ready .site-header .nav-cta-btn,
   .js-ready [data-motion="char-scroll"],
   .js-ready [data-motion="char-scroll"].is-whole,
   .js-ready [data-motion="char-scroll"] .char-unit,

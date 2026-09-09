@@ -16,6 +16,7 @@
   // Excluded from standard standalone scroll-trigger reveals (managed by hero page-load sequences)
   const HERO_MOTIONS = new Set([
     "hero-image",
+    "hero-overlay",
     "hero-title",
     "hero-text",
     "hero-cta",

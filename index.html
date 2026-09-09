@@ -49,9 +49,12 @@
     <section class="hero" aria-labelledby="hero-title">
       <img class="hero__bg" src="assets/images/hero.webp" alt=""
            fetchpriority="high" decoding="async" width="2200" height="1467" data-motion="hero-image" />
-      <div class="hero__overlay" aria-hidden="true"></div>
+      <div class="hero__overlay" aria-hidden="true" data-motion="hero-overlay"></div>
       <div class="hero__inner" data-motion="hero-content">
-        <h1 class="hero__title" id="hero-title" data-motion="hero-title">Travel, made personal.</h1>
+        <h1 class="hero__title" id="hero-title" data-motion="hero-title">
+          <span class="line-mask"><span class="line-inner">Travel, made</span></span>
+          <span class="line-mask"><span class="line-inner">personal.</span></span>
+        </h1>
         <div class="hero__text" data-motion="hero-text">
           <p>Some journeys begin with a destination. Others begin with a feeling.</p>
           <p>Tell us what you're looking for, and discover a more thoughtful way to experience Dubai and Japan.</p>

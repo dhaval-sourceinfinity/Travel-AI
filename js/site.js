@@ -326,179 +326,378 @@
     });
   }
 
-  /* ---- 5c. Hero entrance choreography ----------------------------------- */
-  function initHeroEntrance() {
-    const hero = document.querySelector(".hero");
-    if (!hero) return;
+  /* ==========================================================================
+     HEADER LOAD ANIMATION
+     ========================================================================== */
 
-    const heroImage = hero.querySelector('[data-motion="hero-image"]');
-    const heroTitle = hero.querySelector('[data-motion="hero-title"]');
-    const heroText = hero.querySelector('[data-motion="hero-text"]');
-    const heroCta = hero.querySelector('[data-motion="hero-cta"]');
-    const heroContent = hero.querySelector('[data-motion="hero-content"]');
-    const header = document.getElementById("site-header");
+  /**
+   * Header initial load sequence.
+   * Staggers logo, navigation links, and action buttons subtly from y: -20px.
+   */
+  function initHeaderAnimation(header, masterTl) {
+    if (!header) return;
+
+    const logo = header.querySelector(".brand");
+    const navLinks = header.querySelectorAll(".nav .nav__link");
+    const signIn = header.querySelector(".nav-actions .nav-link-signin");
+    const getStarted = header.querySelector(".nav-actions .nav-cta-btn");
+    const isMobile = window.innerWidth <= 768;
 
     if (REDUCE_MOTION) {
-      [heroImage, heroTitle, heroText, heroCta, heroContent].forEach((el) => {
-        if (el) el.classList.add("is-visible");
+      header.classList.add("is-visible");
+      [logo, ...navLinks, signIn, getStarted].forEach((el) => {
+        if (el) {
+          el.style.opacity = "1";
+          el.style.transform = "none";
+        }
       });
-      if (header) header.classList.add("is-visible");
       return;
     }
 
-    // Mark hero-content visible immediately (it manages its own scroll state)
+    header.classList.add("is-visible");
+
+    if (masterTl && window.gsap) {
+      // 0.08s — Logo
+      if (logo) {
+        masterTl.fromTo(
+          logo,
+          { opacity: 0, y: -20 },
+          { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", clearProps: "transform,opacity" },
+          0.08
+        );
+      }
+
+      // 0.15s — Navigation links staggered (~0.07s between links)
+      if (navLinks.length) {
+        masterTl.fromTo(
+          navLinks,
+          { opacity: 0, y: -20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            stagger: isMobile ? 0.04 : 0.07,
+            ease: "power3.out",
+            clearProps: "transform,opacity",
+          },
+          0.15
+        );
+      }
+
+      // 0.50s — Sign In
+      if (signIn) {
+        masterTl.fromTo(
+          signIn,
+          { opacity: 0, y: -20 },
+          { opacity: 1, y: 0, duration: 0.65, ease: "power3.out", clearProps: "transform,opacity" },
+          0.50
+        );
+      }
+
+      // 0.57s — Get Started CTA
+      if (getStarted) {
+        masterTl.fromTo(
+          getStarted,
+          { opacity: 0, y: -20 },
+          { opacity: 1, y: 0, duration: 0.65, ease: "power3.out", clearProps: "transform,opacity" },
+          0.57
+        );
+      }
+    } else {
+      // Native CSS / JS Fallback
+      if (logo) {
+        setTimeout(() => {
+          logo.style.opacity = "1";
+          logo.style.transform = "none";
+        }, 80);
+      }
+      navLinks.forEach((link, i) => {
+        setTimeout(() => {
+          link.style.opacity = "1";
+          link.style.transform = "none";
+        }, 150 + i * 70);
+      });
+      if (signIn) {
+        setTimeout(() => {
+          signIn.style.opacity = "1";
+          signIn.style.transform = "none";
+        }, 500);
+      }
+      if (getStarted) {
+        setTimeout(() => {
+          getStarted.style.opacity = "1";
+          getStarted.style.transform = "none";
+        }, 570);
+      }
+    }
+  }
+
+  /* ==========================================================================
+     HERO CTA & HOVER STATE
+     ========================================================================== */
+
+  /**
+   * CTA button post-entrance state initialization.
+   * Ensures subtle scale and icon translation on hover.
+   */
+  function initHeroCTA(heroCta) {
+    if (!heroCta) return;
+    heroCta.classList.add("is-visible");
+  }
+
+  /* ==========================================================================
+     HERO LOAD & MASTER ENTRANCE TIMELINE
+     ========================================================================== */
+
+  /**
+   * Master Initial Page Load Choreography
+   * Coordinates HEADER LOAD, HERO IMAGE, OVERLAY, HERO TEXT REVEAL, and CTA.
+   */
+  function initHeroAnimation() {
+    const hero = document.querySelector(".hero");
+    const header = document.getElementById("site-header");
+
+    // If no hero section on this page, run standalone header entrance
+    if (!hero) {
+      if (header) {
+        if (window.gsap && !REDUCE_MOTION) {
+          const headerTl = window.gsap.timeline({ defaults: { ease: "power3.out" } });
+          initHeaderAnimation(header, headerTl);
+        } else {
+          initHeaderAnimation(header, null);
+        }
+      }
+      return;
+    }
+
+    const heroImage = hero.querySelector('[data-motion="hero-image"]');
+    const heroOverlay = hero.querySelector('[data-motion="hero-overlay"]');
+    const heroTitle = hero.querySelector('[data-motion="hero-title"]');
+    const titleLines = heroTitle ? heroTitle.querySelectorAll(".line-inner") : [];
+    const heroText = hero.querySelector('[data-motion="hero-text"]');
+    const textParas = heroText ? heroText.querySelectorAll("p") : [];
+    const heroCta = hero.querySelector('[data-motion="hero-cta"]');
+    const heroContent = hero.querySelector('[data-motion="hero-content"]');
+    const isMobile = window.innerWidth <= 768;
+
+    // Accessibility: prefers-reduced-motion
+    if (REDUCE_MOTION) {
+      if (header) initHeaderAnimation(header, null);
+      [heroImage, heroOverlay, heroTitle, heroText, heroCta, heroContent].forEach((el) => {
+        if (el) el.classList.add("is-visible");
+      });
+      titleLines.forEach((l) => {
+        l.style.opacity = "1";
+        l.style.transform = "none";
+      });
+      textParas.forEach((p) => {
+        p.style.opacity = "1";
+        p.style.transform = "none";
+      });
+      return;
+    }
+
     if (heroContent) {
       heroContent.classList.add("is-visible");
     }
 
-    // GSAP cinematic hero choreography when motion engine is loaded
-    if (window.gsap && window.TravelMotion && window.TravelMotion.isReady()) {
+    // GSAP Master Timeline (Header + Hero)
+    if (window.gsap) {
       const gsap = window.gsap;
-      const ease = "travelEase";
-      const tl = gsap.timeline({ defaults: { ease: ease } });
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      // Split hero title into lines if TravelMotionText is available
-      let titleLines = [];
-      if (window.TravelMotionText && heroTitle) {
-        titleLines = window.TravelMotionText.prepareLineReveal(heroTitle);
-      }
-
-      // 1. Header nav enters smoothly
+      // 1. HEADER LOAD
       if (header) {
-        header.classList.add("is-visible");
-        tl.fromTo(
-          header,
-          { opacity: 0, y: -8 },
-          { opacity: 1, y: 0, duration: 0.35, clearProps: "transform" },
-          0.0
-        );
+        initHeaderAnimation(header, tl);
       }
 
-      // 2. Hero background image settles scale 1.04 -> 1.00
+      // 2. HERO IMAGE LOAD (gently settles into place: 1.06 -> 1, opacity: 0 -> 1)
       if (heroImage) {
         tl.fromTo(
           heroImage,
-          { opacity: 0, scale: 1.04 },
+          { opacity: 0, scale: 1.06, y: 10 },
           {
             opacity: 1,
             scale: 1,
-            duration: 1.1,
+            y: 0,
+            duration: 1.3,
             ease: "power2.out",
             clearProps: "transform,opacity",
             onComplete: () => heroImage.classList.add("is-visible"),
           },
-          0.05
+          0.15
         );
       }
 
-      // 3. Hero title lines rise through overflow mask
-      if (titleLines && titleLines.length) {
+      // 3. HERO DARK OVERLAY (gradually resolves readability: 0.20s start, 1.0s duration)
+      if (heroOverlay) {
         tl.fromTo(
-          titleLines,
-          { opacity: 0, yPercent: 115 },
+          heroOverlay,
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: 1.0,
+            ease: "power2.out",
+            clearProps: "opacity",
+            onComplete: () => heroOverlay.classList.add("is-visible"),
+          },
+          0.20
+        );
+      }
+
+      // 4. HERO TEXT REVEAL: Main Heading Line Reveal + Fade Up
+      if (heroTitle) heroTitle.classList.add("is-visible");
+      if (titleLines && titleLines.length >= 2) {
+        // Line 1: Travel, made
+        tl.fromTo(
+          titleLines[0],
+          { opacity: 0, yPercent: 100 },
           {
             opacity: 1,
             yPercent: 0,
-            duration: 0.85,
-            stagger: 0.08,
-            ease: ease,
-            clearProps: "transform,opacity",
-            onComplete: () => heroTitle.classList.add("is-visible"),
+            duration: 0.9,
+            ease: "power3.out",
+            onComplete: () => {
+              titleLines[0].classList.add("is-visible");
+            },
           },
-          0.2
+          0.30
+        );
+        // Line 2: personal.
+        tl.fromTo(
+          titleLines[1],
+          { opacity: 0, yPercent: 100 },
+          {
+            opacity: 1,
+            yPercent: 0,
+            duration: 0.9,
+            ease: "power3.out",
+            onComplete: () => {
+              titleLines[1].classList.add("is-visible");
+              if (heroTitle) heroTitle.classList.add("is-visible");
+            },
+          },
+          0.42
         );
       } else if (heroTitle) {
         tl.fromTo(
           heroTitle,
-          { opacity: 0, y: 24 },
+          { opacity: 0, y: isMobile ? 30 : 50 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.85,
-            ease: ease,
-            clearProps: "transform,opacity",
+            duration: 0.9,
+            ease: "power3.out",
             onComplete: () => heroTitle.classList.add("is-visible"),
           },
-          0.2
+          0.30
         );
       }
 
-      // 4. Hero supporting text
-      if (heroText) {
+      // 5. HERO SUPPORTING TEXT (Sequential upward fade)
+      if (heroText) heroText.classList.add("is-visible");
+      if (textParas && textParas.length >= 2) {
+        // First description
         tl.fromTo(
-          heroText,
-          { opacity: 0, y: 14 },
+          textParas[0],
+          { opacity: 0, y: isMobile ? 18 : 28 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.65,
-            ease: ease,
-            clearProps: "transform,opacity",
+            duration: 0.7,
+            ease: "power3.out",
+            onComplete: () => {
+              textParas[0].classList.add("is-visible");
+            },
+          },
+          0.70
+        );
+        // Second description
+        tl.fromTo(
+          textParas[1],
+          { opacity: 0, y: isMobile ? 18 : 28 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            ease: "power3.out",
+            onComplete: () => {
+              textParas[1].classList.add("is-visible");
+              if (heroText) heroText.classList.add("is-visible");
+            },
+          },
+          0.82
+        );
+      } else if (heroText) {
+        tl.fromTo(
+          heroText,
+          { opacity: 0, y: isMobile ? 18 : 28 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            ease: "power3.out",
             onComplete: () => heroText.classList.add("is-visible"),
           },
-          0.45
+          0.70
         );
       }
 
-      // 5. Hero CTA button
+      // 6. HERO CTA / DISCOVER BUTTON
       if (heroCta) {
         tl.fromTo(
           heroCta,
-          { opacity: 0, y: 10, scale: 0.98 },
+          { opacity: 0, y: 25, scale: 0.96 },
           {
             opacity: 1,
             y: 0,
             scale: 1,
-            duration: 0.55,
-            ease: ease,
+            duration: 0.65,
+            ease: "power3.out",
             clearProps: "transform,opacity",
-            onComplete: () => heroCta.classList.add("is-visible"),
+            onComplete: () => initHeroCTA(heroCta),
           },
-          0.6
+          1.00
         );
       }
 
       return;
     }
 
-    // Sequence: Hero image → headline → supporting text → CTA (Native CSS Fallback)
+    // Native CSS Fallback Choreography
+    if (header) initHeaderAnimation(header, null);
+
     const sequence = [
-      { el: heroImage, delay: 50 },
-      { el: heroTitle, delay: 350 },
-      { el: heroText, delay: 650 },
-      { el: heroCta, delay: 900 },
+      { el: heroImage, delay: 150 },
+      { el: heroOverlay, delay: 200 },
+      { el: titleLines[0], delay: 300 },
+      { el: titleLines[1], delay: 420 },
+      { el: textParas[0], delay: 700 },
+      { el: textParas[1], delay: 820 },
+      { el: heroCta, delay: 1000 },
     ];
 
     sequence.forEach(({ el, delay }) => {
       if (!el) return;
       setTimeout(() => {
         el.classList.add("is-visible");
+        el.style.opacity = "1";
+        el.style.transform = "none";
       }, delay);
     });
 
-    // Header subtly reveals in tandem without interrupting hero narrative
-    if (header) {
-      setTimeout(() => {
-        header.classList.add("is-visible");
-      }, 300);
-
-      const navLinks = header.querySelectorAll(".nav__link");
-      navLinks.forEach((link, i) => {
-        link.style.opacity = "0";
-        link.style.transform = "translateY(-6px)";
-        link.style.transition = `opacity 400ms var(--ease-reveal, cubic-bezier(.2,.8,.2,1)), transform 400ms var(--ease-reveal, cubic-bezier(.2,.8,.2,1))`;
-        setTimeout(() => {
-          link.style.opacity = "1";
-          link.style.transform = "none";
-        }, 400 + i * 70);
-      });
+    if (heroTitle) {
+      setTimeout(() => heroTitle.classList.add("is-visible"), 420);
     }
-
-    // Once entrance completes, clear heroImage transition so scroll parallax is 100% immediate & responsive
-    setTimeout(() => {
-      if (heroImage) heroImage.style.transition = "none";
-    }, 1600);
+    if (heroText) {
+      setTimeout(() => heroText.classList.add("is-visible"), 820);
+    }
+    if (heroCta) {
+      setTimeout(() => initHeroCTA(heroCta), 1000);
+    }
   }
+
+  const initHeroEntrance = initHeroAnimation;
 
   /* ---- 5d. About hero entrance choreography ------------------------------ */
   function initAboutHeroEntrance() {
