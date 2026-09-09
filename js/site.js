@@ -1263,7 +1263,8 @@
   // Contact Page: Accessible form handling
   function initContactForm() {
     const form = document.querySelector(".contact-form");
-    if (!form) return;
+    if (!form || form.dataset.contactFormBound === "true") return;
+    form.dataset.contactFormBound = "true";
 
     const statusEl = document.getElementById("form-status");
     const submitBtn = form.querySelector('button[type="submit"]');

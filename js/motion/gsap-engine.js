@@ -13,13 +13,22 @@
   let isReducedMotion = false;
   const activeTriggers = [];
 
-  // Excluded from standard standalone scroll-trigger reveals
+  // Excluded from standard standalone scroll-trigger reveals (managed by hero page-load sequences)
   const HERO_MOTIONS = new Set([
     "hero-image",
     "hero-title",
     "hero-text",
     "hero-cta",
     "hero-content",
+    "about-hero-image",
+    "about-hero-title",
+    "about-hero-eyebrow",
+    "about-hero-lede",
+    "contact-image",
+    "contact-title",
+    "contact-eyebrow",
+    "contact-sub",
+    "contact-form",
   ]);
 
   const SCROLL_DRIVEN_MOTIONS = new Set(["copy-follow", "char-scroll"]);
