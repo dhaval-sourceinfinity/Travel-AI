@@ -158,7 +158,12 @@
     },
   ];
 
-  const LEGAL = ["Terms", "Privacy", "Booking Terms", "Cancellation Policy"];
+  const LEGAL = [
+    { label: "Terms", href: "terms-of-use.html" },
+    { label: "Privacy", href: "404.html" },
+    { label: "Booking Terms", href: "404.html" },
+    { label: "Cancellation Policy", href: "404.html" },
+  ];
 
   function renderFooter() {
     const cols = COLUMNS.map(
@@ -170,7 +175,7 @@
       </nav>`
     ).join("");
 
-    const legal = LEGAL.map((l) => `<a href="404.html">${l}</a>`).join("");
+    const legal = LEGAL.map((l) => `<a href="${l.href}">${l.label}</a>`).join("");
 
     return `<div class="container">
       <div class="footer-top">

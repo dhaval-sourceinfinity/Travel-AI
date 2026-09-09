@@ -435,3 +435,58 @@
   }
 }
 
+/* ==========================================================================
+   Terms of Use Responsive Rules
+   ========================================================================== */
+@media (max-width: 768px) {
+  .terms-section {
+    padding-top: calc(var(--header-h) + 40px);
+    padding-bottom: 64px;
+  }
+
+  .terms-header {
+    margin-bottom: 36px;
+  }
+
+  .terms-title {
+    font-size: 32px;
+    line-height: 38px;
+  }
+
+  .terms-content {
+    gap: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .terms-section {
+    padding-top: calc(var(--header-h) + 28px);
+    padding-bottom: 48px;
+  }
+
+  .terms-title {
+    font-size: 26px;
+    line-height: 32px;
+  }
+
+  .terms-header {
+    margin-bottom: 28px;
+  }
+
+  .terms-content {
+    gap: 28px;
+  }
+
+  .terms-block__title {
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  .terms-block__text {
+    font-size: 14px;
+    line-height: 22px;
+  }
+}
+
+
+
