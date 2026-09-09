@@ -41,7 +41,7 @@
   const NAV_LINKS = [
     { label: "About Us", href: "about-us.html" },
     { label: "Packages", href: "journeys.html" },
-    { label: "AI Planner", href: "index.html#how" },
+    { label: "AI Planner", href: "ai-planner.html" },
     { label: "My Trips", href: "my-trips.html" },
     { label: "Blog", href: "blog-listing.html" },
   ];
@@ -57,7 +57,8 @@
     const here = currentPage();
     const links = NAV_LINKS.map((l) => {
       const target = l.href.split("#")[0].toLowerCase();
-      const current = target === here ? ' aria-current="page"' : "";
+      const isCurrent = target === here || (l.href === "ai-planner.html" && here === "ai-planner-result.html");
+      const current = isCurrent ? ' aria-current="page"' : "";
       return `<a class="nav__link" href="${l.href}"${current}>${l.label}</a>`;
     }).join("");
 
@@ -1102,6 +1103,445 @@
   }
 
   /* ==========================================================================
+     7c. AI Travel Planner Components & Logic
+     ========================================================================== */
+  const plannerMockData = {
+    dubai: {
+      destination: "Dubai",
+      title: "Five days in Dubai",
+      duration: "3 days",
+      status: "Draft",
+      statusLabel: "DRAFT ITINERARY",
+      metaText: '3 days · Dubai · <span class="result-status--draft">Draft</span> · not booked',
+      days: [
+        {
+          day: 1,
+          activities: [
+            {
+              timeOfDay: "Morning",
+              title: "Old Dubai and the creek",
+              description: "Cross by abra, walk the spice and gold lanes while it is still cool.",
+              image: "assets/images/planner/dubai-creek-morning.webp",
+              alt: "Traditional wooden abra boat crossing Old Dubai Creek at golden sunrise"
+            },
+            {
+              timeOfDay: "Afternoon",
+              title: "Al Fahidi and lunch",
+              description: "Wind-tower houses, a slow Emirati lunch and an hour out of the sun.",
+              image: "assets/images/planner/dubai-fahidi-afternoon.webp",
+              alt: "Traditional wind-tower sandstone architecture in Al Fahidi historical district"
+            },
+            {
+              timeOfDay: "Evening",
+              title: "Dubai Creek Harbour",
+              description: "The skyline from the quieter side of the water, with dinner along the promenade.",
+              image: "assets/images/planner/dubai-harbour-evening.webp",
+              alt: "Dubai Creek Harbour waterfront promenade at dusk with illuminated skyline"
+            }
+          ]
+        },
+        {
+          day: 2,
+          activities: [
+            {
+              timeOfDay: "Morning",
+              title: "Dubai Marina Promenade",
+              description: "Waterfront breakfast along the canal, yacht watching, and morning sea breeze.",
+              image: "assets/images/planner/dubai-marina-morning.webp",
+              alt: "Luxury yachts moored in Dubai Marina canal beneath modern skyscrapers"
+            },
+            {
+              timeOfDay: "Afternoon",
+              title: "Arabian Desert Safari",
+              description: "Dune driving in a vintage 4x4, falconry demonstration, and sunset over golden sands.",
+              image: "assets/images/planner/dubai-desert-afternoon.webp",
+              alt: "Rolling golden sand dunes in the Dubai desert during late afternoon safari"
+            },
+            {
+              timeOfDay: "Evening",
+              title: "Downtown & Fountain Lake",
+              description: "Burj Khalifa lights, evening fountain choreography, and dinner by the promenade.",
+              image: "assets/images/planner/dubai-mall-evening.webp",
+              alt: "Burj Khalifa illuminated lake and choreographed fountains at night"
+            }
+          ]
+        },
+        {
+          day: 3,
+          activities: [
+            {
+              timeOfDay: "Morning",
+              title: "Museum of the Future",
+              description: "Pioneering architecture, immersive technological exhibits, and calligraphy views.",
+              image: "assets/images/planner/dubai-future-morning.webp",
+              alt: "Futuristic Museum of the Future building with Arabic calligraphy in morning sun"
+            },
+            {
+              timeOfDay: "Afternoon",
+              title: "Palm Jumeirah Beach Club",
+              description: "Private beachside relaxation, warm Persian Gulf waters, and chilled refreshments.",
+              image: "assets/images/planner/dubai-beach-afternoon.webp",
+              alt: "White sandy beach and turquoise water at Palm Jumeirah resort"
+            },
+            {
+              timeOfDay: "Evening",
+              title: "Skyline Rooftop Dining",
+              description: "Panoramic night views of illuminated skyscrapers with world-class dining.",
+              image: "assets/images/planner/dubai-downtown-evening.webp",
+              alt: "Elegant rooftop lounge overlooking the glittering Dubai skyline"
+            }
+          ]
+        }
+      ]
+    },
+    japan: {
+      destination: "Japan",
+      title: "Seven days in Tokyo & Kyoto",
+      duration: "3 days",
+      status: "Draft",
+      statusLabel: "DRAFT ITINERARY",
+      metaText: '3 days · Japan · <span class="result-status--draft">Draft</span> · not booked',
+      days: [
+        {
+          day: 1,
+          activities: [
+            {
+              timeOfDay: "Morning",
+              title: "Asakusa & Senso-ji Temple",
+              description: "Early morning incense at Tokyo's oldest temple, before the Nakamise stalls fill with crowds.",
+              image: "assets/images/trip-tokyo-tech.webp",
+              alt: "Traditional pagoda and lantern at Asakusa Tokyo"
+            },
+            {
+              timeOfDay: "Afternoon",
+              title: "Shibuya Crossing & Omotesando",
+              description: "Architectural walking tour through tree-lined Omotesando, quiet backstreet coffee, and Shibuya Sky views.",
+              image: "assets/images/explore-japan.webp",
+              alt: "Vibrant city streets of Tokyo"
+            },
+            {
+              timeOfDay: "Evening",
+              title: "Shinjuku Omoide Yokocho",
+              description: "Charcoal yakitori in lantern-lit alleyways, followed by quiet craft cocktails in Golden Gai.",
+              image: "assets/images/about-japan.webp",
+              alt: "Atmospheric evening street in Tokyo"
+            }
+          ]
+        },
+        {
+          day: 2,
+          activities: [
+            {
+              timeOfDay: "Morning",
+              title: "Shinkansen to Kyoto & Gion",
+              description: "High-speed bullet train past Mount Fuji, arriving in Kyoto for a peaceful walk along Shirakawa Canal.",
+              image: "assets/images/contact-kyoto.webp",
+              alt: "Historic preserved streets of Kyoto at sunrise"
+            },
+            {
+              timeOfDay: "Afternoon",
+              title: "Fushimi Inari Mountain Path",
+              description: "Hike through thousands of vermilion torii gates into the tranquil cedar forest summit.",
+              image: "assets/images/trip-kyoto-autumn.webp",
+              alt: "Vermilion gates and pagodas in Kyoto autumn foliage"
+            },
+            {
+              timeOfDay: "Evening",
+              title: "Kaiseki Dinner by the Kamogawa",
+              description: "Multi-course seasonal Kyoto dining on a raised wooden platform over the flowing river.",
+              image: "assets/images/map-kyoto.webp",
+              alt: "Peaceful Kyoto waterscape at dusk"
+            }
+          ]
+        },
+        {
+          day: 3,
+          activities: [
+            {
+              timeOfDay: "Morning",
+              title: "Arashiyama Bamboo Grove",
+              description: "Quiet morning stroll through towering green bamboo stalks before visiting Tenryu-ji Zen garden.",
+              image: "assets/images/journey-japan.webp",
+              alt: "Serene bamboo forest pathway in Arashiyama"
+            },
+            {
+              timeOfDay: "Afternoon",
+              title: "Nara Deer Park & Todai-ji",
+              description: "Free-roaming sacred sika deer and the monumental Great Bronze Buddha hall.",
+              image: "assets/images/explore-japan.webp",
+              alt: "Historic temple grounds in Nara"
+            },
+            {
+              timeOfDay: "Evening",
+              title: "Osaka Dotonbori Street Food",
+              description: "Takoyaki, okonomiyaki, and neon reflections along the vibrant Dotonbori canal.",
+              image: "assets/images/trip-tokyo-tech.webp",
+              alt: "Dotonbori neon canal at night"
+            }
+          ]
+        }
+      ]
+    }
+  };
+
+  const plannerChips = {
+    dubai: [
+      "Explore Dubai Marina",
+      "Explore Burj Khalifa",
+      "Explore Palm Jumeirah",
+      "Explore Dubai Mall",
+      "Explore Desert Safari",
+      "Explore Global Village",
+      "Explore Miracle Garden",
+      "Explore Dubai Creek"
+    ],
+    japan: [
+      "Explore Tokyo Shibuya",
+      "Explore Mount Fuji",
+      "Explore Kyoto Temples",
+      "Explore Osaka Dotonbori",
+      "Explore Nara Deer Park",
+      "Explore Hiroshima Peace Park",
+      "Explore Hakone Onsen",
+      "Explore Arashiyama Bamboo"
+    ]
+  };
+
+  const plannerDefaultPrompts = {
+    dubai: "Five relaxed days in Dubai in November — good food, one desert night, no early starts.",
+    japan: "Seven days across Tokyo and Kyoto in spring — culinary focus, historic temples, scenic trains, no rush."
+  };
+
+  function initAIPlanner() {
+    const form = document.getElementById("planner-form");
+    if (!form) return;
+
+    const input = document.getElementById("planner-input");
+    const submitBtn = document.getElementById("planner-submit-btn");
+    const submitText = document.getElementById("planner-submit-text");
+    const toggleBtns = document.querySelectorAll(".planner__toggle-btn");
+    const chipsContainer = document.getElementById("planner-chips");
+    const cmdKeyEl = document.getElementById("planner-cmd-key");
+
+    // OS detection for keyboard shortcut hint
+    if (cmdKeyEl) {
+      const isMac = navigator.platform ? /mac/i.test(navigator.platform) : /mac/i.test(navigator.userAgent);
+      cmdKeyEl.textContent = isMac ? "⌘" : "Ctrl +";
+    }
+
+    // Determine current destination
+    const urlParams = new URLSearchParams(window.location.search);
+    let currentDest = urlParams.get("dest") || sessionStorage.getItem("planner_dest") || "dubai";
+    if (!plannerMockData[currentDest]) currentDest = "dubai";
+
+    // Set initial toggle state
+    function updateToggleUI(dest) {
+      toggleBtns.forEach((btn) => {
+        const isMatch = btn.getAttribute("data-dest") === dest;
+        btn.setAttribute("aria-pressed", String(isMatch));
+      });
+    }
+
+    // Render chips
+    function renderChips(dest) {
+      if (!chipsContainer) return;
+      const chips = plannerChips[dest] || plannerChips.dubai;
+      chipsContainer.innerHTML = chips
+        .map((text) => `<button type="button" class="planner__chip" data-chip="${text}">${text}</button>`)
+        .join("");
+
+      // Rebind chip clicks
+      chipsContainer.querySelectorAll(".planner__chip").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          const chipText = chip.getAttribute("data-chip");
+          chipsContainer.querySelectorAll(".planner__chip").forEach((c) => c.classList.remove("is-active"));
+          chip.classList.add("is-active");
+
+          const activity = chipText.replace(/^Explore\s+/i, "");
+          const currentVal = input.value.trim();
+          const otherDest = dest === "dubai" ? "japan" : "dubai";
+
+          if (!currentVal || currentVal === plannerDefaultPrompts.dubai || currentVal === plannerDefaultPrompts[otherDest]) {
+            input.value = `${dest === "dubai" ? "Five" : "Seven"} relaxed days in ${dest === "dubai" ? "Dubai" : "Japan"} — focusing on ${activity}, good food, no early starts.`;
+          } else if (!currentVal.includes(activity)) {
+            input.value = currentVal.replace(/\.?$/, `, including ${activity}.`);
+          }
+
+          input.focus();
+        });
+      });
+    }
+
+    // Initialize toggle and chips
+    updateToggleUI(currentDest);
+    renderChips(currentDest);
+
+    // If on planner page with no custom text or query param, ensure prompt matches dest
+    const savedQuery = sessionStorage.getItem("planner_query");
+    if (savedQuery && input) {
+      input.value = savedQuery;
+    } else if (input && !urlParams.get("dest")) {
+      // default prompt already in HTML
+    } else if (input && urlParams.get("dest")) {
+      input.value = plannerDefaultPrompts[currentDest] || plannerDefaultPrompts.dubai;
+    }
+
+    // Toggle button handler
+    toggleBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const selectedDest = btn.getAttribute("data-dest");
+        if (selectedDest === currentDest) return;
+
+        currentDest = selectedDest;
+        sessionStorage.setItem("planner_dest", currentDest);
+        updateToggleUI(currentDest);
+        renderChips(currentDest);
+
+        // Update default prompt if unchanged
+        const currentVal = input.value.trim();
+        const otherDest = selectedDest === "dubai" ? "japan" : "dubai";
+        if (!currentVal || currentVal === plannerDefaultPrompts[otherDest]) {
+          input.value = plannerDefaultPrompts[selectedDest] || "";
+        }
+      });
+    });
+
+    // Form submit flow
+    let isSubmitting = false;
+
+    function handlePlannerSubmit(e) {
+      if (e) e.preventDefault();
+      if (isSubmitting) return;
+
+      const promptText = input.value.trim();
+      if (!promptText) {
+        input.focus();
+        return;
+      }
+
+      isSubmitting = true;
+      submitBtn.setAttribute("aria-busy", "true");
+      if (submitText) submitText.textContent = "Drafting…";
+
+      sessionStorage.setItem("planner_dest", currentDest);
+      sessionStorage.setItem("planner_query", promptText);
+
+      window.setTimeout(() => {
+        window.location.href = `ai-planner-result.html?dest=${encodeURIComponent(currentDest)}`;
+      }, 900);
+    }
+
+    form.addEventListener("submit", handlePlannerSubmit);
+
+    // Keyboard shortcut: Cmd+Enter or Ctrl+Enter
+    input.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+        e.preventDefault();
+        handlePlannerSubmit();
+      }
+    });
+  }
+
+  function initAIPlannerResult() {
+    const resultSection = document.getElementById("itinerary-result");
+    if (!resultSection) return;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let dest = urlParams.get("dest") || sessionStorage.getItem("planner_dest") || "dubai";
+    if (!plannerMockData[dest]) dest = "dubai";
+
+    const itinerary = plannerMockData[dest];
+    const statusLabel = document.getElementById("result-status-label");
+    const titleEl = document.getElementById("result-title");
+    const metaEl = document.getElementById("result-meta");
+    const tabsContainer = document.getElementById("result-tabs");
+    const cardsContainer = document.getElementById("result-cards");
+    const btnRefine = document.getElementById("btn-refine");
+
+    // Populate header info
+    if (statusLabel) statusLabel.textContent = itinerary.statusLabel;
+    if (titleEl) titleEl.textContent = itinerary.title;
+    if (metaEl) metaEl.innerHTML = itinerary.metaText;
+
+    // Render cards for a given day
+    function renderDayActivities(dayNumber) {
+      const dayData = itinerary.days.find((d) => d.day === dayNumber) || itinerary.days[0];
+      if (!dayData || !cardsContainer) return;
+
+      cardsContainer.innerHTML = dayData.activities
+        .map((act) => {
+          return `<article class="result__card">
+            <div class="result__card-media">
+              <img class="result__card-img" src="${act.image}" alt="${act.alt}" width="88" height="88" loading="lazy" decoding="async" />
+            </div>
+            <div class="result__card-content">
+              <span class="result__card-time">${act.timeOfDay}</span>
+              <h3 class="result__card-title">${act.title}</h3>
+              <p class="result__card-desc">${act.description}</p>
+            </div>
+          </article>`;
+        })
+        .join("");
+    }
+
+    // Render tabs
+    if (tabsContainer) {
+      tabsContainer.innerHTML = itinerary.days
+        .map((d, index) => {
+          const isFirst = index === 0;
+          return `<button class="result__tab" type="button" role="tab" id="tab-day-${d.day}"
+                   aria-controls="result-cards" aria-selected="${isFirst}" aria-pressed="${isFirst}"
+                   data-day="${d.day}">Day ${d.day}</button>`;
+        })
+        .join("");
+
+      // Bind tab click events
+      tabsContainer.querySelectorAll(".result__tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const day = parseInt(tab.getAttribute("data-day"), 10);
+          tabsContainer.querySelectorAll(".result__tab").forEach((t) => {
+            t.setAttribute("aria-selected", "false");
+            t.setAttribute("aria-pressed", "false");
+          });
+          tab.setAttribute("aria-selected", "true");
+          tab.setAttribute("aria-pressed", "true");
+          cardsContainer.setAttribute("aria-labelledby", tab.id);
+
+          // Subtle crossfade transition
+          if (REDUCE_MOTION) {
+            renderDayActivities(day);
+          } else {
+            cardsContainer.classList.add("result__cards--fade-out");
+            window.setTimeout(() => {
+              renderDayActivities(day);
+              cardsContainer.classList.remove("result__cards--fade-out");
+              cardsContainer.classList.add("result__cards--fade-in");
+              window.setTimeout(() => {
+                cardsContainer.classList.remove("result__cards--fade-in");
+              }, 250);
+            }, 140);
+          }
+        });
+      });
+    }
+
+    // Initial render of Day 1
+    renderDayActivities(1);
+
+    // Refine button smooth scrolls to the top search box
+    if (btnRefine) {
+      btnRefine.addEventListener("click", () => {
+        const topForm = document.getElementById("planner-form");
+        const topInput = document.getElementById("planner-input");
+        if (topForm) {
+          topForm.scrollIntoView({ behavior: REDUCE_MOTION ? "auto" : "smooth" });
+          if (topInput) topInput.focus();
+        }
+      });
+    }
+  }
+
+  /* ==========================================================================
      8. Application Boot
      ========================================================================== */
   function boot() {
@@ -1135,6 +1575,10 @@
 
     // Contact form (contact page)
     initContactForm();
+
+    // AI Planner & Result (planner pages)
+    initAIPlanner();
+    initAIPlannerResult();
 
     // ---- Motion system ----
     // Split editorial typography (char-scroll) before the scroll engine registers it

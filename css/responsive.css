@@ -312,3 +312,126 @@
     grid-column: auto;
   }
 }
+
+/* ==========================================================================
+   AI Planner & Result Pages Responsive Rules
+   ========================================================================== */
+@media (max-width: 768px) {
+  .planner-section {
+    padding-block: var(--space-8);
+  }
+
+  .planner__header {
+    margin-bottom: var(--space-5);
+  }
+
+  .planner__chips {
+    gap: 6px 8px;
+    min-height: auto;
+  }
+
+  .planner__card {
+    padding: 16px 18px;
+  }
+
+  .result-section {
+    padding-block: var(--space-6) var(--space-8);
+  }
+
+  .result__card {
+    gap: 14px;
+    padding: 14px 16px;
+  }
+
+  .result__card-media {
+    width: 72px;
+    height: 72px;
+  }
+
+  .result__actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 18px 20px;
+  }
+
+  .result__actions-text {
+    max-width: 100%;
+  }
+
+  .result__actions-buttons {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+  }
+
+  .result__btn-refine,
+  .result__btn-agent {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .planner__title {
+    font-size: 28px;
+  }
+
+  .planner__toggle-btn {
+    padding: 6px 16px;
+    font-size: 12px;
+  }
+
+  .planner__chip {
+    padding: 6px 13px;
+    font-size: 12px;
+  }
+
+  .planner__card-footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .planner__shortcut {
+    justify-content: center;
+  }
+
+  .planner__submit {
+    width: 100%;
+  }
+
+  .result__title-group {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .result__restart {
+    align-self: flex-start;
+  }
+
+  .result__card {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .result__card-media {
+    width: 68px;
+    height: 68px;
+  }
+
+  .result__card-title {
+    font-size: 15px;
+  }
+
+  .result__actions-buttons {
+    flex-direction: column;
+  }
+
+  .result__btn-refine,
+  .result__btn-agent {
+    width: 100%;
+  }
+}
+

@@ -4,7 +4,7 @@ import { brand } from "./brand.js";
 const NAV_LINKS = [
   { label: "About Us", href: "about-us.html" },
   { label: "Packages", href: "journeys.html" },
-  { label: "AI Planner", href: "index.html#how" },
+  { label: "AI Planner", href: "ai-planner.html" },
   { label: "My Trips", href: "my-trips.html" },
   { label: "Blog", href: "blog-listing.html" },
 ];
@@ -18,7 +18,8 @@ export function renderHeader() {
   const here = currentPage();
   const links = NAV_LINKS.map((l) => {
     const target = l.href.split("#")[0].toLowerCase();
-    const current = target === here ? ' aria-current="page"' : "";
+    const isCurrent = target === here || (l.href === "ai-planner.html" && here === "ai-planner-result.html");
+    const current = isCurrent ? ' aria-current="page"' : "";
     return `<a class="nav__link" href="${l.href}"${current}>${l.label}</a>`;
   }).join("");
 
