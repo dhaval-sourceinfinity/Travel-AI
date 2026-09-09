@@ -160,7 +160,7 @@
 
   const LEGAL = [
     { label: "Terms", href: "terms-of-use.html" },
-    { label: "Privacy", href: "404.html" },
+    { label: "Privacy", href: "privacy-policy.html" },
     { label: "Booking Terms", href: "404.html" },
     { label: "Cancellation Policy", href: "404.html" },
   ];

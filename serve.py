@@ -32,6 +32,19 @@ class NotFoundHandler(SimpleHTTPRequestHandler):
             self.wfile.write(body)
 
     def send_head(self):
+        import urllib.parse
+        clean_path = urllib.parse.unquote(self.path.split('?', 1)[0].split('#', 1)[0]).strip('/')
+        if clean_path in ("terms of use.html", "terms.html", "terms"):
+            self.send_response(301)
+            self.send_header("Location", "/terms-of-use.html")
+            self.end_headers()
+            return None
+        if clean_path in ("privacy policy.html", "privacy.html", "privacy"):
+            self.send_response(301)
+            self.send_header("Location", "/privacy-policy.html")
+            self.end_headers()
+            return None
+
         # Resolve the requested path (query stripped by SimpleHTTPRequestHandler).
         path = self.translate_path(self.path)
         if os.path.isdir(path):
