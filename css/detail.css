@@ -37,7 +37,7 @@
 .breadcrumb [aria-current="page"] { color: var(--color-text-secondary); }
 
 .detail-title {
-  margin-top: var(--space-4);
+  margin-top: var(--space-3);
   font-size: clamp(30px, 5vw, 41px);
   letter-spacing: -0.04em;
 }
@@ -88,7 +88,7 @@
   margin-top: clamp(40px, 6vw, 64px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
-  gap: clamp(40px, 6vw, 96px);
+  gap: clamp(32px, 5vw, 64px);
   align-items: start;
 }
 
@@ -248,6 +248,12 @@
 .detail-sidebar {
   position: sticky;
   top: calc(var(--header-h) + var(--space-5));
+}
+@media (min-width: 901px) {
+  .detail-sidebar {
+    padding-left: clamp(28px, 4vw, 48px);
+    border-left: 0.8px solid var(--color-border);
+  }
 }
 .pkg__price {
   display: flex;
