@@ -452,26 +452,28 @@
 
 .about-cta .cta__title {
   max-width: 20ch;
-  margin-top: var(--space-3);
+  margin: var(--space-3) auto 0;
   font-size: var(--fs-h2-lg);
   font-weight: 800;
-  line-height: 1.12;
+  line-height: 1.2;
   letter-spacing: -0.035em;
   color: var(--color-text-strong);
+  text-align: center;
 }
 
 .about-cta .cta__sub {
-  margin-top: var(--space-3);
+  margin: var(--space-5) auto 0;
   font-size: var(--fs-about-lede);
   font-weight: 400;
   letter-spacing: normal;
   text-transform: none;
   color: var(--color-text-body);
+  text-align: center;
 }
 
 .about-cta .cta__btn {
   --motion-delay: 240ms;
-  margin-top: var(--space-8);
+  margin: var(--space-8) auto 0;
 }
 
 /* ---- Pill button arrow --------------------------------------------------- */

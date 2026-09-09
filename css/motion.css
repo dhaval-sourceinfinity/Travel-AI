@@ -72,7 +72,14 @@
 .gsap-active [data-motion="hero-image"],
 .gsap-active [data-motion="hero-title"],
 .gsap-active [data-motion="hero-text"],
-.gsap-active [data-motion="hero-cta"] {
+.gsap-active [data-motion="hero-cta"],
+.gsap-active [data-motion="about-hero-image"],
+.gsap-active [data-motion="about-hero-title"],
+.gsap-active [data-motion="about-hero-eyebrow"],
+.gsap-active [data-motion="about-hero-lede"],
+.gsap-active [data-motion="about-hero-title"] .line-inner,
+.gsap-active .about-hero__img,
+.gsap-active .about-hero__inner {
   transition: none !important;
 }
 

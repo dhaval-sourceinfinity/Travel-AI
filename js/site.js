@@ -272,7 +272,8 @@
 
     // Exclude hero elements — they are revealed by the hero entrance sequence
     const heroMotions = new Set([
-      "hero-image", "hero-title", "hero-text", "hero-cta", "hero-content"
+      "hero-image", "hero-title", "hero-text", "hero-cta", "hero-content",
+      "about-hero-image", "about-hero-title", "about-hero-eyebrow", "about-hero-lede"
     ]);
 
     // copy-follow is driven entirely by --reveal-progress, so a one-shot
@@ -498,7 +499,139 @@
     }, 1600);
   }
 
-  /* ---- 5d. Scroll-linked motion (Hero + subtle editorial parallax) ------- */
+  /* ---- 5d. About hero entrance choreography ------------------------------ */
+  function initAboutHeroEntrance() {
+    const hero = document.querySelector(".about-hero");
+    if (!hero) return;
+
+    const heroImage = hero.querySelector('[data-motion="about-hero-image"]');
+    const eyebrow = hero.querySelector('[data-motion="about-hero-eyebrow"]');
+    const title = hero.querySelector('[data-motion="about-hero-title"]');
+    const lede = hero.querySelector('[data-motion="about-hero-lede"]');
+    const header = document.getElementById("site-header");
+
+    if (REDUCE_MOTION) {
+      [heroImage, eyebrow, title, lede].forEach((el) => {
+        if (el) el.classList.add("is-visible");
+      });
+      if (header) header.classList.add("is-visible");
+      return;
+    }
+
+    if (window.gsap && window.TravelMotion && window.TravelMotion.isReady()) {
+      const gsap = window.gsap;
+      const ease = "travelEase";
+      const tl = gsap.timeline({ defaults: { ease: ease } });
+
+      let titleLines = [];
+      if (window.TravelMotionText && title) {
+        titleLines = window.TravelMotionText.prepareLineReveal(title);
+      }
+
+      // 1. Header nav enters smoothly
+      if (header) {
+        header.classList.add("is-visible");
+        tl.fromTo(
+          header,
+          { opacity: 0, y: -8 },
+          { opacity: 1, y: 0, duration: 0.35, clearProps: "transform" },
+          0.0
+        );
+      }
+
+      // 2. Masthead background image settles scale 1.03 -> 1.00
+      if (heroImage) {
+        tl.fromTo(
+          heroImage,
+          { opacity: 0, scale: 1.03 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1.0,
+            ease: "power2.out",
+            clearProps: "transform,opacity",
+            onComplete: () => heroImage.classList.add("is-visible"),
+          },
+          0.05
+        );
+      }
+
+      // 3. Eyebrow fades up
+      if (eyebrow) {
+        tl.fromTo(
+          eyebrow,
+          { opacity: 0, y: 10 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: ease,
+            clearProps: "transform,opacity",
+            onComplete: () => eyebrow.classList.add("is-visible"),
+          },
+          0.15
+        );
+      }
+
+      // 4. Headline lines rise through overflow mask
+      if (titleLines && titleLines.length) {
+        tl.fromTo(
+          titleLines,
+          { opacity: 0, yPercent: 115 },
+          {
+            opacity: 1,
+            yPercent: 0,
+            duration: 0.85,
+            stagger: 0.08,
+            ease: ease,
+            clearProps: "transform,opacity",
+            onComplete: () => title.classList.add("is-visible"),
+          },
+          0.25
+        );
+      } else if (title) {
+        tl.fromTo(
+          title,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.85,
+            ease: ease,
+            clearProps: "transform,opacity",
+            onComplete: () => title.classList.add("is-visible"),
+          },
+          0.25
+        );
+      }
+
+      // 5. Supporting lede copy
+      if (lede) {
+        tl.fromTo(
+          lede,
+          { opacity: 0, y: 14 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.65,
+            ease: ease,
+            clearProps: "transform,opacity",
+            onComplete: () => lede.classList.add("is-visible"),
+          },
+          0.50
+        );
+      }
+    } else {
+      // Fallback: simple staggered visibility
+      setTimeout(() => { if (header) header.classList.add("is-visible"); }, 50);
+      setTimeout(() => { if (heroImage) heroImage.classList.add("is-visible"); }, 150);
+      setTimeout(() => { if (eyebrow) eyebrow.classList.add("is-visible"); }, 250);
+      setTimeout(() => { if (title) title.classList.add("is-visible"); }, 350);
+      setTimeout(() => { if (lede) lede.classList.add("is-visible"); }, 450);
+    }
+  }
+
+  /* ---- 5e. Scroll-linked motion (Hero + subtle editorial parallax) ------- */
   function initScrollMotion() {
     if (REDUCE_MOTION) return;
 
@@ -2382,6 +2515,7 @@
 
     // Hero entrance animation (sequenced page-load)
     initHeroEntrance();
+    initAboutHeroEntrance();
 
     // Scroll-linked motion (Hero + subtle editorial parallax)
     initScrollMotion();
