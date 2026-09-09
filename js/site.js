@@ -1579,6 +1579,9 @@
 
     // Initialize custom themed select dropdowns
     initCustomSelects(profileSection);
+
+    // Initialize custom themed date pickers
+    initDatePickers(profileSection);
   }
 
   /* --------------------------------------------------------------------------
@@ -1790,6 +1793,418 @@
       document.querySelectorAll(".select-wrapper.is-open").forEach((w) => {
         if (!w.contains(e.target) && w.__closeSelect) {
           w.__closeSelect();
+        }
+      });
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     Custom Themed Date Picker Component
+     -------------------------------------------------------------------------- */
+  function initDatePickers(container = document) {
+    const wrappers = container.querySelectorAll(".date-wrapper");
+    if (!wrappers.length) return;
+
+    const MONTH_NAMES = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    const MONTH_SHORT = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+    const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
+    wrappers.forEach((wrapper) => {
+      const input = wrapper.querySelector("input");
+      if (!input || wrapper.querySelector(".date-wrapper__trigger")) return;
+
+      // Hide the original input and icon
+      input.style.cssText = "position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;clip:rect(0,0,0,0)!important;overflow:hidden!important;";
+      input.setAttribute("tabindex", "-1");
+      input.setAttribute("aria-hidden", "true");
+
+      const staticIcon = wrapper.querySelector(".date-wrapper__icon");
+      if (staticIcon) staticIcon.style.display = "none";
+
+      // State
+      let selectedDate = null;
+      let viewMonth = new Date().getMonth();
+      let viewYear = new Date().getFullYear();
+      let isOpen = false;
+      let currentView = "days"; // "days" | "months" | "years"
+      let yearRangeStart = Math.floor(new Date().getFullYear() / 12) * 12;
+
+      // Parse existing value
+      if (input.value) {
+        const parsed = parseDateString(input.value);
+        if (parsed) {
+          selectedDate = parsed;
+          viewMonth = parsed.getMonth();
+          viewYear = parsed.getFullYear();
+        }
+      }
+
+      // --- Trigger Button ---
+      const trigger = document.createElement("button");
+      trigger.type = "button";
+      trigger.className = "date-wrapper__trigger";
+      trigger.setAttribute("aria-haspopup", "dialog");
+      trigger.setAttribute("aria-expanded", "false");
+      trigger.setAttribute("aria-label", "Choose date of birth");
+
+      const labelSpan = document.createElement("span");
+      labelSpan.className = "date-wrapper__trigger-label";
+
+      const iconSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      iconSvg.setAttribute("class", "date-wrapper__trigger-icon");
+      iconSvg.setAttribute("viewBox", "0 0 32 32");
+      iconSvg.setAttribute("fill", "none");
+      iconSvg.setAttribute("aria-hidden", "true");
+      iconSvg.innerHTML = '<path d="M10.6667 2.66553V7.99929M21.3333 2.66553V7.99929M4 13.333H28M6.66667 5.33241H25.3333C26.8061 5.33241 28 6.52641 28 7.99929V26.6674C28 28.1403 26.8061 29.3343 25.3333 29.3343H6.66667C5.19391 29.3343 4 28.1403 4 26.6674V7.99929C4 6.52641 5.19391 5.33241 6.66667 5.33241Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>';
+
+      trigger.appendChild(labelSpan);
+      trigger.appendChild(iconSvg);
+      wrapper.appendChild(trigger);
+
+      // --- Calendar Popup ---
+      const picker = document.createElement("div");
+      picker.className = "datepicker";
+      picker.setAttribute("role", "dialog");
+      picker.setAttribute("aria-label", "Date picker");
+      wrapper.appendChild(picker);
+
+      // Helper functions
+      function parseDateString(str) {
+        if (!str) return null;
+        // Accept mm/dd/yyyy or yyyy-mm-dd
+        const slashMatch = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (slashMatch) {
+          const d = new Date(+slashMatch[3], +slashMatch[1] - 1, +slashMatch[2]);
+          return isNaN(d.getTime()) ? null : d;
+        }
+        const isoMatch = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+        if (isoMatch) {
+          const d = new Date(+isoMatch[1], +isoMatch[2] - 1, +isoMatch[3]);
+          return isNaN(d.getTime()) ? null : d;
+        }
+        return null;
+      }
+
+      function formatDate(date) {
+        if (!date) return "";
+        const mm = String(date.getMonth() + 1).padStart(2, "0");
+        const dd = String(date.getDate()).padStart(2, "0");
+        const yyyy = date.getFullYear();
+        return `${mm}/${dd}/${yyyy}`;
+      }
+
+      function formatDisplayDate(date) {
+        if (!date) return "";
+        return `${MONTH_NAMES[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+      }
+
+      function isSameDay(a, b) {
+        if (!a || !b) return false;
+        return a.getFullYear() === b.getFullYear() &&
+               a.getMonth() === b.getMonth() &&
+               a.getDate() === b.getDate();
+      }
+
+      function updateLabel() {
+        if (selectedDate) {
+          labelSpan.textContent = formatDisplayDate(selectedDate);
+          labelSpan.classList.remove("is-placeholder");
+        } else {
+          labelSpan.textContent = input.placeholder || "mm/dd/yyyy";
+          labelSpan.classList.add("is-placeholder");
+        }
+      }
+
+      function syncInput() {
+        input.value = selectedDate ? formatDate(selectedDate) : "";
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+
+      // --- Build Calendar ---
+      function renderDaysView() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const firstDay = new Date(viewYear, viewMonth, 1);
+        const lastDay = new Date(viewYear, viewMonth + 1, 0);
+        const startWeekday = firstDay.getDay();
+        const daysInMonth = lastDay.getDate();
+
+        // Previous month trailing days
+        const prevLastDay = new Date(viewYear, viewMonth, 0);
+        const prevDaysInMonth = prevLastDay.getDate();
+
+        let html = "";
+
+        // Header
+        html += '<div class="datepicker__header">';
+        html += `<button type="button" class="datepicker__nav-btn" data-action="prev-month" aria-label="Previous month">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>`;
+        html += '<div class="datepicker__title-group">';
+        html += `<button type="button" class="datepicker__month-btn" data-action="show-months">${MONTH_NAMES[viewMonth]}</button>`;
+        html += `<button type="button" class="datepicker__year-btn" data-action="show-years">${viewYear}</button>`;
+        html += '</div>';
+        html += `<button type="button" class="datepicker__nav-btn" data-action="next-month" aria-label="Next month">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>`;
+        html += '</div>';
+
+        // Weekday headers
+        html += '<div class="datepicker__weekdays">';
+        WEEKDAYS.forEach(d => {
+          html += `<div class="datepicker__weekday">${d}</div>`;
+        });
+        html += '</div>';
+
+        // Day cells
+        html += '<div class="datepicker__days">';
+
+        // Previous month overflow
+        for (let i = startWeekday - 1; i >= 0; i--) {
+          const day = prevDaysInMonth - i;
+          const date = new Date(viewYear, viewMonth - 1, day);
+          const sel = isSameDay(date, selectedDate) ? " is-selected" : "";
+          const tod = isSameDay(date, today) ? " is-today" : "";
+          html += `<button type="button" class="datepicker__day is-other-month${sel}${tod}" data-date="${date.toISOString()}">${day}</button>`;
+        }
+
+        // Current month days
+        for (let day = 1; day <= daysInMonth; day++) {
+          const date = new Date(viewYear, viewMonth, day);
+          const sel = isSameDay(date, selectedDate) ? " is-selected" : "";
+          const tod = isSameDay(date, today) ? " is-today" : "";
+          html += `<button type="button" class="datepicker__day${sel}${tod}" data-date="${date.toISOString()}">${day}</button>`;
+        }
+
+        // Next month overflow (fill to 42 cells for consistent 6-row grid)
+        const totalCells = startWeekday + daysInMonth;
+        const remaining = totalCells <= 35 ? 35 - totalCells : 42 - totalCells;
+        for (let i = 1; i <= remaining; i++) {
+          const date = new Date(viewYear, viewMonth + 1, i);
+          const sel = isSameDay(date, selectedDate) ? " is-selected" : "";
+          const tod = isSameDay(date, today) ? " is-today" : "";
+          html += `<button type="button" class="datepicker__day is-other-month${sel}${tod}" data-date="${date.toISOString()}">${i}</button>`;
+        }
+
+        html += '</div>';
+
+        // Footer
+        html += '<div class="datepicker__footer">';
+        html += '<button type="button" class="datepicker__today-btn" data-action="today">Today</button>';
+        html += '<button type="button" class="datepicker__clear-btn" data-action="clear">Clear</button>';
+        html += '</div>';
+
+        picker.innerHTML = html;
+        currentView = "days";
+      }
+
+      function renderMonthsView() {
+        let html = '';
+
+        // Header
+        html += '<div class="datepicker__header">';
+        html += `<button type="button" class="datepicker__nav-btn" data-action="prev-year" aria-label="Previous year">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>`;
+        html += '<div class="datepicker__title-group">';
+        html += `<button type="button" class="datepicker__year-btn" data-action="show-years">${viewYear}</button>`;
+        html += '</div>';
+        html += `<button type="button" class="datepicker__nav-btn" data-action="next-year" aria-label="Next year">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>`;
+        html += '</div>';
+
+        // Month grid
+        html += '<div class="datepicker__month-grid">';
+        const now = new Date();
+        MONTH_SHORT.forEach((m, idx) => {
+          const isCurrent = idx === now.getMonth() && viewYear === now.getFullYear();
+          const isSelected = selectedDate && idx === selectedDate.getMonth() && viewYear === selectedDate.getFullYear();
+          let cls = "datepicker__month-cell";
+          if (isSelected) cls += " is-selected";
+          else if (isCurrent) cls += " is-current";
+          html += `<button type="button" class="${cls}" data-month="${idx}">${m}</button>`;
+        });
+        html += '</div>';
+
+        picker.innerHTML = html;
+        currentView = "months";
+      }
+
+      function renderYearsView() {
+        let html = '';
+        const rangeEnd = yearRangeStart + 11;
+
+        // Header
+        html += '<div class="datepicker__header">';
+        html += `<button type="button" class="datepicker__nav-btn" data-action="prev-decade" aria-label="Previous decade">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>`;
+        html += '<div class="datepicker__title-group">';
+        html += `<span class="datepicker__month-btn" style="cursor:default;pointer-events:none;">${yearRangeStart} – ${rangeEnd}</span>`;
+        html += '</div>';
+        html += `<button type="button" class="datepicker__nav-btn" data-action="next-decade" aria-label="Next decade">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>`;
+        html += '</div>';
+
+        // Year grid
+        html += '<div class="datepicker__year-grid">';
+        const now = new Date();
+        for (let y = yearRangeStart; y <= rangeEnd; y++) {
+          const isCurrent = y === now.getFullYear();
+          const isSelected = selectedDate && y === selectedDate.getFullYear();
+          let cls = "datepicker__year-cell";
+          if (isSelected) cls += " is-selected";
+          else if (isCurrent) cls += " is-current";
+          html += `<button type="button" class="${cls}" data-year="${y}">${y}</button>`;
+        }
+        html += '</div>';
+
+        picker.innerHTML = html;
+        currentView = "years";
+      }
+
+      // --- Open / Close ---
+      function open() {
+        // Close other date pickers
+        document.querySelectorAll(".date-wrapper.is-open").forEach((w) => {
+          if (w !== wrapper && w.__closeDatePicker) w.__closeDatePicker();
+        });
+        // Close any open select dropdowns
+        document.querySelectorAll(".select-wrapper.is-open").forEach((w) => {
+          if (w.__closeSelect) w.__closeSelect();
+        });
+
+        isOpen = true;
+        wrapper.classList.add("is-open");
+        trigger.classList.add("is-open");
+        trigger.setAttribute("aria-expanded", "true");
+
+        const card = wrapper.closest(".profile-card");
+        if (card) card.classList.add("has-dropdown-open");
+
+        if (selectedDate) {
+          viewMonth = selectedDate.getMonth();
+          viewYear = selectedDate.getFullYear();
+        }
+        currentView = "days";
+        renderDaysView();
+        picker.classList.add("is-open");
+      }
+
+      function close() {
+        isOpen = false;
+        wrapper.classList.remove("is-open");
+        trigger.classList.remove("is-open");
+        trigger.setAttribute("aria-expanded", "false");
+        picker.classList.remove("is-open");
+
+        const card = wrapper.closest(".profile-card");
+        if (card) card.classList.remove("has-dropdown-open");
+      }
+
+      wrapper.__closeDatePicker = close;
+
+      function selectDate(date) {
+        selectedDate = date;
+        updateLabel();
+        syncInput();
+        close();
+        trigger.focus();
+      }
+
+      // --- Event Delegation ---
+      trigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (isOpen) { close(); } else { open(); }
+      });
+
+      picker.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const btn = e.target.closest("button");
+        if (!btn) return;
+
+        const action = btn.dataset.action;
+
+        if (action === "prev-month") {
+          viewMonth--;
+          if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+          renderDaysView();
+        } else if (action === "next-month") {
+          viewMonth++;
+          if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+          renderDaysView();
+        } else if (action === "prev-year") {
+          viewYear--;
+          renderMonthsView();
+        } else if (action === "next-year") {
+          viewYear++;
+          renderMonthsView();
+        } else if (action === "prev-decade") {
+          yearRangeStart -= 12;
+          renderYearsView();
+        } else if (action === "next-decade") {
+          yearRangeStart += 12;
+          renderYearsView();
+        } else if (action === "show-months") {
+          renderMonthsView();
+        } else if (action === "show-years") {
+          yearRangeStart = Math.floor(viewYear / 12) * 12;
+          renderYearsView();
+        } else if (action === "today") {
+          const now = new Date();
+          now.setHours(0, 0, 0, 0);
+          selectDate(now);
+        } else if (action === "clear") {
+          selectedDate = null;
+          updateLabel();
+          syncInput();
+          close();
+          trigger.focus();
+        } else if (btn.dataset.date) {
+          const date = new Date(btn.dataset.date);
+          date.setHours(0, 0, 0, 0);
+          selectDate(date);
+        } else if (btn.dataset.month !== undefined) {
+          viewMonth = +btn.dataset.month;
+          renderDaysView();
+        } else if (btn.dataset.year !== undefined) {
+          viewYear = +btn.dataset.year;
+          renderMonthsView();
+        }
+      });
+
+      // Keyboard navigation
+      trigger.addEventListener("keydown", (e) => {
+        if (!isOpen && (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          open();
+          return;
+        }
+        if (isOpen && e.key === "Escape") {
+          e.preventDefault();
+          close();
+          trigger.focus();
+        }
+      });
+
+      // Init label
+      updateLabel();
+    });
+
+    // Click outside closes any open date picker
+    document.addEventListener("click", (e) => {
+      document.querySelectorAll(".date-wrapper.is-open").forEach((w) => {
+        if (!w.contains(e.target) && w.__closeDatePicker) {
+          w.__closeDatePicker();
         }
       });
     });
