@@ -118,7 +118,7 @@
       }
     });
 
-    const mq = window.matchMedia("(min-width: 769px)");
+    const mq = window.matchMedia("(min-width: 768px)");
     mq.addEventListener("change", (e) => {
       if (e.matches) setOpen(false);
     });
