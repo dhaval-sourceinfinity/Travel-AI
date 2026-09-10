@@ -68,13 +68,13 @@
       <nav class="nav" id="primary-nav" aria-label="Primary">
         ${links}
         <div class="nav__mobile-actions">
-          <a class="nav-link-signin" href="contact.html">Sign In</a>
-          <a class="btn btn--pill btn--accent" href="index.html#destinations">Get Started</a>
+          <a class="nav-link-signin" href="#login" data-auth-trigger="login">Sign In</a>
+          <a class="btn btn--pill btn--accent" href="#signup" data-auth-trigger="signup">Get Started</a>
         </div>
       </nav>
       <div class="nav-actions">
-        <a class="nav-link-signin" href="contact.html">Sign In</a>
-        <a class="btn btn--pill btn--accent nav-cta-btn" href="index.html#destinations">Get Started</a>
+        <a class="nav-link-signin" href="#login" data-auth-trigger="login">Sign In</a>
+        <a class="btn btn--pill btn--accent nav-cta-btn" href="#signup" data-auth-trigger="signup">Get Started</a>
       </div>
       <button class="nav-toggle" type="button" aria-expanded="false"
               aria-controls="primary-nav" aria-label="Open menu">

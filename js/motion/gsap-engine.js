@@ -183,6 +183,31 @@
     },
 
     /**
+     * Pauses Lenis smooth scrolling (e.g., when an overlay modal is active).
+     */
+    stopScroll: function () {
+      if (lenisInstance && typeof lenisInstance.stop === "function") {
+        lenisInstance.stop();
+      }
+    },
+
+    /**
+     * Resumes Lenis smooth scrolling (e.g., when an overlay modal closes).
+     */
+    startScroll: function () {
+      if (lenisInstance && typeof lenisInstance.start === "function") {
+        lenisInstance.start();
+      }
+    },
+
+    /**
+     * Returns the active Lenis smooth scroll instance if available.
+     */
+    getLenis: function () {
+      return lenisInstance;
+    },
+
+    /**
      * Binds internal anchor links so they smoothly scroll using Lenis or native behavior,
      * maintaining accessibility focus rings on navigation targets.
      */
