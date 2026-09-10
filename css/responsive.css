@@ -57,64 +57,210 @@
   }
 }
 
-/* ---- Mobile (under 768px): collapse header nav into a menu --------------- */
+/* ---- Mobile (under 768px): Vita Travel header drawer -------------------- */
 @media (max-width: 767px) {
+  /* Show hamburger, hide desktop nav & actions */
+  .header__burger,
+  .btn-burger,
   .nav-toggle {
-    display: flex;
+    display: flex !important;
   }
   .nav {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-    padding: var(--space-1) var(--container-pad) var(--space-4);
-    background: var(--color-surface-nav);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    border-bottom: 0.8px solid var(--color-border);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px);
-    transition: opacity var(--dur-normal) var(--ease-standard),
-      transform var(--dur-normal) var(--ease-standard),
-      visibility var(--dur-normal) var(--ease-standard);
+    display: none !important;
   }
-  .site-header.nav-open .nav {
-    opacity: 1;
-    visibility: visible;
-    transform: none;
-  }
-  .nav__link {
-    padding: 14px 2px;
-    font-size: 15px;
-    color: var(--color-text);
-    border-bottom: 0.8px solid var(--color-border);
-  }
-  .nav__link::after { display: none; }
-
   .nav-actions {
-    display: none;
+    display: none !important;
   }
-  .nav__mobile-actions {
+
+  /* Header inner bar remains above the drawer */
+  .site-header {
+    border-bottom: 1px solid var(--color-border-nav, #1d1e23);
+  }
+  .site-header__inner {
+    position: relative;
+    z-index: 105;
+  }
+
+  /* Full-viewport mobile drawer matching Vita Travel */
+  .mobile-drawer,
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 101;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100svh;
+    background-color: #080b0d;
+    background: radial-gradient(circle at top right, rgba(20, 26, 32, 0.95), #080b0d 70%);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
-    padding-top: var(--space-4);
-    padding-bottom: var(--space-2);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translateY(-1rem);
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .nav__mobile-actions .nav-link-signin {
-    justify-content: center;
-    color: var(--color-text);
-    font-size: 15px;
-    padding: 12px;
-    border-radius: var(--radius-sm);
+
+  .mobile-drawer.is-active,
+  .site-header.nav-open .mobile-drawer {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
   }
-  .nav__mobile-actions .btn {
+
+  .mobile-drawer__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
+    padding: calc(var(--header-h, 64px) + 1.75rem) clamp(1.25rem, 5vw, 2.5rem) clamp(2rem, 6vw, 3.5rem);
+    max-width: var(--container-max);
+    margin: 0 auto;
     width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Large editorial links with plus (+) prefix */
+  .mobile-drawer__nav,
+  .mobile-drawer .header-nav {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 2.5vw, 1.25rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mobile-drawer__item,
+  .mobile-drawer .header-nav__item {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mobile-drawer__link,
+  .mobile-drawer .header-nav__link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: clamp(2.1rem, 7.5vw, 2.75rem);
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    color: var(--color-text, #ffffff);
+    text-decoration: none;
+    transition: color 0.25s ease, transform 0.25s ease;
+    padding: 0.25rem 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-drawer__link:hover,
+  .mobile-drawer__link:focus-visible {
+    color: var(--color-accent);
+    transform: translateX(4px);
+  }
+
+  .mobile-drawer__link.is-current,
+  .mobile-drawer__link[aria-current="page"] {
+    color: var(--color-accent-hover, #b9a4fb);
+  }
+
+  .mobile-drawer__plus {
+    color: rgba(255, 255, 255, 0.35);
+    font-weight: 300;
+    font-size: 0.85em;
+    display: inline-block;
+    transition: color 0.25s ease, transform 0.25s ease;
+  }
+
+  .mobile-drawer__link:hover .mobile-drawer__plus,
+  .mobile-drawer__link:focus-visible .mobile-drawer__plus,
+  .mobile-drawer__link.is-current .mobile-drawer__plus {
+    color: var(--color-accent);
+    transform: rotate(45deg);
+  }
+
+  /* Drawer Footer / CTA Buttons */
+  .mobile-drawer__footer,
+  .mobile-drawer .header__button {
+    margin-top: clamp(2rem, 6vw, 3.5rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+    width: 100%;
+  }
+
+  .mobile-drawer__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .mobile-drawer__signin {
+    display: flex;
+    align-items: center;
     justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill, 999px);
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+  .mobile-drawer__signin:hover,
+  .mobile-drawer__signin:focus-visible {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .mobile-drawer__cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .mobile-drawer__dec,
+  .header__dec.header__dec--1 {
+    background-color: var(--color-border, rgba(255, 255, 255, 0.08));
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
+
+/* Prevent background scrolling when mobile drawer is open */
+body.drawer-open {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+/* Ensure mobile drawer is strictly hidden on desktop */
+@media (min-width: 768px) {
+  .header__burger,
+  .btn-burger,
+  .mobile-drawer,
+  .mobile-menu {
+    display: none !important;
   }
 }
 
