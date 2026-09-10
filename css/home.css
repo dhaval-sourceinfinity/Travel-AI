@@ -66,22 +66,23 @@
   margin-bottom: -0.08em;
 }
 .hero__text {
-  margin-top: var(--space-4);
+  margin-top: clamp(16px, 2.5vw, 24px);
   width: 100%;
-  max-width: 330px;
+  max-width: 580px;
   margin-inline: auto;
-  font-size: 13px;
-  line-height: 20px;
-  color: rgba(255, 255, 255, 0.88);
+  font-size: var(--fs-body-lg);
+  line-height: 1.55;
+  letter-spacing: -0.015em;
+  color: rgba(255, 255, 255, 0.9);
   text-align: center;
 }
 .hero__text p {
   margin: 0;
 }
 .hero__text p + p {
-  margin-top: 14px;
+  margin-top: 10px;
 }
-.hero__cta { margin-top: var(--space-8); }
+.hero__cta { margin-top: clamp(24px, 3.5vw, 36px); }
 
 /* --------------------------------------------------------------------------
    Intro copy width guards

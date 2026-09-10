@@ -264,56 +264,70 @@ body.drawer-open {
   }
 }
 
-/* ---- Small tablets: single-column card grids --------------------------- */
-@media (max-width: 720px) {
+/* ---- Tablet & Mobile Card Grids & Layout Adaptation -------------------- */
+@media (max-width: 767px) {
   .destinations,
   .features,
   .journeys {
     grid-template-columns: 1fr;
+    gap: var(--space-6);
   }
   .destinations { margin-top: var(--space-8); }
   .journeys { margin-top: var(--space-8); }
 
   .dest-card {
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 16 / 10;
   }
-}
+  .dest-card__body {
+    padding: clamp(16px, 4vw, 24px);
+  }
 
-/* ---- Steps to single column on phones ---------------------------------- */
-@media (max-width: 560px) {
   .steps {
     grid-template-columns: 1fr;
-    margin-top: var(--space-10);
+    margin-top: var(--space-8);
   }
   .step {
     border-right: 0;
     border-bottom: 0.8px solid var(--color-border);
-    padding: 28px 0;
+    padding: 24px 0;
   }
   .step:last-child { border-bottom: 0; }
 
   .notes {
     grid-template-columns: 1fr;
-    gap: var(--space-6);
+    gap: var(--space-5);
   }
 
   .footer-bottom {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-3);
+    gap: var(--space-4);
   }
   .advisor {
     flex-direction: column;
     align-items: flex-start;
+    gap: var(--space-3);
+  }
+  .advisor .btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 
-/* ---- Testimonial photos: keep 2×2 but allow shrink; go 1-col very small - */
-@media (max-width: 380px) {
+/* ---- Small Mobile (<= 479px): compact padding and proportions ------------- */
+@media (max-width: 479px) {
+  .dest-card {
+    aspect-ratio: 4 / 3;
+  }
   .testimonial-grid {
     grid-template-columns: 1fr;
   }
-  .person-card { aspect-ratio: 3 / 4; }
+  .person-card {
+    aspect-ratio: 16 / 10;
+  }
+  .section-head .section-title {
+    font-size: clamp(26px, 7vw, 34px);
+  }
 }
 
 /* ---- Large desktop: keep imagery generous, text measured --------------- */

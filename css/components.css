@@ -197,10 +197,11 @@
   background: #fff;
   color: #0b0f11;
   border-radius: var(--radius-pill);
-  padding: 6px 6px 6px 18px;
-  font-size: 12px;
-  font-weight: 500;
+  padding: 8px 10px 8px 22px;
+  font-size: 14px;
+  font-weight: 600;
   letter-spacing: -0.01em;
+  min-height: 44px;
   box-shadow: var(--shadow-pill);
   transition: transform 0.25s ease-out,
     box-shadow 0.25s ease-out;
@@ -580,8 +581,8 @@
   max-width: 22ch;
 }
 .dest-card__text {
-  font-size: 12.5px;
-  line-height: 1.7;
+  font-size: var(--fs-body);
+  line-height: 1.6;
   color: var(--color-on-image);
   max-width: 42ch;
 }
@@ -615,8 +616,8 @@
   margin-bottom: var(--space-3);
 }
 .feature__text {
-  font-size: 12.5px;
-  line-height: 1.7;
+  font-size: var(--fs-body);
+  line-height: 1.6;
   color: var(--color-text-muted);
 }
 
@@ -693,8 +694,8 @@
   letter-spacing: -0.035em;
 }
 .journey-card__text {
-  font-size: 12.5px;
-  line-height: 1.7;
+  font-size: var(--fs-body);
+  line-height: 1.6;
   color: var(--color-text-secondary);
   margin-top: var(--space-3);
 }
@@ -709,12 +710,13 @@
   border-top: 0.8px solid var(--color-border);
 }
 .journey-card__price {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--color-text-muted);
 }
 .journey-card__price strong {
   color: var(--color-text);
   font-weight: 600;
+  font-size: 14.5px;
 }
 
 /* ---- Trip variant (my-trips) --------------------------------------------
@@ -846,8 +848,8 @@
   letter-spacing: -0.035em;
 }
 .place-card__text {
-  font-size: 12.5px;
-  line-height: 1.7;
+  font-size: var(--fs-body);
+  line-height: 1.6;
   color: var(--color-text-secondary);
   margin-top: var(--space-3);
 }
@@ -878,8 +880,8 @@
 }
 .step:last-child { border-right: 0; }
 .step__num {
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   letter-spacing: 0.06em;
   color: var(--color-text-faint);
 }
@@ -890,19 +892,20 @@
   margin: 28px 0 24px;
 }
 .step__title {
-  font-size: 15px;
+  font-size: 17px;
+  font-weight: 600;
   letter-spacing: -0.025em;
 }
 .step__cue {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--color-accent);
   letter-spacing: -0.01em;
   margin-top: 10px;
 }
 .step__text {
-  font-size: 12px;
-  line-height: 1.7;
+  font-size: 14px;
+  line-height: 1.6;
   color: var(--color-text-muted);
   margin-top: var(--space-3);
 }
@@ -946,14 +949,14 @@
   bottom: 14px;
 }
 .person-card__name {
-  font-size: 12.5px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   color: #fff;
   letter-spacing: -0.01em;
 }
 .person-card__place {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
   margin-top: 3px;
 }
 
