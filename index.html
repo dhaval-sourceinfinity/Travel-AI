@@ -35,6 +35,7 @@
   <!-- Motion Foundation: GSAP 3.x + ScrollTrigger (pinned CDN) & Motion Engine -->
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/MorphSVGPlugin.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
   <script defer src="js/motion/gsap-presets.js"></script>
   <script defer src="js/motion/gsap-text.js"></script>
@@ -292,69 +293,103 @@
     </section>
 
     <!-- ===================== 08 — Testimonials ===================== -->
-    <section class="section section--surface" aria-labelledby="testimonials-title">
+    <section class="section section--surface testimonials-section" aria-labelledby="testimonials-title">
       <div class="container">
-        <!-- No wrapper reveal: every child animates on its own position. A reveal here
-           would make this the only editorial heading not observed directly, slaving its
-           rise to the wrapper and firing 23 elements in one instant. -->
-        <div class="testimonials-grid">
-          <div class="testimonial-grid" data-motion-stagger>
-            <figure class="person-card" data-motion="fade-in">
-              <img class="person-card__img" src="assets/images/portrait-james.webp"
-                   alt="Portrait of James R." loading="lazy" decoding="async" data-motion="image-reveal" />
-              <div class="person-card__scrim" aria-hidden="true"></div>
-              <figcaption class="person-card__caption">
-                <p class="person-card__name" data-motion="text-reveal">James R.</p>
-                <p class="person-card__place" data-motion="text-reveal">Auckland, New Zealand</p>
-              </figcaption>
-            </figure>
-            <figure class="person-card" data-motion="fade-in">
-              <img class="person-card__img" src="assets/images/portrait-sofia.webp"
-                   alt="Portrait of Sofia M." loading="lazy" decoding="async" data-motion="image-reveal" />
-              <div class="person-card__scrim" aria-hidden="true"></div>
-              <figcaption class="person-card__caption">
-                <p class="person-card__name" data-motion="text-reveal">Sofia M.</p>
-                <p class="person-card__place" data-motion="text-reveal">Wellington, New Zealand</p>
-              </figcaption>
-            </figure>
-            <figure class="person-card" data-motion="fade-in">
-              <img class="person-card__img" src="assets/images/portrait-daniel.webp"
-                   alt="Portrait of Daniel K." loading="lazy" decoding="async" data-motion="image-reveal" />
-              <div class="person-card__scrim" aria-hidden="true"></div>
-              <figcaption class="person-card__caption">
-                <p class="person-card__name" data-motion="text-reveal">Daniel K.</p>
-                <p class="person-card__place" data-motion="text-reveal">Christchurch, New Zealand</p>
-              </figcaption>
-            </figure>
-            <figure class="person-card" data-motion="fade-in">
-              <img class="person-card__img" src="assets/images/portrait-rachel.webp"
-                   alt="Portrait of Rachel T." loading="lazy" decoding="async" data-motion="image-reveal" />
-              <div class="person-card__scrim" aria-hidden="true"></div>
-              <figcaption class="person-card__caption">
-                <p class="person-card__name" data-motion="text-reveal">Rachel T.</p>
-                <p class="person-card__place" data-motion="text-reveal">Queenstown, New Zealand</p>
-              </figcaption>
-            </figure>
+        <div class="testimonials-editorial">
+          <!-- Left Column: 2x2 cards with hairline grid dividers -->
+          <div class="testimonials-cards-wrap">
+            <div class="testimonials-cards">
+              <div class="testimonials-card" data-testimonial-card="1">
+                <div class="testimonials-card__visual">
+                  <img class="testimonials-card__img" src="assets/images/portrait-james.webp"
+                       alt="Portrait of James R." loading="lazy" decoding="async" />
+                  <div class="testimonials-card__scrim" aria-hidden="true"></div>
+                  <div class="testimonials-card__caption">
+                    <p class="testimonials-card__name">James R.</p>
+                    <p class="testimonials-card__place">Auckland, New Zealand</p>
+                  </div>
+                </div>
+              </div>
+              <div class="testimonials-card" data-testimonial-card="2">
+                <div class="testimonials-card__visual">
+                  <img class="testimonials-card__img" src="assets/images/portrait-sofia.webp"
+                       alt="Portrait of Sofia M." loading="lazy" decoding="async" />
+                  <div class="testimonials-card__scrim" aria-hidden="true"></div>
+                  <div class="testimonials-card__caption">
+                    <p class="testimonials-card__name">Sofia M.</p>
+                    <p class="testimonials-card__place">Wellington, New Zealand</p>
+                  </div>
+                </div>
+              </div>
+              <div class="testimonials-card" data-testimonial-card="3">
+                <div class="testimonials-card__visual">
+                  <img class="testimonials-card__img" src="assets/images/portrait-daniel.webp"
+                       alt="Portrait of Daniel K." loading="lazy" decoding="async" />
+                  <div class="testimonials-card__scrim" aria-hidden="true"></div>
+                  <div class="testimonials-card__caption">
+                    <p class="testimonials-card__name">Daniel K.</p>
+                    <p class="testimonials-card__place">Christchurch, New Zealand</p>
+                  </div>
+                </div>
+              </div>
+              <div class="testimonials-card" data-testimonial-card="4">
+                <div class="testimonials-card__visual">
+                  <img class="testimonials-card__img" src="assets/images/portrait-rachel.webp"
+                       alt="Portrait of Rachel T." loading="lazy" decoding="async" />
+                  <div class="testimonials-card__scrim" aria-hidden="true"></div>
+                  <div class="testimonials-card__caption">
+                    <p class="testimonials-card__name">Rachel T.</p>
+                    <p class="testimonials-card__place">Queenstown, New Zealand</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Internal Grid Hairline Decs -->
+            <div class="testimonials-dec testimonials-dec--grid-v" aria-hidden="true"></div>
+            <div class="testimonials-dec testimonials-dec--grid-h" aria-hidden="true"></div>
           </div>
 
-          <div class="testimonials-copy">
-            <div class="section-head">
-              <p class="eyebrow" data-motion="text-reveal">08 — Testimonials</p>
-              <p class="label" data-motion="text-reveal">What Travellers Say</p>
-              <h2 class="section-title" id="testimonials-title" data-motion="line-reveal">Words from the people who've travelled.</h2>
-            </div>
-            <div class="notes" data-motion="fade-up">
-              <div class="note">
-                <p class="note__plus" aria-hidden="true">+</p>
-                <h3 class="note__title" data-motion="text-reveal">Real journeys, real people.</h3>
-                <p class="note__text" data-motion="text-reveal">Every review comes from a traveller who experienced a journey we helped create — no templates, no guesswork.</p>
+          <!-- Right Column: Heading on top + 2 sub-columns with plus icons on bottom -->
+          <div class="testimonials-content">
+            <div class="testimonials-content__top">
+              <div class="testimonials-eyebrow">
+                <svg class="testimonials-eyebrow__icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                  <path d="M8 0L9.8 5.2L15 3.4L11.4 7.6L16 9.8L10.8 11.6L12.6 16.8L8.4 13.2L6.2 17.8L4.4 12.6L0 14.4L3.6 10.2L-1 8L4.2 6.2L2.4 1L6.6 4.6Z"/>
+                </svg>
+                <span>What Travellers Say</span>
               </div>
-              <div class="note">
-                <p class="note__plus" aria-hidden="true">+</p>
-                <p class="note__text note__text--strong" data-motion="text-reveal">We measure our success by how you feel when you return home — and whether you can't wait to go back.</p>
+              <h2 class="section-title testimonials-headline" id="testimonials-title">Words from the people<br />who've travelled.</h2>
+            </div>
+
+            <div class="testimonials-content__bottom">
+              <div class="testimonials-notes">
+                <div class="testimonials-note" data-testimonial-note="1">
+                  <svg class="testimonials-note__plus" data-testimonial-plus="1" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="7" width="2" height="16" fill="currentColor"/>
+                    <rect x="16" y="7" width="2" height="16" transform="rotate(90 16 7)" fill="currentColor"/>
+                  </svg>
+                  <div class="testimonials-note__body">
+                    <h3 class="testimonials-note__title">Real journeys, real people.</h3>
+                    <p class="testimonials-note__text">Every review comes from a traveller who experienced a journey we helped create — thoughtful itineraries, personal touches, no guesswork.</p>
+                  </div>
+                </div>
+                <div class="testimonials-note" data-testimonial-note="2">
+                  <svg class="testimonials-note__plus" data-testimonial-plus="2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="7" width="2" height="16" fill="currentColor"/>
+                    <rect x="16" y="7" width="2" height="16" transform="rotate(90 16 7)" fill="currentColor"/>
+                  </svg>
+                  <div class="testimonials-note__body">
+                    <p class="testimonials-note__quote">We measure our success by how you feel when you return home — and whether you can't wait to go back.</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
+          <!-- Outer Hairline Decs -->
+          <div class="testimonials-dec testimonials-dec--top" aria-hidden="true"></div>
+          <div class="testimonials-dec testimonials-dec--bottom" aria-hidden="true"></div>
+          <div class="testimonials-dec testimonials-dec--mid-v" aria-hidden="true"></div>
         </div>
       </div>
     </section>

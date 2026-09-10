@@ -72,6 +72,9 @@
       const gsap = root.gsap;
       const ScrollTrigger = root.ScrollTrigger;
       gsap.registerPlugin(ScrollTrigger);
+      if (root.MorphSVGPlugin) {
+        gsap.registerPlugin(root.MorphSVGPlugin);
+      }
 
       isReducedMotion = this.hasReducedMotion();
 
@@ -98,6 +101,8 @@
       this.initStaggerContainers();
       this.initStandaloneElements();
       this.initTypographyReveals();
+      this.initTestimonialsEditorial();
+      this.initFooterBounce();
 
       // Bind resize & font load listeners for geometry recalculations
       this.bindMetricsWatchers();
@@ -266,6 +271,19 @@
           root.gsap.set(el, { clearProps: "all" });
         }
       });
+      const testSection = document.querySelector(".testimonials-section");
+      if (testSection && root.gsap) {
+        root.gsap.set(
+          testSection.querySelectorAll(
+            ".testimonials-card, .testimonials-eyebrow, .testimonials-headline, .testimonials-note__plus, .testimonials-note, .testimonials-dec"
+          ),
+          { clearProps: "all" }
+        );
+      }
+      const bouncyPath = document.querySelector("#bouncy-path");
+      if (bouncyPath) {
+        bouncyPath.setAttribute("d", "M0-0.3C0-0.3,464,0,1139,0s1139-0.3,1139-0.3V683H0V-0.3z");
+      }
       // Kill any active triggers
       if (root.ScrollTrigger) {
         root.ScrollTrigger.getAll().forEach((t) => t.kill());
@@ -688,14 +706,227 @@
         });
 
         activeTriggers.push(trigger);
-      });
-    },
+    });
+  },
 
-    /**
-     * Animates dynamically injected elements, such as package cards
-     * rendered in js/journeys.js during filtering or sorting.
-     */
-    animateDynamicGrid: function (gridEl) {
+  /**
+   * Vita Travel style Testimonials / Practitioners section entrance choreography:
+   * - Staggered card slides from left (x: -40 -> 0)
+   * - Rotating plus icons (-180deg -> 0deg)
+   * - Expanding hairline divider lines (width / height 0% -> 100%)
+   * - Reversible on scroll back up, and respects prefers-reduced-motion
+   */
+  initTestimonialsEditorial: function () {
+    const section = document.querySelector(".testimonials-section");
+    if (!section) return;
+
+    const gsap = root.gsap;
+    const ScrollTrigger = root.ScrollTrigger;
+    if (!gsap || !ScrollTrigger) return;
+
+    const cards = Array.from(section.querySelectorAll(".testimonials-card"));
+    const decTop = section.querySelector(".testimonials-dec--top");
+    const decBottom = section.querySelector(".testimonials-dec--bottom");
+    const decMidV = section.querySelector(".testimonials-dec--mid-v");
+    const decGridV = section.querySelector(".testimonials-dec--grid-v");
+    const decGridH = section.querySelector(".testimonials-dec--grid-h");
+    const eyebrow = section.querySelector(".testimonials-eyebrow");
+    const headline = section.querySelector(".testimonials-headline");
+    const plusIcons = Array.from(section.querySelectorAll(".testimonials-note__plus"));
+    const notes = Array.from(section.querySelectorAll(".testimonials-note"));
+
+    if (isReducedMotion) {
+      gsap.set([cards, eyebrow, headline, plusIcons, notes], { opacity: 1, x: 0, y: 0, rotation: 0 });
+      gsap.set([decTop, decBottom, decGridH], { width: "100%" });
+      gsap.set([decMidV, decGridV], { height: "100%" });
+      return;
+    }
+
+    // Initial state matching Vita Travel reference
+    gsap.set(cards, { opacity: 0, x: -40 });
+    if (eyebrow) gsap.set(eyebrow, { opacity: 0, y: 30 });
+    if (headline) gsap.set(headline, { opacity: 0, y: 30 });
+    if (plusIcons.length) {
+      gsap.set(plusIcons, {
+        rotation: -180,
+        scale: 0.6,
+        opacity: 0,
+        transformOrigin: "50% 50%",
+      });
+    }
+    if (notes.length) gsap.set(notes, { opacity: 0, y: 24 });
+
+    const isMobile = window.innerWidth <= 767;
+    if (!isMobile) {
+      if (decTop) gsap.set(decTop, { width: "0%" });
+      if (decBottom) gsap.set(decBottom, { width: "0%" });
+      if (decMidV) gsap.set(decMidV, { height: "0%" });
+      if (decGridV) gsap.set(decGridV, { height: "0%" });
+      if (decGridH) gsap.set(decGridH, { width: "0%" });
+    }
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 82%",
+        toggleActions: "play none none reverse",
+      },
+    });
+
+    // 1. Hairline divider lines expand across (Vita Travel ease power2.inOut)
+    if (!isMobile) {
+      if (decTop) tl.to(decTop, { width: "100%", duration: 0.8, ease: "power2.inOut" }, 0);
+      if (decBottom) tl.to(decBottom, { width: "100%", duration: 0.8, ease: "power2.inOut" }, 0.1);
+      if (decMidV) tl.to(decMidV, { height: "100%", duration: 0.8, ease: "power2.inOut" }, 0.2);
+      if (decGridV) tl.to(decGridV, { height: "100%", duration: 0.8, ease: "power2.inOut" }, 0.25);
+      if (decGridH) tl.to(decGridH, { width: "100%", duration: 0.8, ease: "power2.inOut" }, 0.3);
+    }
+
+    // 2. Cards entrance: slide from left (x: -40 -> 0) and fade in (opacity: 0 -> 1) with 0.15s stagger
+    cards.forEach((card, i) => {
+      const startTime = 0.15 * i;
+      tl.to(card, { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" }, startTime);
+    });
+
+    // 3. Right column text entrance
+    if (eyebrow) {
+      tl.to(eyebrow, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.25);
+    }
+    if (headline) {
+      tl.to(headline, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.35);
+    }
+
+    // 4. Plus icons spin & un-rotate from -180deg to 0deg (Vita Travel signature entrance)
+    if (plusIcons.length) {
+      tl.to(
+        plusIcons,
+        {
+          rotation: 0,
+          scale: 1,
+          opacity: 1,
+          duration: 0.65,
+          ease: "power3.out",
+          stagger: 0.15,
+        },
+        0.45
+      );
+    }
+
+    // 5. Notes fade in
+    if (notes.length) {
+      tl.to(notes, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", stagger: 0.12 }, 0.55);
+    }
+
+    // 6. Interactive tactile hover/focus rotation matching mobile drawer feel
+    notes.forEach((note) => {
+      const plus = note.querySelector(".testimonials-note__plus");
+      if (!plus) return;
+
+      const handleEnter = () => {
+        gsap.to(plus, {
+          rotation: 45,
+          duration: 0.35,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+      };
+      const handleLeave = () => {
+        gsap.to(plus, {
+          rotation: 0,
+          duration: 0.35,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+      };
+
+      note.addEventListener("mouseenter", handleEnter);
+      note.addEventListener("mouseleave", handleLeave);
+      note.addEventListener("focusin", handleEnter);
+      note.addEventListener("focusout", handleLeave);
+    });
+
+    activeTriggers.push(tl.scrollTrigger);
+  },
+
+  /**
+   * Initializes the velocity-linked footer bounce animation.
+   * Recreates the physics and dynamic elasticity of https://demos.gsap.com/demo/footer-bounce/
+   */
+  initFooterBounce: function () {
+    const footer = document.getElementById("site-footer");
+    if (!footer) return;
+
+    const bouncyPath = footer.querySelector("#bouncy-path");
+    if (!bouncyPath) return;
+
+    const gsap = root.gsap;
+    const ScrollTrigger = root.ScrollTrigger;
+    if (!gsap || !ScrollTrigger) return;
+
+    const down = "M0-0.3C0-0.3,464,156,1139,156S2278-0.3,2278-0.3V683H0V-0.3z";
+    const center = "M0-0.3C0-0.3,464,0,1139,0s1139-0.3,1139-0.3V683H0V-0.3z";
+
+    if (isReducedMotion) {
+      bouncyPath.setAttribute("d", center);
+      return;
+    }
+
+    // Initial flat resting state
+    bouncyPath.setAttribute("d", center);
+
+    const hasMorphSVG = Boolean(root.MorphSVGPlugin && gsap.plugins && gsap.plugins.morphSVG);
+
+    const trigger = ScrollTrigger.create({
+      trigger: footer,
+      start: "top bottom",
+      toggleActions: "play pause resume reverse",
+      onEnter: (self) => {
+        const velocity = typeof self.getVelocity === "function" ? self.getVelocity() : 1000;
+        // Calculate variation based on scroll speed: clamp between -0.85 and 0.85
+        const variation = Math.min(0.85, Math.max(-0.85, velocity / 10000));
+        const springTension = Math.max(0.2, 1 + variation);
+        const springDamping = Math.max(0.15, 1 - variation);
+
+        if (hasMorphSVG) {
+          gsap.fromTo(
+            bouncyPath,
+            { morphSVG: down },
+            {
+              duration: 2,
+              morphSVG: center,
+              ease: `elastic.out(${springTension}, ${springDamping})`,
+              overwrite: "auto",
+            }
+          );
+        } else {
+          // High-performance native fallback: animate cubic bezier curve control points
+          const proxy = { curve: 156 };
+          gsap.killTweensOf(proxy);
+          gsap.to(proxy, {
+            curve: 0,
+            duration: 2,
+            ease: `elastic.out(${springTension}, ${springDamping})`,
+            overwrite: "auto",
+            onUpdate: () => {
+              const c = proxy.curve.toFixed(1);
+              bouncyPath.setAttribute(
+                "d",
+                `M0-0.3C0-0.3,464,${c},1139,${c}S2278-0.3,2278-0.3V683H0V-0.3z`
+              );
+            },
+          });
+        }
+      },
+    });
+
+    activeTriggers.push(trigger);
+  },
+
+  /**
+   * Animates dynamically injected elements, such as package cards
+   * rendered in js/journeys.js during filtering or sorting.
+   */
+  animateDynamicGrid: function (gridEl) {
       if (!gridEl) return;
 
       if (this.hasReducedMotion()) {

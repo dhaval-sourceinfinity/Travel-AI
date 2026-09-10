@@ -50,7 +50,19 @@ export function renderFooter() {
     (l) => `<a href="404.html">${l}</a>`
   ).join("");
 
-  return `<div class="container">
+  return `<div class="footer-bounce" aria-hidden="true">
+    <svg preserveAspectRatio="none" class="footer-bounce__svg" id="footer-bouncy-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2278 683">
+      <defs>
+        <linearGradient id="footer-bounce-grad" x1="0" y1="0" x2="0" y2="683" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#0c1013"></stop>
+          <stop offset="40%" stop-color="#090d0f"></stop>
+          <stop offset="100%" stop-color="#080b0d"></stop>
+        </linearGradient>
+      </defs>
+      <path class="footer-bounce__path" id="bouncy-path" fill="url(#footer-bounce-grad)" d="M0-0.3C0-0.3,464,0,1139,0s1139-0.3,1139-0.3V683H0V-0.3z"/>
+    </svg>
+  </div>
+  <div class="container footer-content-wrap">
     <div class="footer-top">
       <div class="footer-brand">
         ${brand()}

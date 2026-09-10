@@ -15,16 +15,73 @@
   }
 }
 
-/* ---- Map + testimonials: stack the two editorial columns ---------------- */
-@media (max-width: 900px) {
-  .testimonials-grid {
+/* ---- Testimonials: Tablet & Mobile Layout Transitions -------------------- */
+@media (max-width: 991px) {
+  .testimonials-card {
+    padding: clamp(12px, 1.8vw, 20px);
+  }
+  .testimonials-content {
+    padding: clamp(16px, 2.5vw, 32px);
+  }
+  .testimonials-notes {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .testimonials-editorial {
+    display: flex;
+    flex-direction: column;
+  }
+  .testimonials-content {
+    padding: 0;
+    order: 1;
+  }
+  .testimonials-content__top {
+    margin-bottom: var(--space-6);
+  }
+  .testimonials-cards-wrap {
+    order: 2;
+    margin-bottom: var(--space-8);
+  }
+  .testimonials-content__bottom {
+    order: 3;
+    margin-top: 0;
+  }
+  .testimonials-card {
+    padding: 6px;
+  }
+  .testimonials-card__visual {
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-xs, 4px);
+  }
+  .testimonials-card__caption {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+  }
+  .testimonials-card__name {
+    font-size: 14px;
+  }
+  .testimonials-card__place {
+    font-size: 11px;
+  }
+  .testimonials-notes {
     grid-template-columns: 1fr;
+    gap: var(--space-6);
   }
-  .testimonials-copy {
-    order: -1; /* lead with the heading on narrow screens */
+  .testimonials-note__plus {
+    margin-bottom: 12px;
   }
-  .testimonials-copy .notes {
-    margin-top: var(--space-8);
+  /* Hide hairline lines on mobile to match clean Vita Travel mobile layout */
+  .testimonials-dec {
+    display: none !important;
+  }
+}
+
+@media (max-width: 479px) {
+  .testimonials-headline {
+    font-size: clamp(28px, 7.5vw, 36px);
   }
 }
 

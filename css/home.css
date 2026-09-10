@@ -173,25 +173,7 @@
 }
 .cta__btn { margin-top: var(--space-10); }
 
-/* --------------------------------------------------------------------------
-   Testimonials layout (photos left, copy right on desktop)
-   -------------------------------------------------------------------------- */
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(40px, 5vw, 60px);
-  align-items: start;
-}
-.testimonials-copy {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-}
-.testimonials-copy .section-title {
-  font-size: clamp(26px, 4vw, 32px);
-  letter-spacing: -0.035em;
-  margin-top: var(--space-8);
-}
+/* Testimonials layout styles now centralized in components.css matching Vita Travel structure */
 
 /* --------------------------------------------------------------------------
    Centralized Motion Delays & Staggers (Removing inline styles from HTML)
