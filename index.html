@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/auth.css" />
+  <link rel="stylesheet" href="css/chat.css" />
   <link rel="stylesheet" href="css/home.css" />
   <link rel="stylesheet" href="css/motion.css" />
   <link rel="stylesheet" href="css/responsive.css" />
@@ -40,6 +41,7 @@
   <script defer src="js/motion/gsap-engine.js"></script>
   <script defer src="js/site.js"></script>
   <script defer src="js/components/auth.js"></script>
+  <script defer type="module" src="js/components/chat.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -59,10 +61,16 @@
           <span class="line-mask"><span class="line-inner">personal.</span></span>
         </h1>
         <div class="hero__text" data-motion="hero-text">
-          <p>Some journeys begin with a destination. Others begin with a feeling.</p>
-          <p>Tell us what you're looking for, and discover a more thoughtful way to experience Dubai and Japan.</p>
+          <p>
+            Some journeys begin with a destination.<br />
+            Others begin with a feeling.
+          </p>
+          <p>
+            Tell us what you're looking for, and discover a more<br />
+            thoughtful way to experience Dubai and Japan.
+          </p>
         </div>
-        <a class="btn-hero hero__cta" href="#destinations" data-motion="hero-cta">
+        <a class="btn-hero hero__cta" href="#chat" data-motion="hero-cta" data-chat-trigger="true" aria-haspopup="dialog">
           Discover
           <span class="btn-hero__icon" aria-hidden="true">
             <svg class="icon icon--arrow" viewBox="0 0 9 9" focusable="false"><path d="M2.25 6.75 6.75 2.25M6.75 5.76V2.25H3.24" stroke-linecap="round" stroke-linejoin="round"/></svg>

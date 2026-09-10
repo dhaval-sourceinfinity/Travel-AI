@@ -67,12 +67,20 @@
 }
 .hero__text {
   margin-top: var(--space-4);
-  max-width: min(330px, 100%);
+  width: 100%;
+  max-width: 330px;
+  margin-inline: auto;
   font-size: 13px;
   line-height: 20px;
   color: rgba(255, 255, 255, 0.88);
+  text-align: center;
 }
-.hero__text p + p { margin-top: 0.75em; }
+.hero__text p {
+  margin: 0;
+}
+.hero__text p + p {
+  margin-top: 14px;
+}
 .hero__cta { margin-top: var(--space-8); }
 
 /* --------------------------------------------------------------------------
