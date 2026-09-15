@@ -921,38 +921,45 @@
 
 .testimonials-editorial {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 544px) minmax(0, 544px);
+  justify-content: space-between;
+  gap: clamp(32px, 5vw, 60px);
   position: relative;
   width: 100%;
+  max-width: 1148px;
+  margin-inline: auto;
+  align-items: start;
 }
 
-/* ---- Left: 2x2 Cards Grid & Dividers ---- */
+/* ---- Left: 2x2 Cards Grid (Figma 265px × 389px cards) ---- */
 .testimonials-cards-wrap {
   position: relative;
   width: 100%;
+  max-width: 544px;
 }
 
 .testimonials-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
+  grid-template-columns: repeat(2, minmax(0, 265px));
+  gap: 15px 12px;
   position: relative;
   width: 100%;
 }
 
 .testimonials-card {
-  padding: clamp(20px, 2.8vw, 40px);
   position: relative;
   box-sizing: border-box;
+  padding: 0;
+  width: 100%;
 }
 
 .testimonials-card__visual {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 265 / 389;
   border-radius: var(--radius-sm, 6px);
   overflow: hidden;
-  background: #141c1f;
+  background: linear-gradient(135deg, #141c1f 0%, #0f1618 55%, #182124 100%);
 }
 
 .testimonials-card__img {
@@ -1005,10 +1012,11 @@
 .testimonials-content {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: clamp(24px, 3.5vw, 48px);
+  justify-content: flex-start;
+  padding: 6px 0 0;
   position: relative;
   box-sizing: border-box;
+  max-width: 544px;
 }
 
 .testimonials-content__top {
@@ -1107,61 +1115,6 @@
   letter-spacing: -0.02em;
   color: rgba(255, 255, 255, 0.9);
   margin: 0;
-}
-
-/* ---- Hairline Divider Lines (Vita Travel signature dec lines) ---- */
-.testimonials-dec {
-  background-color: var(--color-border, rgba(255, 255, 255, 0.09));
-  position: absolute;
-  pointer-events: none;
-}
-
-/* Top full horizontal border */
-.testimonials-dec--top {
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  width: 100%;
-}
-
-/* Bottom full horizontal border */
-.testimonials-dec--bottom {
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  width: 100%;
-}
-
-/* Middle vertical border between Left and Right columns */
-.testimonials-dec--mid-v {
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 1px;
-  height: 100%;
-  transform: translateX(-50%);
-}
-
-/* Internal card grid vertical divider */
-.testimonials-dec--grid-v {
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 1px;
-  height: 100%;
-  transform: translateX(-50%);
-}
-
-/* Internal card grid horizontal divider */
-.testimonials-dec--grid-h {
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 1px;
-  width: 100%;
-  transform: translateY(-50%);
 }
 
 /* --------------------------------------------------------------------------

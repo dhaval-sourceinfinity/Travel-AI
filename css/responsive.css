@@ -17,11 +17,17 @@
 
 /* ---- Testimonials: Tablet & Mobile Layout Transitions -------------------- */
 @media (max-width: 991px) {
+  .intro-split {
+    gap: clamp(32px, 4vw, 48px);
+  }
+  .testimonials-editorial {
+    gap: 32px;
+  }
   .testimonials-card {
-    padding: clamp(12px, 1.8vw, 20px);
+    padding: 0;
   }
   .testimonials-content {
-    padding: clamp(16px, 2.5vw, 32px);
+    padding: 0;
   }
   .testimonials-notes {
     gap: 20px;
@@ -29,9 +35,20 @@
 }
 
 @media (max-width: 767px) {
+  .intro-section {
+    padding-block: var(--space-10, 40px);
+  }
+  .intro-head {
+    margin-bottom: var(--space-5, 20px);
+  }
+  .intro-split {
+    grid-template-columns: 1fr;
+    gap: var(--space-5, 20px);
+  }
   .testimonials-editorial {
     display: flex;
     flex-direction: column;
+    gap: var(--space-8);
   }
   .testimonials-content {
     padding: 0;
@@ -42,17 +59,21 @@
   }
   .testimonials-cards-wrap {
     order: 2;
-    margin-bottom: var(--space-8);
+    margin-bottom: 0;
+    max-width: 100%;
+  }
+  .testimonials-cards {
+    gap: 12px;
   }
   .testimonials-content__bottom {
     order: 3;
     margin-top: 0;
   }
   .testimonials-card {
-    padding: 6px;
+    padding: 0;
   }
   .testimonials-card__visual {
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 265 / 389;
     border-radius: var(--radius-xs, 4px);
   }
   .testimonials-card__caption {
@@ -72,10 +93,6 @@
   }
   .testimonials-note__plus {
     margin-bottom: 12px;
-  }
-  /* Hide hairline lines on mobile to match clean Vita Travel mobile layout */
-  .testimonials-dec {
-    display: none !important;
   }
 }
 

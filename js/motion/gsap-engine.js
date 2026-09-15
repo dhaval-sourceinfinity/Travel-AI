@@ -275,7 +275,7 @@
       if (testSection && root.gsap) {
         root.gsap.set(
           testSection.querySelectorAll(
-            ".testimonials-card, .testimonials-eyebrow, .testimonials-headline, .testimonials-note__plus, .testimonials-note, .testimonials-dec"
+            ".testimonials-card, .testimonials-eyebrow, .testimonials-headline, .testimonials-note__plus, .testimonials-note"
           ),
           { clearProps: "all" }
         );
@@ -725,11 +725,6 @@
     if (!gsap || !ScrollTrigger) return;
 
     const cards = Array.from(section.querySelectorAll(".testimonials-card"));
-    const decTop = section.querySelector(".testimonials-dec--top");
-    const decBottom = section.querySelector(".testimonials-dec--bottom");
-    const decMidV = section.querySelector(".testimonials-dec--mid-v");
-    const decGridV = section.querySelector(".testimonials-dec--grid-v");
-    const decGridH = section.querySelector(".testimonials-dec--grid-h");
     const eyebrow = section.querySelector(".testimonials-eyebrow");
     const headline = section.querySelector(".testimonials-headline");
     const plusIcons = Array.from(section.querySelectorAll(".testimonials-note__plus"));
@@ -737,8 +732,6 @@
 
     if (isReducedMotion) {
       gsap.set([cards, eyebrow, headline, plusIcons, notes], { opacity: 1, x: 0, y: 0, rotation: 0 });
-      gsap.set([decTop, decBottom, decGridH], { width: "100%" });
-      gsap.set([decMidV, decGridV], { height: "100%" });
       return;
     }
 
@@ -756,15 +749,6 @@
     }
     if (notes.length) gsap.set(notes, { opacity: 0, y: 24 });
 
-    const isMobile = window.innerWidth <= 767;
-    if (!isMobile) {
-      if (decTop) gsap.set(decTop, { width: "0%" });
-      if (decBottom) gsap.set(decBottom, { width: "0%" });
-      if (decMidV) gsap.set(decMidV, { height: "0%" });
-      if (decGridV) gsap.set(decGridV, { height: "0%" });
-      if (decGridH) gsap.set(decGridH, { width: "0%" });
-    }
-
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
@@ -772,15 +756,6 @@
         toggleActions: "play none none reverse",
       },
     });
-
-    // 1. Hairline divider lines expand across (Vita Travel ease power2.inOut)
-    if (!isMobile) {
-      if (decTop) tl.to(decTop, { width: "100%", duration: 0.8, ease: "power2.inOut" }, 0);
-      if (decBottom) tl.to(decBottom, { width: "100%", duration: 0.8, ease: "power2.inOut" }, 0.1);
-      if (decMidV) tl.to(decMidV, { height: "100%", duration: 0.8, ease: "power2.inOut" }, 0.2);
-      if (decGridV) tl.to(decGridV, { height: "100%", duration: 0.8, ease: "power2.inOut" }, 0.25);
-      if (decGridH) tl.to(decGridH, { width: "100%", duration: 0.8, ease: "power2.inOut" }, 0.3);
-    }
 
     // 2. Cards entrance: slide from left (x: -40 -> 0) and fade in (opacity: 0 -> 1) with 0.15s stagger
     cards.forEach((card, i) => {
