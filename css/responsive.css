@@ -18,7 +18,7 @@
 /* ---- Testimonials: Tablet & Mobile Layout Transitions -------------------- */
 @media (max-width: 991px) {
   .testimonials-editorial {
-    gap: 32px;
+    gap: 24px;
   }
   .testimonials-card {
     padding: 0;
@@ -38,11 +38,15 @@
     gap: var(--space-8);
   }
   .testimonials-content {
+    display: flex;
+    flex-direction: column;
+    height: auto;
     padding: 0;
     order: 1;
+    gap: var(--space-6);
   }
   .testimonials-content__top {
-    margin-bottom: var(--space-6);
+    margin-bottom: 0;
   }
   .testimonials-cards-wrap {
     order: 2;
@@ -55,6 +59,7 @@
   .testimonials-content__bottom {
     order: 3;
     margin-top: 0;
+    height: auto;
   }
   .testimonials-card {
     padding: 0;
@@ -77,17 +82,23 @@
   .testimonials-notes {
     grid-template-columns: 1fr;
     gap: var(--space-6);
+    height: auto;
+  }
+  .testimonials-note {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
   .testimonials-note__plus {
-    margin-bottom: 12px;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .testimonials-note__body {
+    margin-top: 0;
   }
 }
 
-@media (max-width: 479px) {
-  .testimonials-headline {
-    font-size: clamp(28px, 7.5vw, 36px);
-  }
-}
 
 /* ---- Tablet (768px to 960px): compact desktop nav to prevent crowding --- */
 @media (min-width: 768px) and (max-width: 960px) {

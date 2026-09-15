@@ -275,7 +275,7 @@
       if (testSection && root.gsap) {
         root.gsap.set(
           testSection.querySelectorAll(
-            ".testimonials-card, .testimonials-eyebrow, .testimonials-headline, .testimonials-note__plus, .testimonials-note"
+            ".testimonials-card, .testimonials-eyebrow, .testimonials-label, .testimonials-headline, .testimonials-note__plus, .testimonials-note"
           ),
           { clearProps: "all" }
         );
@@ -726,18 +726,20 @@
 
     const cards = Array.from(section.querySelectorAll(".testimonials-card"));
     const eyebrow = section.querySelector(".testimonials-eyebrow");
+    const label = section.querySelector(".testimonials-label");
     const headline = section.querySelector(".testimonials-headline");
     const plusIcons = Array.from(section.querySelectorAll(".testimonials-note__plus"));
     const notes = Array.from(section.querySelectorAll(".testimonials-note"));
 
     if (isReducedMotion) {
-      gsap.set([cards, eyebrow, headline, plusIcons, notes], { opacity: 1, x: 0, y: 0, rotation: 0 });
+      gsap.set([cards, eyebrow, label, headline, plusIcons, notes], { opacity: 1, x: 0, y: 0, rotation: 0 });
       return;
     }
 
     // Initial state matching Vita Travel reference
     gsap.set(cards, { opacity: 0, x: -40 });
     if (eyebrow) gsap.set(eyebrow, { opacity: 0, y: 30 });
+    if (label) gsap.set(label, { opacity: 0, y: 30 });
     if (headline) gsap.set(headline, { opacity: 0, y: 30 });
     if (plusIcons.length) {
       gsap.set(plusIcons, {
@@ -767,8 +769,11 @@
     if (eyebrow) {
       tl.to(eyebrow, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.25);
     }
+    if (label) {
+      tl.to(label, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.30);
+    }
     if (headline) {
-      tl.to(headline, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.35);
+      tl.to(headline, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.38);
     }
 
     // 4. Plus icons spin & un-rotate from -180deg to 0deg (Vita Travel signature entrance)
