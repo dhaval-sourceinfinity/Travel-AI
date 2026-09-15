@@ -17,9 +17,6 @@
 
 /* ---- Testimonials: Tablet & Mobile Layout Transitions -------------------- */
 @media (max-width: 991px) {
-  .intro-split {
-    gap: clamp(32px, 4vw, 48px);
-  }
   .testimonials-editorial {
     gap: 32px;
   }
@@ -35,16 +32,6 @@
 }
 
 @media (max-width: 767px) {
-  .intro-section {
-    padding-block: var(--space-10, 40px);
-  }
-  .intro-head {
-    margin-bottom: var(--space-5, 20px);
-  }
-  .intro-split {
-    grid-template-columns: 1fr;
-    gap: var(--space-5, 20px);
-  }
   .testimonials-editorial {
     display: flex;
     flex-direction: column;

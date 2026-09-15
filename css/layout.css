@@ -34,12 +34,16 @@
 .split {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(32px, 5vw, 64px);
+  gap: var(--gap-split);
   align-items: end;
 }
 
 .split--top {
   align-items: start;
+}
+
+.split--top > :last-child {
+  padding-top: clamp(4px, 0.6vw, 8px);
 }
 
 /* Section header block (eyebrow + label + title) */
@@ -62,7 +66,7 @@
 }
 
 .stack-3 > * + * {
-  margin-top: var(--space-3);
+  margin-top: var(--gap-paragraphs, 16px);
 }
 
 @media (max-width: 720px) {
@@ -70,5 +74,8 @@
     grid-template-columns: 1fr;
     gap: var(--space-6);
     align-items: start;
+  }
+  .split--top > :last-child {
+    padding-top: 0;
   }
 }

@@ -70,7 +70,7 @@
   width: 100%;
   max-width: 580px;
   margin-inline: auto;
-  font-size: var(--fs-body-lg);
+  font-size: var(--fs-hero-text);
   line-height: 1.55;
   letter-spacing: -0.015em;
   color: rgba(255, 255, 255, 0.9);
@@ -95,36 +95,6 @@
 .section-head--full .section-title {
   max-width: 20ch;
   font-size: var(--fs-h2-lg);
-}
-
-/* --------------------------------------------------------------------------
-   02 — Introduction (Destinations intro)
-   -------------------------------------------------------------------------- */
-.intro-section {
-  padding-block: clamp(48px, 5.5vw, 72px);
-}
-
-.intro-head {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2, 8px);
-  margin-bottom: clamp(24px, 3vw, 36px);
-}
-
-.intro-split {
-  display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-  gap: clamp(40px, 6vw, 84px);
-  align-items: start;
-}
-
-.intro-heading-wrap .section-title {
-  margin-top: 0;
-  line-height: 1.08;
-}
-
-.intro-copy.stack-3 > * + * {
-  margin-top: var(--space-4, 16px);
 }
 
 /* Small layout utilities (replace one-off inline styles) */
