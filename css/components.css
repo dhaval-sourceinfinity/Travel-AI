@@ -544,10 +544,12 @@
 }
 .dest-card__img {
   position: absolute;
-  inset: 0;
+  top: -6%;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: 112%;
   object-fit: cover;
+  will-change: transform;
 }
 .dest-card__scrim {
   position: absolute;
@@ -656,10 +658,12 @@
 }
 .journey-card__img {
   position: absolute;
-  inset: 0;
+  top: -6%;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: 112%;
   object-fit: cover;
+  will-change: transform;
 }
 .journey-card__tag {
   position: absolute;
@@ -831,14 +835,19 @@
   overflow: hidden;
 }
 .place-card__media {
+  position: relative;
   aspect-ratio: 540 / 338;
   overflow: hidden;
   background: #141c1f;
 }
 .place-card__img {
+  position: absolute;
+  top: -6%;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: 112%;
   object-fit: cover;
+  will-change: transform;
 }
 .place-card__body {
   padding: var(--space-6);

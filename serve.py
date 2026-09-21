@@ -49,6 +49,11 @@ class NotFoundHandler(SimpleHTTPRequestHandler):
             self.send_header("Location", "/profile.html")
             self.end_headers()
             return None
+        if clean_path in ("dashboard", "admin", "agents-overview"):
+            self.send_response(301)
+            self.send_header("Location", "/dashboard.html")
+            self.end_headers()
+            return None
 
         # Resolve the requested path (query stripped by SimpleHTTPRequestHandler).
         path = self.translate_path(self.path)

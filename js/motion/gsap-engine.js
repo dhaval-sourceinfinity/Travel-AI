@@ -101,6 +101,9 @@
       this.initStaggerContainers();
       this.initStandaloneElements();
       this.initTypographyReveals();
+      this.initDestinations();
+      this.initJourneys();
+      this.initExploreSection();
       this.initTestimonialsEditorial();
       this.initFooterBounce();
 
@@ -276,6 +279,33 @@
         root.gsap.set(
           testSection.querySelectorAll(
             ".testimonials-card, .testimonials-eyebrow, .testimonials-label, .testimonials-headline, .testimonials-note__plus, .testimonials-note"
+          ),
+          { clearProps: "all" }
+        );
+      }
+      const destSection = document.querySelector("#destinations");
+      if (destSection && root.gsap) {
+        root.gsap.set(
+          destSection.querySelectorAll(
+            ".dest-card, .dest-card__img, .dest-card__body, .dest-card__eyebrow, .dest-card__title, .dest-card__text, .btn, .eyebrow"
+          ),
+          { clearProps: "all" }
+        );
+      }
+      const journeysSection = document.querySelector("#journeys");
+      if (journeysSection && root.gsap) {
+        root.gsap.set(
+          journeysSection.querySelectorAll(
+            ".journey-card, .journey-card__img, .journey-card__body, .journey-card__meta, .journey-card__title, .journey-card__text, .journey-card__footer, .btn, .icon--arrow"
+          ),
+          { clearProps: "all" }
+        );
+      }
+      const exploreSection = document.querySelector("#explore");
+      if (exploreSection && root.gsap) {
+        root.gsap.set(
+          exploreSection.querySelectorAll(
+            ".place-card, .place-card__img, .place-card__body, .place-card__title, .place-card__text, .place-card__actions, .btn, .explore-tabs, .explore-places, .chip, .place"
           ),
           { clearProps: "all" }
         );
@@ -570,8 +600,8 @@
       );
 
       containers.forEach((container) => {
-        // If inside a choreographed section, let the section timeline control it
-        if (container.closest("[data-motion-choreography]")) return;
+        // If inside a bespoke section or choreographed section, let dedicated controller handle it
+        if (container.closest("#destinations") || container.closest("#journeys") || container.closest("#explore") || container.closest("[data-motion-choreography]")) return;
 
         const children = Array.from(container.querySelectorAll(":scope > [data-motion]"));
         if (!children.length) return;
@@ -707,6 +737,942 @@
 
         activeTriggers.push(trigger);
     });
+  },
+ 
+  /**
+   * Section 03 — Explore / Destinations entrance reveal & subtle scroll parallax:
+   * - Staggered fade + upward reveal for the destination cards
+   * - Inner image scale animation from 1.08 -> 1.0
+   * - Card text, heading, and button fade + upward reveal shortly after the image
+   * - Subtle ScrollTrigger scrub parallax on the card imagery
+   * - Interactive hover zoom integration
+   * - Responsive & respects prefers-reduced-motion
+   */
+  initDestinations: function () {
+    const section = document.querySelector("#destinations");
+    if (!section) return;
+
+    const gsap = root.gsap;
+    const ScrollTrigger = root.ScrollTrigger;
+    if (!gsap || !ScrollTrigger) return;
+
+    const eyebrow = section.querySelector(".eyebrow");
+    const cards = Array.from(section.querySelectorAll(".dest-card"));
+    if (!cards.length) return;
+
+    if (isReducedMotion) {
+      gsap.set(cards, { opacity: 1, y: 0 });
+      cards.forEach((card) => {
+        const img = card.querySelector(".dest-card__img");
+        const content = card.querySelectorAll(".dest-card__eyebrow, .dest-card__title, .dest-card__text, .btn");
+        if (img) gsap.set(img, { opacity: 1, scale: 1, yPercent: 0 });
+        if (content.length) gsap.set(content, { opacity: 1, y: 0 });
+        card.classList.add("is-visible");
+      });
+      if (eyebrow) {
+        eyebrow.classList.add("is-visible");
+        gsap.set(eyebrow, { opacity: 1, y: 0 });
+      }
+      return;
+    }
+
+    // 1. Set initial states
+    gsap.set(cards, { opacity: 0, y: 40 });
+    if (eyebrow) gsap.set(eyebrow, { opacity: 0, y: 16 });
+
+    cards.forEach((card) => {
+      const img = card.querySelector(".dest-card__img");
+      const content = card.querySelectorAll(".dest-card__eyebrow, .dest-card__title, .dest-card__text, .btn");
+      if (img) gsap.set(img, { scale: 1.08 });
+      if (content.length) gsap.set(content, { opacity: 0, y: 18 });
+    });
+
+    // 2. Entrance reveal timeline
+    const entranceTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 82%",
+        once: true,
+        onEnter: () => {
+          section.classList.add("is-visible");
+        },
+      },
+    });
+
+    if (eyebrow) {
+      entranceTl.to(
+        eyebrow,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power3.out",
+          onComplete: () => {
+            eyebrow.classList.add("is-visible");
+          },
+        },
+        0
+      );
+    }
+
+    cards.forEach((card, index) => {
+      const startTime = 0.12 + index * 0.18; // Slight stagger between cards
+      const img = card.querySelector(".dest-card__img");
+      const content = card.querySelectorAll(".dest-card__eyebrow, .dest-card__title, .dest-card__text, .btn");
+
+      // Card fade + upward reveal
+      entranceTl.to(
+        card,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.95,
+          ease: "power3.out",
+          onComplete: () => {
+            card.classList.add("is-visible");
+          },
+        },
+        startTime
+      );
+
+      // Image reveal from scale: 1.08 to scale: 1
+      if (img) {
+        entranceTl.to(
+          img,
+          {
+            scale: 1,
+            duration: 1.25,
+            ease: "power2.out",
+          },
+          startTime
+        );
+      }
+
+      // Card text/buttons fade and move up slightly after image reveal begins
+      if (content.length) {
+        entranceTl.to(
+          content,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.65,
+            ease: "power3.out",
+            stagger: 0.08,
+            onComplete: () => {
+              content.forEach((el) => el.classList.add("is-visible"));
+            },
+          },
+          startTime + 0.32
+        );
+      }
+    });
+
+    if (entranceTl.scrollTrigger) {
+      activeTriggers.push(entranceTl.scrollTrigger);
+    }
+
+    // 3. Subtle ScrollTrigger Parallax effect while scrolling through the section
+    cards.forEach((card) => {
+      const img = card.querySelector(".dest-card__img");
+      if (!img) return;
+
+      const parallaxTween = gsap.fromTo(
+        img,
+        { yPercent: -5 },
+        {
+          yPercent: 5,
+          ease: "none",
+          scrollTrigger: {
+            trigger: card,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1,
+          },
+        }
+      );
+
+      if (parallaxTween.scrollTrigger) {
+        activeTriggers.push(parallaxTween.scrollTrigger);
+      }
+
+      // 4. Smooth interactive hover zoom on fine pointer devices
+      if (typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+        card.addEventListener("mouseenter", () => {
+          gsap.to(img, {
+            scale: 1.04,
+            duration: 0.5,
+            ease: "power2.out",
+            overwrite: "auto",
+          });
+        });
+        card.addEventListener("mouseleave", () => {
+          gsap.to(img, {
+            scale: 1,
+            duration: 0.5,
+            ease: "power2.out",
+            overwrite: "auto",
+          });
+        });
+      }
+    });
+  },
+
+  /**
+   * Section 05 Journeys cards GSAP ScrollTrigger animation:
+   * - Entrance: subtle fade + upward movement, with a small stagger between the two cards.
+   * - Parallax: very subtle image-only parallax effect while scrolling through the section.
+   * - Hover: card structure stable, card lifts -4px, image scales to ~1.04,
+   *   card content shifts by -3px, and CTA arrow nudges up-right.
+   * - Respects prefers-reduced-motion and responsive touch viewports.
+   */
+  initJourneys: function () {
+    const section = document.querySelector("#journeys");
+    const gsap = root.gsap;
+    const ScrollTrigger = root.ScrollTrigger;
+    if (!gsap || !ScrollTrigger) return;
+
+    // Support both the featured section cards and any other journey cards on the page
+    const featuredCards = section ? Array.from(section.querySelectorAll(".journey-card")) : [];
+    const allJourneyCards = Array.from(document.querySelectorAll(".journey-card"));
+    if (!allJourneyCards.length) return;
+
+    if (isReducedMotion) {
+      allJourneyCards.forEach((card) => {
+        const img = card.querySelector(".journey-card__img");
+        const body = card.querySelector(".journey-card__body");
+        const content = card.querySelectorAll(
+          ".journey-card__meta, .journey-card__title, .journey-card__text, .journey-card__footer, .btn"
+        );
+        if (img) gsap.set(img, { opacity: 1, scale: 1, yPercent: 0 });
+        if (body) gsap.set(body, { y: 0 });
+        if (content.length) gsap.set(content, { opacity: 1, y: 0 });
+        card.classList.add("is-visible");
+      });
+      return;
+    }
+
+    // 1. Entrance reveal for #journeys featured cards
+    if (section && featuredCards.length) {
+      gsap.set(featuredCards, { opacity: 0, y: 36 });
+      featuredCards.forEach((card) => {
+        const content = card.querySelectorAll(
+          ".journey-card__meta, .journey-card__title, .journey-card__text, .journey-card__footer, .btn"
+        );
+        if (content.length) gsap.set(content, { opacity: 0, y: 16 });
+      });
+
+      const entranceTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          once: true,
+          onEnter: () => {
+            section.classList.add("is-visible");
+          },
+        },
+      });
+
+      featuredCards.forEach((card, index) => {
+        const startTime = 0.12 + index * 0.18; // Small stagger between the two cards
+        const content = card.querySelectorAll(
+          ".journey-card__meta, .journey-card__title, .journey-card__text, .journey-card__footer, .btn"
+        );
+
+        // Subtle fade + upward movement
+        entranceTl.to(
+          card,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            ease: "power3.out",
+            onComplete: () => {
+              card.classList.add("is-visible");
+              gsap.set(card, { y: 0 });
+            },
+          },
+          startTime
+        );
+
+        // Smooth content reveal shifting slightly after card starts
+        if (content.length) {
+          entranceTl.to(
+            content,
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.65,
+              ease: "power3.out",
+              stagger: 0.06,
+              onComplete: () => {
+                content.forEach((el) => el.classList.add("is-visible"));
+                gsap.set(content, { y: 0 });
+              },
+            },
+            startTime + 0.22
+          );
+        }
+      });
+
+      if (entranceTl.scrollTrigger) {
+        activeTriggers.push(entranceTl.scrollTrigger);
+      }
+    }
+
+    // 2. Parallax and hover interactions for journey cards
+    allJourneyCards.forEach((card) => {
+      if (card.dataset.journeyMotionBound) return;
+      card.dataset.journeyMotionBound = "true";
+
+      const img = card.querySelector(".journey-card__img");
+
+      // Subtle image-only parallax effect so image moves independently from card
+      if (img) {
+        const parallaxTween = gsap.fromTo(
+          img,
+          { yPercent: -5 },
+          {
+            yPercent: 5,
+            ease: "none",
+            scrollTrigger: {
+              trigger: card,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1,
+            },
+          }
+        );
+
+        if (parallaxTween.scrollTrigger) {
+          activeTriggers.push(parallaxTween.scrollTrigger);
+        }
+      }
+
+      // 3. Stable hover interaction on fine pointer devices
+      if (typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+        const body = card.querySelector(".journey-card__body");
+        const ctaBtn = card.querySelector(".btn--accent-outline, .btn");
+        const arrow = card.querySelector(".icon--arrow");
+
+        card.addEventListener("mouseenter", () => {
+          // Smoothly scale card image from 1 to around 1.04
+          if (img) {
+            gsap.to(img, {
+              scale: 1.04,
+              duration: 0.5,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+          }
+
+          // Subtle card lift of -4px (structure remains stable)
+          gsap.to(card, {
+            y: -4,
+            duration: 0.4,
+            ease: "power2.out",
+            overwrite: "auto",
+          });
+
+          // Smoothly reveal/shift card content by a few pixels (-3px)
+          if (body) {
+            gsap.to(body, {
+              y: -3,
+              duration: 0.4,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+          }
+
+          // Subtle CTA interaction
+          if (arrow) {
+            gsap.to(arrow, {
+              x: 3,
+              y: -2,
+              duration: 0.35,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+          }
+          if (ctaBtn) {
+            gsap.to(ctaBtn, {
+              borderColor: "rgba(110, 86, 207, 0.6)",
+              backgroundColor: "rgba(110, 86, 207, 0.08)",
+              duration: 0.35,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+          }
+        });
+
+        card.addEventListener("mouseleave", () => {
+          if (img) {
+            gsap.to(img, {
+              scale: 1,
+              duration: 0.5,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+          }
+
+          gsap.to(card, {
+            y: 0,
+            duration: 0.4,
+            ease: "power2.out",
+            overwrite: "auto",
+          });
+
+          if (body) {
+            gsap.to(body, {
+              y: 0,
+              duration: 0.4,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+          }
+
+          if (arrow) {
+            gsap.to(arrow, {
+              x: 0,
+              y: 0,
+              duration: 0.3,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+          }
+          if (ctaBtn) {
+            gsap.to(ctaBtn, {
+              borderColor: "var(--color-accent-border)",
+              backgroundColor: "transparent",
+              duration: 0.3,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+          }
+        });
+      }
+    });
+  },
+
+  /**
+   * Section 06 — Explore / Deep Exploration premium GSAP animations:
+   * - Scroll-driven storytelling entrance: left content reveals, then card reveals
+   * - Subtle image-only parallax while scrolling
+   * - Hover: image zoom (~1.03), CTA arrow nudge
+   * - Animated destination switching (Dubai/Japan region + place navigation)
+   * - Respects prefers-reduced-motion and responsive viewports
+   */
+  initExploreSection: function () {
+    var section = document.querySelector("#explore");
+    if (!section) return;
+
+    var gsap = root.gsap;
+    var ScrollTrigger = root.ScrollTrigger;
+    if (!gsap || !ScrollTrigger) return;
+
+    var placeCard = section.querySelector(".place-card");
+    var placeImg = section.querySelector(".place-card__img");
+    var placeTitle = section.querySelector(".place-card__title");
+    var placeText = section.querySelector(".place-card__text");
+    var placeActions = section.querySelector(".place-card__actions");
+    var placeBody = section.querySelector(".place-card__body");
+    var regionTabs = section.querySelector("[data-region-tabs]");
+    var placesNav = section.querySelector("[data-places]");
+
+    if (!placeCard) return;
+
+    // ── Place Data ──────────────────────────────────────────────────────
+    var EXPLORE_DATA = {
+      Dubai: {
+        places: ["Downtown", "Marina", "Old Town", "Desert", "Creek"],
+        data: {
+          Downtown: {
+            image: "assets/images/explore-dubai.webp",
+            alt: "Dubai Downtown skyline at golden hour",
+            title: "Downtown Dubai",
+            text: "Stand beneath the world's tallest building, walk along the Dubai Fountain promenade, and discover the vibrant heart of modern Dubai.",
+            discoverLabel: "Discover Downtown",
+            askLabel: "Ask about Downtown"
+          },
+          Marina: {
+            image: "assets/images/explore-dubai.webp",
+            alt: "Dubai Marina waterfront with yachts and skyscrapers",
+            title: "Dubai Marina",
+            text: "A waterfront district where gleaming towers meet the Arabian Gulf. Stroll the Marina Walk, dine at waterside restaurants, and feel the energy of cosmopolitan Dubai.",
+            discoverLabel: "Discover Marina",
+            askLabel: "Ask about Marina"
+          },
+          "Old Town": {
+            image: "assets/images/explore-dubai.webp",
+            alt: "Historic Al Fahidi neighbourhood with wind towers",
+            title: "Old Town",
+            text: "Wind towers, narrow lanes, and the gentle current of Dubai Creek. Explore the soul of old Dubai where heritage meets quiet charm.",
+            discoverLabel: "Discover Old Town",
+            askLabel: "Ask about Old Town"
+          },
+          Desert: {
+            image: "assets/images/explore-dubai.webp",
+            alt: "Desert dunes at sunset outside Dubai",
+            title: "The Desert",
+            text: "Beyond the city, golden dunes stretch to the horizon. Experience the silence of the Arabian desert, Bedouin traditions, and sunsets you won't forget.",
+            discoverLabel: "Discover the Desert",
+            askLabel: "Ask about the Desert"
+          },
+          Creek: {
+            image: "assets/images/explore-dubai.webp",
+            alt: "Traditional abra boats on Dubai Creek",
+            title: "Dubai Creek",
+            text: "Where Dubai's story began. Cross the creek by abra, explore the spice and gold souks, and discover a city shaped by trade and water.",
+            discoverLabel: "Discover the Creek",
+            askLabel: "Ask about the Creek"
+          }
+        }
+      },
+      Japan: {
+        places: ["Tokyo", "Kyoto", "Osaka", "Mount Fuji", "Nara"],
+        data: {
+          Tokyo: {
+            image: "assets/images/explore-japan.webp",
+            alt: "Neon-lit streets and modern architecture in Tokyo",
+            title: "Tokyo",
+            text: "A city of contrasts — where ancient temples sit beneath glass towers, quiet gardens border bustling crossings, and every neighbourhood has its own character.",
+            discoverLabel: "Discover Tokyo",
+            askLabel: "Ask about Tokyo"
+          },
+          Kyoto: {
+            image: "assets/images/map-kyoto.webp",
+            alt: "Traditional pagoda and townscape at golden hour in Kyoto",
+            title: "Kyoto",
+            text: "A city where centuries of tradition still form part of everyday life. Wander through historic neighbourhoods, discover quiet gardens and experience a slower side of Japan.",
+            discoverLabel: "Discover Kyoto",
+            askLabel: "Ask about Kyoto"
+          },
+          Osaka: {
+            image: "assets/images/explore-japan.webp",
+            alt: "Vibrant street food scene in Osaka at night",
+            title: "Osaka",
+            text: "Japan's kitchen — a city that lives for food, laughter, and warmth. From street vendors in Dōtonbori to hidden izakayas, every meal tells a story.",
+            discoverLabel: "Discover Osaka",
+            askLabel: "Ask about Osaka"
+          },
+          "Mount Fuji": {
+            image: "assets/images/explore-japan.webp",
+            alt: "Mount Fuji rising above lake and cherry blossoms",
+            title: "Mount Fuji",
+            text: "Japan's most iconic silhouette. See it reflected in still lakes, framed by cherry blossoms, or towering above the clouds on a clear morning.",
+            discoverLabel: "Discover Mount Fuji",
+            askLabel: "Ask about Mount Fuji"
+          },
+          Nara: {
+            image: "assets/images/explore-japan.webp",
+            alt: "Friendly deer among autumn trees in Nara park",
+            title: "Nara",
+            text: "Ancient capital of Japan, where friendly deer roam freely through parkland and some of the country's oldest Buddhist temples stand in quiet grandeur.",
+            discoverLabel: "Discover Nara",
+            askLabel: "Ask about Nara"
+          }
+        }
+      }
+    };
+
+    var currentRegion = "Japan";
+    var currentPlace = "Kyoto";
+    var isTransitioning = false;
+
+    // ── Reduced Motion: show everything immediately ─────────────────────
+    if (isReducedMotion) {
+      if (placeCard) gsap.set(placeCard, { opacity: 1, y: 0, scale: 1 });
+      if (placeImg) gsap.set(placeImg, { opacity: 1, scale: 1, yPercent: 0 });
+      if (placeBody) gsap.set(placeBody, { opacity: 1, y: 0 });
+      section.querySelectorAll("[data-motion]").forEach(function (el) {
+        el.classList.add("is-visible");
+      });
+      // Still wire up destination switching without animation
+      bindDestinationSwitching(false);
+      return;
+    }
+
+    // ── 1. Scroll Entrance Reveal ───────────────────────────────────────
+    var leftCol = section.querySelector(".split--top > :first-child");
+    var leftElements = [];
+    if (leftCol) {
+      var sectionHead = leftCol.querySelector(".section-head");
+      var lede = leftCol.querySelector(".lede, .stack-3");
+      var tabs = leftCol.querySelector(".explore-tabs");
+      var places = leftCol.querySelector(".explore-places");
+      if (sectionHead) leftElements.push(sectionHead);
+      if (lede) leftElements.push(lede);
+      if (tabs) leftElements.push(tabs);
+      if (places) leftElements.push(places);
+    }
+
+    // Set initial states
+    leftElements.forEach(function (el) {
+      gsap.set(el, { opacity: 0, y: 24 });
+    });
+    gsap.set(placeCard, { opacity: 0, y: 30 });
+    if (placeImg) gsap.set(placeImg, { scale: 1.05 });
+
+    var entranceTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 80%",
+        once: true,
+        onEnter: function () {
+          section.classList.add("is-visible");
+        }
+      }
+    });
+
+    // Left content: staggered fade + upward movement
+    leftElements.forEach(function (el, idx) {
+      entranceTl.to(
+        el,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.85,
+          ease: "power3.out",
+          onComplete: function () {
+            el.classList.add("is-visible");
+            // Also mark nested data-motion elements visible
+            el.querySelectorAll("[data-motion]").forEach(function (child) {
+              child.classList.add("is-visible");
+            });
+          }
+        },
+        0.08 + idx * 0.12
+      );
+    });
+
+    // Right card: slightly delayed fade + upward movement
+    entranceTl.to(
+      placeCard,
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.95,
+        ease: "power3.out",
+        onComplete: function () {
+          placeCard.classList.add("is-visible");
+          gsap.set(placeCard, { clearProps: "y" });
+        }
+      },
+      0.22
+    );
+
+    // Image scale settle: 1.05 → 1
+    if (placeImg) {
+      entranceTl.to(
+        placeImg,
+        {
+          scale: 1,
+          duration: 1.3,
+          ease: "power2.out"
+        },
+        0.22
+      );
+    }
+
+    if (entranceTl.scrollTrigger) {
+      activeTriggers.push(entranceTl.scrollTrigger);
+    }
+
+    // ── 2. Image Parallax (scrub) ───────────────────────────────────────
+    if (placeImg) {
+      var parallaxTween = gsap.fromTo(
+        placeImg,
+        { yPercent: -5 },
+        {
+          yPercent: 5,
+          ease: "none",
+          scrollTrigger: {
+            trigger: placeCard,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1
+          }
+        }
+      );
+
+      if (parallaxTween.scrollTrigger) {
+        activeTriggers.push(parallaxTween.scrollTrigger);
+      }
+    }
+
+    // ── 3. Hover Interactions ────────────────────────────────────────────
+    if (typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      // Image hover zoom
+      if (placeImg) {
+        placeCard.addEventListener("mouseenter", function () {
+          gsap.to(placeImg, {
+            scale: 1.03,
+            duration: 0.5,
+            ease: "power2.out",
+            overwrite: "auto"
+          });
+        });
+        placeCard.addEventListener("mouseleave", function () {
+          gsap.to(placeImg, {
+            scale: 1,
+            duration: 0.5,
+            ease: "power2.out",
+            overwrite: "auto"
+          });
+        });
+      }
+
+      // CTA arrow nudge on primary button hover
+      var primaryBtn = placeCard.querySelector(".btn--primary");
+      if (primaryBtn) {
+        primaryBtn.addEventListener("mouseenter", function () {
+          gsap.to(primaryBtn, {
+            letterSpacing: "0.11em",
+            duration: 0.3,
+            ease: "power2.out",
+            overwrite: "auto"
+          });
+        });
+        primaryBtn.addEventListener("mouseleave", function () {
+          gsap.to(primaryBtn, {
+            letterSpacing: "0.09em",
+            duration: 0.3,
+            ease: "power2.out",
+            overwrite: "auto"
+          });
+        });
+      }
+
+      // Sparkle pulse on Ask button hover
+      var sparkBtn = placeCard.querySelector(".btn-spark");
+      if (sparkBtn) {
+        sparkBtn.addEventListener("mouseenter", function () {
+          gsap.to(sparkBtn, {
+            scale: 1.02,
+            duration: 0.25,
+            ease: "power2.out",
+            overwrite: "auto"
+          });
+        });
+        sparkBtn.addEventListener("mouseleave", function () {
+          gsap.to(sparkBtn, {
+            scale: 1,
+            duration: 0.25,
+            ease: "power2.out",
+            overwrite: "auto"
+          });
+        });
+      }
+    }
+
+    // ── 4. Destination Switch Animation ─────────────────────────────────
+
+    function updatePlaceCard(data, animate) {
+      if (!data) return;
+
+      if (!animate) {
+        // Instant swap (reduced motion or initial load)
+        if (placeImg) {
+          placeImg.src = data.image;
+          placeImg.alt = data.alt;
+        }
+        if (placeTitle) placeTitle.textContent = data.title;
+        if (placeText) placeText.textContent = data.text;
+        updateCTALabels(data);
+        return;
+      }
+
+      if (isTransitioning) return;
+      isTransitioning = true;
+
+      var bodyElements = [placeTitle, placeText, placeActions].filter(Boolean);
+
+      // Phase 1: Fade out current content
+      var outTl = gsap.timeline({
+        onComplete: function () {
+          // Swap the content
+          if (placeImg) {
+            placeImg.src = data.image;
+            placeImg.alt = data.alt;
+          }
+          if (placeTitle) placeTitle.textContent = data.title;
+          if (placeText) placeText.textContent = data.text;
+          updateCTALabels(data);
+
+          // Phase 2: Fade in new content
+          if (placeImg) {
+            gsap.fromTo(
+              placeImg,
+              { opacity: 0.7, scale: 1.04 },
+              {
+                opacity: 1,
+                scale: 1,
+                duration: 0.5,
+                ease: "power2.out"
+              }
+            );
+          }
+
+          gsap.fromTo(
+            bodyElements,
+            { opacity: 0, y: 10 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.4,
+              ease: "power3.out",
+              stagger: 0.06,
+              onComplete: function () {
+                isTransitioning = false;
+              }
+            }
+          );
+        }
+      });
+
+      // Fade out body
+      outTl.to(bodyElements, {
+        opacity: 0,
+        y: -8,
+        duration: 0.25,
+        ease: "power2.in",
+        stagger: 0.03
+      }, 0);
+
+      // Crossfade image
+      if (placeImg) {
+        outTl.to(placeImg, {
+          opacity: 0.3,
+          scale: 0.98,
+          duration: 0.3,
+          ease: "power2.in"
+        }, 0);
+      }
+    }
+
+    function updateCTALabels(data) {
+      var primaryBtn = placeCard.querySelector(".btn--primary");
+      var sparkBtn = placeCard.querySelector(".btn-spark");
+      if (primaryBtn && data.discoverLabel) {
+        primaryBtn.textContent = data.discoverLabel + " →";
+      }
+      if (sparkBtn && data.askLabel) {
+        // Preserve the sparkle pseudo-element by only updating text content
+        sparkBtn.childNodes[0].textContent = data.askLabel;
+      }
+    }
+
+    function updatePlacesNav(regionName) {
+      if (!placesNav) return;
+      var regionData = EXPLORE_DATA[regionName];
+      if (!regionData) return;
+
+      var placeNames = regionData.places;
+      placesNav.setAttribute("aria-label", "Places in " + regionName);
+
+      // Animate out existing place links
+      var existingLinks = Array.from(placesNav.querySelectorAll(".place"));
+
+      if (isReducedMotion || !existingLinks.length) {
+        rebuildPlaceLinks(placeNames);
+        return;
+      }
+
+      gsap.to(existingLinks, {
+        opacity: 0,
+        y: -6,
+        duration: 0.2,
+        ease: "power2.in",
+        stagger: 0.02,
+        onComplete: function () {
+          rebuildPlaceLinks(placeNames);
+
+          var newLinks = Array.from(placesNav.querySelectorAll(".place"));
+          gsap.fromTo(
+            newLinks,
+            { opacity: 0, y: 8 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.3,
+              ease: "power3.out",
+              stagger: 0.04
+            }
+          );
+        }
+      });
+    }
+
+    function rebuildPlaceLinks(placeNames) {
+      if (!placesNav) return;
+      placesNav.innerHTML = "";
+      placeNames.forEach(function (name, idx) {
+        var a = document.createElement("a");
+        a.className = "place";
+        a.href = "#";
+        a.textContent = name;
+        a.setAttribute("aria-current", idx === 0 ? "true" : "false");
+        placesNav.appendChild(a);
+      });
+    }
+
+    function bindDestinationSwitching(animate) {
+      // Region chip clicks (Dubai / Japan)
+      if (regionTabs) {
+        regionTabs.addEventListener("click", function (e) {
+          var chip = e.target.closest(".chip");
+          if (!chip || isTransitioning) return;
+
+          var chipText = chip.textContent.trim();
+          if (chipText === currentRegion) return;
+
+          // Update chip active states
+          regionTabs.querySelectorAll(".chip").forEach(function (c) {
+            c.setAttribute("aria-pressed", String(c === chip));
+          });
+
+          currentRegion = chipText;
+          var regionData = EXPLORE_DATA[currentRegion];
+          if (!regionData) return;
+
+          // Switch to first place in the new region
+          var firstPlace = regionData.places[0];
+          currentPlace = firstPlace;
+          var placeData = regionData.data[firstPlace];
+
+          // Rebuild place navigation
+          updatePlacesNav(currentRegion);
+
+          // Animate the card content change
+          updatePlaceCard(placeData, animate);
+        });
+      }
+
+      // Place link clicks (Tokyo, Kyoto, Osaka, etc.)
+      if (placesNav) {
+        placesNav.addEventListener("click", function (e) {
+          var placeLink = e.target.closest(".place");
+          if (!placeLink || isTransitioning) return;
+          e.preventDefault();
+
+          var placeName = placeLink.textContent.trim();
+          if (placeName === currentPlace) return;
+
+          // Update active states
+          placesNav.querySelectorAll(".place").forEach(function (p) {
+            p.setAttribute("aria-current", String(p === placeLink));
+          });
+
+          currentPlace = placeName;
+          var regionData = EXPLORE_DATA[currentRegion];
+          if (!regionData) return;
+
+          var placeData = regionData.data[placeName];
+          updatePlaceCard(placeData, animate);
+        });
+      }
+    }
+
+    bindDestinationSwitching(true);
   },
 
   /**

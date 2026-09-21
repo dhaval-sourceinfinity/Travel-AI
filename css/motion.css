@@ -96,7 +96,10 @@
 .gsap-active [data-motion="contact-sub"],
 .gsap-active [data-motion="contact-form"],
 .gsap-active [data-motion="contact-title"] .line-inner,
-.gsap-active .contact-media__img {
+.gsap-active .contact-media__img,
+.gsap-active .dest-card__img,
+.gsap-active .journey-card__img,
+.gsap-active .place-card__img {
   transition: none !important;
 }
 
@@ -467,6 +470,11 @@
   .place-card:hover .place-card__img {
     transform: scale(1.035);
   }
+  .gsap-active .dest-card:hover .dest-card__img,
+  .gsap-active .journey-card:hover .journey-card__img,
+  .gsap-active .place-card:hover .place-card__img {
+    transform: none;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -490,6 +498,18 @@
   .place-card:hover .place-card__img[data-parallax] {
     transform: translateY(var(--parallax-y, 0px)) scale(1.035);
   }
+}
+/* When GSAP is active, it controls parallax + hover zoom — disable CSS-driven rules */
+.gsap-active .place-card__img[data-parallax] {
+  height: 112%;
+  margin-top: 0;
+  transform: none;
+}
+.gsap-active [data-motion="image-reveal"].is-visible[data-parallax] {
+  transform: none;
+}
+.gsap-active .place-card:hover .place-card__img[data-parallax] {
+  transform: none;
 }
 
 /* --------------------------------------------------------------------------
