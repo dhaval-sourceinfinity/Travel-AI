@@ -833,6 +833,7 @@
   border: 0.8px solid var(--color-border);
   border-radius: var(--radius-md);
   overflow: hidden;
+  padding-top: 0;
 }
 .place-card__media {
   position: relative;
@@ -1237,6 +1238,8 @@
   border: 0.8px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--color-accent-soft);
+  width: 100%;
+  box-sizing: border-box;
 }
 .advisor__text {
   font-size: 13px;
@@ -1269,6 +1272,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-6);
+}
+.footer-legal a {
+  white-space: nowrap;
 }
 .footer-legal a:hover { color: var(--color-text-secondary); }
 

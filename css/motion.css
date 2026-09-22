@@ -227,7 +227,10 @@
   transform: translateY(var(--motion-text-rise));
   transition: transform var(--motion-reveal) var(--ease-reveal);
 }
-[data-motion="char-scroll"].is-visible {
+[data-motion="char-scroll"].is-visible,
+.js-ready [data-motion="char-scroll"].is-settled,
+.js-ready .is-settled [data-motion="char-scroll"],
+.cta [data-motion="char-scroll"] {
   transform: none;
 }
 

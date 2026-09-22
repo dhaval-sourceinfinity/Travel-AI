@@ -42,7 +42,7 @@
   align-items: start;
 }
 
-.split--top > :last-child {
+.split--top > :last-child:not(.place-card) {
   padding-top: clamp(4px, 0.6vw, 8px);
 }
 
