@@ -154,6 +154,17 @@ function populateFilters() {
 /* ---- Wire events -------------------------------------------------------- */
 function initFilters() {
   populateFilters();
+
+  if (window.initCustomSelects) {
+    window.initCustomSelects(document);
+  } else {
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.initCustomSelects) {
+        window.initCustomSelects(document);
+      }
+    });
+  }
+
   filterDest.addEventListener("change", applyFiltersAndSort);
   filterConsultant.addEventListener("change", applyFiltersAndSort);
   filterCost.addEventListener("change", applyFiltersAndSort);
@@ -161,6 +172,9 @@ function initFilters() {
     filterDest.value = "";
     filterConsultant.value = "";
     filterCost.value = "";
+    filterDest.dispatchEvent(new Event("change", { bubbles: true }));
+    filterConsultant.dispatchEvent(new Event("change", { bubbles: true }));
+    filterCost.dispatchEvent(new Event("change", { bubbles: true }));
     applyFiltersAndSort();
   });
 }

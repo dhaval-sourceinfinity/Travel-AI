@@ -2262,7 +2262,18 @@
 
     wrappers.forEach((wrapper) => {
       const select = wrapper.querySelector("select");
-      if (!select || wrapper.querySelector(".custom-select__trigger")) return;
+      if (!select) return;
+
+      const existingTrigger = wrapper.querySelector(".custom-select__trigger");
+      const existingMenu = wrapper.querySelector(".custom-select__menu");
+      if (existingTrigger && existingMenu) {
+        const existingCount = existingMenu.querySelectorAll(".custom-select__option").length;
+        if (existingCount === select.options.length) {
+          return;
+        }
+        existingTrigger.remove();
+        existingMenu.remove();
+      }
 
       // Hide original select visually but keep in DOM for form submission & accessibility
       select.classList.add("custom-select__native");
@@ -2366,7 +2377,7 @@
 
         isOpen = true;
         wrapper.classList.add("is-open");
-        const card = wrapper.closest(".profile-card");
+        const card = wrapper.closest(".profile-card, .pkg-filters, .pkg-toolbar");
         if (card) card.classList.add("has-dropdown-open");
         const grid = wrapper.closest(".profile-grid");
         if (grid) grid.classList.add("has-dropdown-open");
@@ -2380,7 +2391,7 @@
       const close = () => {
         isOpen = false;
         wrapper.classList.remove("is-open");
-        const card = wrapper.closest(".profile-card");
+        const card = wrapper.closest(".profile-card, .pkg-filters, .pkg-toolbar");
         if (card) card.classList.remove("has-dropdown-open");
         const grid = wrapper.closest(".profile-grid");
         if (grid) grid.classList.remove("has-dropdown-open");
@@ -2390,6 +2401,14 @@
       };
 
       wrapper.__closeSelect = close;
+      wrapper.__rebuildSelect = () => {
+        const t = wrapper.querySelector(".custom-select__trigger");
+        const m = wrapper.querySelector(".custom-select__menu");
+        if (t) t.remove();
+        if (m) m.remove();
+        initCustomSelects(wrapper);
+      };
+      select.__rebuildCustomSelect = wrapper.__rebuildSelect;
 
       const updateHighlight = () => {
         optionEls.forEach((el, idx) => {
