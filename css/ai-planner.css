@@ -120,6 +120,10 @@
   min-height: 82px; /* Prevent layout shift during destination switch */
 }
 
+.planner__chips-indicator {
+  display: none;
+}
+
 .planner__chip {
   appearance: none;
   border: 1px solid var(--color-border);

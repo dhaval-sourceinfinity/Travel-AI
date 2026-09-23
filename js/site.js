@@ -1588,12 +1588,72 @@
     });
 
     if (filter) {
+      function updateFilterMask() {
+        const maxScroll = filter.scrollWidth - filter.clientWidth;
+        if (maxScroll <= 4) {
+          filter.style.maskImage = "none";
+          filter.style.webkitMaskImage = "none";
+          return;
+        }
+        const sl = filter.scrollLeft;
+        const fadeLeft = sl > 8;
+        const fadeRight = sl < maxScroll - 8;
+        if (fadeLeft && fadeRight) {
+          const mask = "linear-gradient(to right, transparent 0%, black 32px, black calc(100% - 32px), transparent 100%)";
+          filter.style.maskImage = mask;
+          filter.style.webkitMaskImage = mask;
+        } else if (fadeLeft) {
+          const mask = "linear-gradient(to right, transparent 0%, black 32px, black 100%)";
+          filter.style.maskImage = mask;
+          filter.style.webkitMaskImage = mask;
+        } else {
+          const mask = "linear-gradient(to right, black 0%, black calc(100% - 32px), transparent 100%)";
+          filter.style.maskImage = mask;
+          filter.style.webkitMaskImage = mask;
+        }
+      }
+
+      filter.addEventListener("scroll", updateFilterMask, { passive: true });
+      window.addEventListener("resize", updateFilterMask, { passive: true });
+      requestAnimationFrame(updateFilterMask);
+
+      // Drag to scroll for mouse/trackpad desktop emulation
+      let isDown = false;
+      let startX = 0;
+      let scrollLeft = 0;
+      let hasDragged = false;
+
+      filter.addEventListener("mousedown", (e) => {
+        isDown = true;
+        hasDragged = false;
+        startX = e.pageX - filter.offsetLeft;
+        scrollLeft = filter.scrollLeft;
+      });
+      window.addEventListener("mouseup", () => {
+        isDown = false;
+      });
+      filter.addEventListener("mousemove", (e) => {
+        if (!isDown) return;
+        const x = e.pageX - filter.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        if (Math.abs(walk) > 4) {
+          hasDragged = true;
+          e.preventDefault();
+          filter.scrollLeft = scrollLeft - walk;
+        }
+      });
+
       filter.addEventListener("click", (e) => {
+        if (hasDragged) {
+          hasDragged = false;
+          return;
+        }
         const tab = e.target.closest(".trip-filter__tab");
         if (!tab) return;
         filter
           .querySelectorAll(".trip-filter__tab")
           .forEach((t) => t.setAttribute("aria-pressed", String(t === tab)));
+        tab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
         apply(tab.dataset.filter || "all");
       });
     }
@@ -2018,11 +2078,79 @@
           input.focus();
         });
       });
+
+      chipsContainer.scrollLeft = 0;
+      updateChipsScrollState();
+    }
+
+    const chipsIndicator = document.getElementById("chips-scroll-indicator");
+    const chipsThumb = document.getElementById("chips-scroll-thumb");
+
+    function updateChipsScrollState() {
+      if (!chipsContainer) return;
+      const max = chipsContainer.scrollWidth - chipsContainer.clientWidth;
+      if (max <= 4) {
+        if (chipsIndicator) chipsIndicator.style.display = "none";
+        chipsContainer.style.webkitMaskImage = "none";
+        chipsContainer.style.maskImage = "none";
+        return;
+      }
+
+      if (chipsIndicator) chipsIndicator.style.display = "";
+      const scrollLeft = chipsContainer.scrollLeft;
+      const progress = Math.max(0, Math.min(1, scrollLeft / max));
+      if (chipsThumb) {
+        const trackW = chipsIndicator.clientWidth || 60;
+        const thumbW = chipsThumb.clientWidth || 22;
+        chipsThumb.style.transform = `translateX(${progress * (trackW - thumbW)}px)`;
+      }
+
+      const atStart = scrollLeft <= 4;
+      const atEnd = scrollLeft >= max - 4;
+      let mask;
+      if (atStart) {
+        mask = "linear-gradient(to right, black calc(100% - 44px), transparent 100%)";
+      } else if (atEnd) {
+        mask = "linear-gradient(to left, black calc(100% - 44px), transparent 100%)";
+      } else {
+        mask = "linear-gradient(to right, transparent, black 36px, black calc(100% - 36px), transparent 100%)";
+      }
+      chipsContainer.style.webkitMaskImage = mask;
+      chipsContainer.style.maskImage = mask;
+    }
+
+    if (chipsContainer) {
+      chipsContainer.addEventListener("scroll", updateChipsScrollState, { passive: true });
+      window.addEventListener("resize", updateChipsScrollState, { passive: true });
+
+      // Drag-to-scroll support for mouse/desktop testing
+      let isDown = false;
+      let startX = 0;
+      let startScrollLeft = 0;
+      chipsContainer.addEventListener("mousedown", (e) => {
+        isDown = true;
+        startX = e.pageX - chipsContainer.offsetLeft;
+        startScrollLeft = chipsContainer.scrollLeft;
+      });
+      window.addEventListener("mouseup", () => {
+        isDown = false;
+      });
+      chipsContainer.addEventListener("mouseleave", () => {
+        isDown = false;
+      });
+      chipsContainer.addEventListener("mousemove", (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - chipsContainer.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        chipsContainer.scrollLeft = startScrollLeft - walk;
+      });
     }
 
     // Initialize toggle and chips
     updateToggleUI(currentDest);
     renderChips(currentDest);
+    setTimeout(updateChipsScrollState, 200);
 
     // If on planner page with no custom text or query param, ensure prompt matches dest
     const savedQuery = sessionStorage.getItem("planner_query");
