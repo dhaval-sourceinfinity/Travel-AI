@@ -5,40 +5,50 @@
 
 /* --------------------------------------------------------------------------
    Page heading (reuses .split from layout.css)
+   Two-column editorial split on desktop and tablet down through 768px.
    -------------------------------------------------------------------------- */
 .pkg-heading {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: flex-start;
-  gap: clamp(20px, 3.2vw, 45px);
-  padding-bottom: clamp(40px, 6vw, 56px);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: end;
+  justify-content: start;
+  gap: clamp(20px, 3vw, 45px);
+  padding-bottom: clamp(32px, 5vw, 56px);
   border-bottom: 0.8px solid var(--color-border);
 }
 
 .pkg-heading .section-title {
-  flex: 0 0 auto;
-  font-size: clamp(32px, 5vw, 41px);
+  font-size: clamp(26px, 3.2vw, 41px);
   font-weight: 600;
   letter-spacing: -0.04em;
-  line-height: 1.08;
+  line-height: 1.1;
+  white-space: nowrap;
   margin: 0;
-}
-
-@media (min-width: 641px) {
-  .pkg-heading .section-title {
-    white-space: nowrap;
-  }
 }
 
 .pkg-heading .pkg-lede {
-  width: min(100%, 603px);
+  width: 100%;
   max-width: 603px;
-  flex: 0 1 603px;
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: clamp(14px, 1.2vw, 16px);
+  line-height: 1.55;
   color: #a5b1b5;
   margin: 0;
+}
+
+@media (max-width: 767px) {
+  .pkg-heading {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+  .pkg-heading .section-title {
+    white-space: normal;
+    font-size: clamp(24px, 7vw, 32px);
+  }
+  .pkg-heading .pkg-lede {
+    font-size: 14px;
+    max-width: 100%;
+  }
 }
 
 /* --------------------------------------------------------------------------

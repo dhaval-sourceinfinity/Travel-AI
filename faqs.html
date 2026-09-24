@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Frequently Asked Questions — Travel AI</title>
+  <meta name="description" content="Everything you need to know about navigating the Travel AI platform, custom package building, and secure booking processes." />
+  <meta name="theme-color" content="#080b0d" />
+  <link rel="canonical" href="https://travel-ai.example/faqs.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Frequently Asked Questions — Travel AI" />
+  <meta property="og:description" content="Everything you need to know about navigating the Travel AI platform, custom package building, and secure booking processes." />
+
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-600.woff2" crossorigin />
+
+  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/home.css" />
+  <link rel="stylesheet" href="css/motion.css" />
+  <link rel="stylesheet" href="css/faqs.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+
+  <!-- Motion Foundation: GSAP 3.x + ScrollTrigger (pinned CDN) & Motion Engine -->
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/MorphSVGPlugin.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+  <script defer src="js/motion/gsap-presets.js"></script>
+  <script defer src="js/motion/gsap-text.js"></script>
+  <script defer src="js/motion/gsap-engine.js"></script>
+  <script defer src="js/site.js"></script>
+  <script defer src="js/faqs.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header id="site-header" class="site-header"></header>
+
+  <main id="main">
+    <!-- FAQ Hero Section -->
+    <section class="container faq-hero" aria-labelledby="faq-page-heading">
+      <div class="faq-hero__inner" data-motion="fade-up">
+        <span class="faq-badge">Support Center</span>
+        <h1 class="faq-hero__title" id="faq-page-heading">Frequently Asked Questions</h1>
+        <p class="faq-hero__desc">
+          Everything you need to know about navigating the Travel AI platform, custom package building, and secure booking processes.
+        </p>
+      </div>
+    </section>
+
+    <!-- Main FAQ Layout Section -->
+    <section class="container faq-layout-section">
+      <div class="faq-layout">
+        <!-- Sidebar Navigation / Category Tabs -->
+        <aside class="faq-sidebar" aria-label="FAQ categories">
+          <p class="faq-sidebar__label">FAQ Categories</p>
+          <nav class="faq-categories" role="tablist" aria-orientation="vertical">
+            <button type="button" class="faq-cat-btn is-active" role="tab" id="tab-general" aria-selected="true" aria-controls="faq-panel" data-cat="general">
+              General
+            </button>
+            <button type="button" class="faq-cat-btn" role="tab" id="tab-booking" aria-selected="false" aria-controls="faq-panel" data-cat="booking">
+              Booking &amp; Payments
+            </button>
+            <button type="button" class="faq-cat-btn" role="tab" id="tab-planner" aria-selected="false" aria-controls="faq-panel" data-cat="planner">
+              AI Planner
+            </button>
+            <button type="button" class="faq-cat-btn" role="tab" id="tab-packages" aria-selected="false" aria-controls="faq-panel" data-cat="packages">
+              Travel Packages
+            </button>
+            <button type="button" class="faq-cat-btn" role="tab" id="tab-account" aria-selected="false" aria-controls="faq-panel" data-cat="account">
+              Account &amp; Profile
+            </button>
+          </nav>
+        </aside>
+
+        <!-- Accordion Content Column -->
+        <div class="faq-content" id="faq-panel" role="tabpanel" aria-labelledby="tab-general">
+          <div class="faq-content__header">
+            <h2 class="faq-content__title" id="faq-category-title">General &amp; Platform FAQs</h2>
+            <p class="faq-content__desc" id="faq-category-desc">Learn about Travel AI's hybrid human-computer curation process.</p>
+          </div>
+
+          <div class="faq-accordion-stack" id="faq-accordion-stack" data-motion-stagger>
+            <!-- Items populated by JavaScript or initial server markup for instant SEO/rendering -->
+            <div class="faq-accordion is-open" data-faq-id="gen-1">
+              <button type="button" class="faq-accordion__trigger" aria-expanded="true" aria-controls="faq-body-gen-1" id="faq-btn-gen-1">
+                <span class="faq-accordion__question">What exactly is Travel AI and how does it make travel personal?</span>
+                <span class="faq-accordion__icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 6l4 4 4-4"/>
+                  </svg>
+                </span>
+              </button>
+              <div class="faq-accordion__body" id="faq-body-gen-1" role="region" aria-labelledby="faq-btn-gen-1">
+                <div class="faq-accordion__content">
+                  <p>Travel AI represents a hybrid approach to modern holiday planning. We pair state-of-the-art artificial intelligence models with verified, professional travel agents. The AI organizes raw insights, neighborhood trends, and options while real local experts validate itineraries to guarantee everything runs smoothly.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-accordion" data-faq-id="gen-2">
+              <button type="button" class="faq-accordion__trigger" aria-expanded="false" aria-controls="faq-body-gen-2" id="faq-btn-gen-2">
+                <span class="faq-accordion__question">Are the journeys pre-packaged or fully customizable?</span>
+                <span class="faq-accordion__icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 6l4 4 4-4"/>
+                  </svg>
+                </span>
+              </button>
+              <div class="faq-accordion__body" id="faq-body-gen-2" role="region" aria-labelledby="faq-btn-gen-2" hidden>
+                <div class="faq-accordion__content">
+                  <p>Every journey serves as a curated foundation that can be completely tailored. You can adjust durations, swap accommodations, add private excursions, or let our AI re-optimize the pacing according to your preferences.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-accordion is-open" data-faq-id="gen-3">
+              <button type="button" class="faq-accordion__trigger" aria-expanded="true" aria-controls="faq-body-gen-3" id="faq-btn-gen-3">
+                <span class="faq-accordion__question">What booking and cancellation rules apply to your signature packages?</span>
+                <span class="faq-accordion__icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 6l4 4 4-4"/>
+                  </svg>
+                </span>
+              </button>
+              <div class="faq-accordion__body" id="faq-body-gen-3" role="region" aria-labelledby="faq-btn-gen-3">
+                <div class="faq-accordion__content">
+                  <p>Since bookings depend on premium localized providers across Dubai and Japan, each route carries customized cancellation windows. You will see detailed timeline visualizers before finalizing any package. Support is always accessible through your dedicated agent.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-accordion" data-faq-id="gen-4">
+              <button type="button" class="faq-accordion__trigger" aria-expanded="false" aria-controls="faq-body-gen-4" id="faq-btn-gen-4">
+                <span class="faq-accordion__question">How detailed can my prompts be when using the AI Planner?</span>
+                <span class="faq-accordion__icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 6l4 4 4-4"/>
+                  </svg>
+                </span>
+              </button>
+              <div class="faq-accordion__body" id="faq-body-gen-4" role="region" aria-labelledby="faq-btn-gen-4" hidden>
+                <div class="faq-accordion__content">
+                  <p>You can be as specific as you like. Include details like dietary requirements, mobility preferences, architectural interests, ideal daily wake-up times, or specific neighborhoods you want to stay in.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-accordion" data-faq-id="gen-5">
+              <button type="button" class="faq-accordion__trigger" aria-expanded="false" aria-controls="faq-body-gen-5" id="faq-btn-gen-5">
+                <span class="faq-accordion__question">Why do you focus exclusively on Dubai and Japan?</span>
+                <span class="faq-accordion__icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 6l4 4 4-4"/>
+                  </svg>
+                </span>
+              </button>
+              <div class="faq-accordion__body" id="faq-body-gen-5" role="region" aria-labelledby="faq-btn-gen-5" hidden>
+                <div class="faq-accordion__content">
+                  <p>We prioritize depth over breadth. By focusing on Dubai and Japan, our AI models and human travel agents maintain unmatched ground-truth knowledge, exclusive local partnerships, and real-time availability.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Still Have Questions? Contact CTA Card -->
+    <section class="container faq-cta-section" aria-labelledby="faq-cta-heading">
+      <div class="faq-cta-card" data-motion="fade-up">
+        <div class="faq-cta-card__text">
+          <h2 class="faq-cta-card__title" id="faq-cta-heading">Still have questions?</h2>
+          <p class="faq-cta-card__desc">
+            Can't find what you are looking for? Send us a message and our Vita Travel support desk will guide you.
+          </p>
+        </div>
+        <div class="faq-cta-card__actions">
+          <a href="contact.html" class="btn-faq-primary">Contact Support</a>
+          <a href="contact.html" class="btn-faq-secondary">Email Agents directly</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+</body>
+</html>

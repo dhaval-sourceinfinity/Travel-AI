@@ -28,7 +28,7 @@ const COLUMNS = [
     head: "Help",
     links: [
       { label: "Contact", href: "contact.html" },
-      { label: "FAQs", href: "404.html" },
+      { label: "FAQs", href: "faqs.html" },
     ],
   },
 ];

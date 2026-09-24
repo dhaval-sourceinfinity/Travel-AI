@@ -1,0 +1,424 @@
+/* ==========================================================================
+   faqs.css — Frequently Asked Questions page styles
+   Production-ready responsive layout matching Figma node 208:6459.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Page Layout & Hero Section
+   -------------------------------------------------------------------------- */
+.faq-hero {
+  padding-top: calc(var(--header-h) + clamp(36px, 5vw, 64px));
+}
+
+.faq-hero__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+/* Badge (Figma: #1E1830 bg, #7C3AED border, #A78BFA text) */
+.faq-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #a78bfa;
+  background-color: #1e1830;
+  border: 1px solid #7c3aed;
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-4);
+}
+
+.faq-hero__title {
+  font-size: clamp(28px, 4vw + 8px, 48px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  color: var(--color-text);
+  margin-bottom: var(--space-3);
+  text-align: center;
+}
+
+.faq-hero__desc {
+  font-size: clamp(14px, 1.1vw, 15px);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  max-width: 580px;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   2. Main FAQ Split Layout
+   -------------------------------------------------------------------------- */
+.faq-layout-section {
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+.faq-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: clamp(36px, 4.5vw, 48px);
+  align-items: start;
+}
+
+/* --------------------------------------------------------------------------
+   3. Sidebar Categories (Desktop)
+   -------------------------------------------------------------------------- */
+.faq-sidebar {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-5));
+}
+
+.faq-sidebar__label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.faq-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.faq-cat-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 11px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-standard);
+  min-height: 42px;
+}
+
+.faq-cat-btn:hover {
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.faq-cat-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Active Category (Figma: rgba(167, 139, 250, 0.04) bg, rgba(167, 139, 250, 0.3) border, #A78BFA text) */
+.faq-cat-btn.is-active {
+  color: var(--color-accent);
+  font-weight: 600;
+  background-color: rgba(167, 139, 250, 0.06);
+  border-color: rgba(167, 139, 250, 0.35);
+}
+
+/* --------------------------------------------------------------------------
+   4. Accordion Content Area
+   -------------------------------------------------------------------------- */
+.faq-content {
+  min-width: 0;
+}
+
+.faq-content__header {
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.faq-content__title {
+  font-size: clamp(20px, 1.8vw, 22px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+
+.faq-content__desc {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* Accordion Stack */
+.faq-accordion-stack {
+  border-top: 0.8px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.faq-accordion {
+  border-bottom: 0.8px solid var(--color-border);
+  transition: background-color var(--dur-fast) var(--ease-standard);
+}
+
+.faq-accordion.is-open {
+  background-color: var(--color-surface);
+}
+
+.faq-accordion__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: clamp(16px, 2vw, 20px) clamp(16px, 2.5vw, 24px);
+  font-size: clamp(15px, 1.2vw, 16px);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-text);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  gap: 16px;
+  min-height: 48px;
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+
+.faq-accordion__trigger:hover {
+  color: var(--color-accent);
+}
+
+.faq-accordion__trigger:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.faq-accordion__question {
+  flex: 1;
+}
+
+.faq-accordion__icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--dur-standard) var(--ease-standard), color var(--dur-fast) var(--ease-standard);
+}
+
+.faq-accordion.is-open .faq-accordion__icon {
+  transform: rotate(180deg);
+  color: var(--color-accent);
+}
+
+.faq-accordion__body {
+  padding: 0 clamp(16px, 2.5vw, 24px) clamp(18px, 2.5vw, 24px);
+}
+
+.faq-accordion__body[hidden] {
+  display: none;
+}
+
+.faq-accordion__content p {
+  font-size: clamp(13.5px, 0.4vw + 12px, 14px);
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  max-width: 75ch;
+}
+
+/* --------------------------------------------------------------------------
+   5. Still Have Questions? Contact CTA Card
+   -------------------------------------------------------------------------- */
+.faq-cta-section {
+  margin-top: clamp(48px, 6vw, 72px);
+  margin-bottom: clamp(56px, 7vw, 96px);
+}
+
+.faq-cta-card {
+  background-color: var(--color-surface);
+  border: 0.8px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(32px, 4.5vw, 48px) clamp(20px, 4vw, 40px);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  max-width: var(--container-max);
+  margin-inline: auto;
+}
+
+.faq-cta-card__title {
+  font-size: clamp(20px, 2vw, 22px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.faq-cta-card__desc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+  max-width: 500px;
+  margin-inline: auto;
+}
+
+.faq-cta-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-faq-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--color-accent-strong);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  text-decoration: none;
+  min-height: 44px;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-standard), transform var(--dur-fast);
+}
+
+.btn-faq-primary:hover {
+  background-color: #8b6ff5;
+  color: #ffffff;
+}
+
+.btn-faq-primary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.btn-faq-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background-color: transparent;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 8px;
+  text-decoration: none;
+  min-height: 44px;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard);
+}
+
+.btn-faq-secondary:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--color-text);
+}
+
+.btn-faq-secondary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   6. Responsive Breakpoints
+   -------------------------------------------------------------------------- */
+
+/* Tablet & Below (<= 1023px): Convert vertical sidebar into horizontal tabs */
+@media (max-width: 1023px) {
+  .faq-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+
+  .faq-sidebar {
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .faq-sidebar__label {
+    display: none; /* Pill tabs speak for themselves on mobile/tablet */
+  }
+
+  .faq-categories {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+    gap: 8px;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .faq-categories::-webkit-scrollbar {
+    display: none;
+  }
+
+  .faq-cat-btn {
+    width: auto;
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border);
+  }
+
+  .faq-cat-btn.is-active {
+    border-color: rgba(167, 139, 250, 0.45);
+  }
+}
+
+/* Mobile (<= 540px): CTA buttons stack vertically with full width */
+@media (max-width: 540px) {
+  .faq-cta-card__actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .btn-faq-primary,
+  .btn-faq-secondary {
+    width: 100%;
+    min-height: 48px;
+  }
+}
+
+/* Small Mobile (<= 375px & 320px) */
+@media (max-width: 375px) {
+  .faq-hero__title {
+    font-size: 26px;
+  }
+
+  .faq-accordion__trigger {
+    padding-inline: 14px;
+    font-size: 14.5px;
+    gap: 12px;
+  }
+
+  .faq-accordion__body {
+    padding-inline: 14px;
+    padding-bottom: 16px;
+  }
+
+  .faq-cta-card {
+    padding: 28px 16px;
+  }
+}
