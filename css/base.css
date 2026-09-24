@@ -21,7 +21,7 @@ h3,
 h4 {
   color: var(--color-text);
   font-weight: 600;
-  line-height: 1.08;
+  line-height: 1.1;
   letter-spacing: -0.03em;
   text-wrap: balance;
   margin: 0;
@@ -29,8 +29,8 @@ h4 {
 
 h1 {
   font-size: var(--fs-hero);
-  line-height: 0.98;
-  letter-spacing: -0.045em;
+  line-height: var(--lh-hero, 1.02);
+  letter-spacing: var(--ls-hero, -0.04em);
 }
 
 h2 {
@@ -41,21 +41,21 @@ h2 {
 
 h3 {
   font-size: var(--fs-h3);
-  line-height: 1.15;
-  letter-spacing: -0.025em;
+  line-height: var(--lh-h3, 1.2);
+  letter-spacing: var(--ls-h3, -0.025em);
 }
 
 h4 {
   font-size: var(--fs-h4);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  line-height: var(--lh-h4, 1.25);
+  letter-spacing: var(--ls-h4, -0.02em);
 }
 
 /* ---- Section intro primitives (repeated pattern across the page) ------- */
 .eyebrow {
   font-size: var(--fs-section-label);
   line-height: var(--lh-section-label);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-text-muted);
   letter-spacing: var(--ls-section-label);
   text-transform: uppercase;
@@ -78,9 +78,9 @@ h4 {
 
 .lede {
   color: var(--color-text-secondary);
-  font-size: var(--fs-section-body);
-  line-height: var(--lh-section-body);
-  letter-spacing: var(--ls-section-body);
+  font-size: var(--fs-lede);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
 }
 
 .quote {

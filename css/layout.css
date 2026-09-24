@@ -7,9 +7,19 @@
   margin-inline: auto;
 }
 
+.container--wide {
+  width: min(100% - (var(--container-pad) * 2), var(--container-wide));
+  margin-inline: auto;
+}
+
+.container--narrow {
+  width: min(100% - (var(--container-pad) * 2), var(--container-narrow));
+  margin-inline: auto;
+}
+
 .section {
   padding-block: var(--section-py);
-  border-bottom: 0.8px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .section--deep {

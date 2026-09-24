@@ -62,16 +62,17 @@
 
 .error__title {
   margin-top: var(--space-6);
-  font-size: clamp(26px, 5vw, 40px);
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 1.1;
 }
 
 .error__text {
   margin-top: var(--space-4);
-  max-width: 46ch;
-  font-size: var(--fs-body);
-  line-height: 1.75;
+  max-width: 48ch;
+  font-size: var(--fs-lede, 17px);
+  line-height: 1.6;
   color: var(--color-text-secondary);
 }
 
@@ -86,7 +87,7 @@
 .error__links {
   margin-top: var(--space-10);
   padding-top: var(--space-6);
-  border-top: 0.8px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
   width: min(100%, 460px);
   display: flex;
   flex-wrap: wrap;
@@ -94,7 +95,7 @@
   justify-content: center;
 }
 .error__links a {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--color-text-muted);
   transition: color var(--dur-fast) var(--ease-standard);
 }

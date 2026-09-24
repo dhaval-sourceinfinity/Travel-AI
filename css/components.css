@@ -64,23 +64,28 @@
    Buttons
    -------------------------------------------------------------------------- */
 .btn {
-  --btn-fs: 11px;
+  --btn-fs: var(--btn-fs, 14px);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
   font-size: var(--btn-fs);
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  border-radius: var(--radius-xs);
-  padding: 10px 18px;
-  min-height: 40px;
-  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  border-radius: var(--radius-pill);
+  padding: 11px 24px;
+  min-height: var(--btn-height, 44px);
+  line-height: 1.25;
+  box-sizing: border-box;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
   transition: background-color var(--dur-fast) var(--ease-standard),
     border-color var(--dur-fast) var(--ease-standard),
     color var(--dur-fast) var(--ease-standard),
-    transform var(--dur-fast) var(--ease-standard);
+    transform var(--dur-fast) var(--ease-standard),
+    box-shadow var(--dur-fast) var(--ease-standard);
 }
 
 .btn:active {
@@ -91,21 +96,25 @@
 .btn--primary {
   background: var(--color-accent-strong);
   color: #fff;
+  border: 1px solid transparent;
 }
 .btn--primary:hover {
   background: var(--color-accent-hover);
-  color: #14121b;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35);
 }
 
 /* Accent outline — violet border/text (journey cards, footer advisor) */
 .btn--accent-outline {
-  border: 0.8px solid var(--color-accent-border);
+  border: 1px solid var(--color-accent-border);
   color: var(--color-accent);
-  letter-spacing: 0.07em;
+  background: transparent;
+  letter-spacing: -0.01em;
 }
 .btn--accent-outline:hover {
   background: var(--color-accent-soft);
   border-color: var(--color-accent);
+  color: var(--color-accent-hover);
 }
 
 /* Accent solid pill button (e.g. Header Get Started) */
@@ -117,26 +126,27 @@
 .btn--accent:hover {
   background: var(--color-accent-solid-hover);
   color: #fff;
-  box-shadow: 0 0 16px rgba(123, 92, 240, 0.35);
+  box-shadow: 0 0 18px rgba(123, 92, 240, 0.4);
 }
 
-/* Subtle fill — no border. Sits between --ghost (border, no fill) and
-   --glass (both). Used for secondary card actions. */
+/* Subtle fill — translucent on card surfaces */
 .btn--subtle {
   background: rgba(255, 255, 255, 0.07);
-  border: 1px solid transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--color-text-secondary);
 }
 .btn--subtle:hover {
   background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.16);
   color: var(--color-text);
 }
 
 /* Compact control for dense card footers. */
 .btn--sm {
-  min-height: 32px;
-  padding: 8px 14px;
-  letter-spacing: 0.06em;
+  min-height: var(--btn-height-sm, 36px);
+  padding: 8px 16px;
+  font-size: 13px;
+  letter-spacing: -0.01em;
 }
 @media (pointer: coarse) {
   .btn--sm {
@@ -146,50 +156,42 @@
 
 .btn--pill {
   border-radius: var(--radius-pill);
-  padding: 10px 22px;
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: none;
-  letter-spacing: normal;
-  min-height: 41px;
-  line-height: 1.2;
 }
 
-/* Ghost outline — light hairline (view all, secondary) */
+/* Ghost outline — refined translucent hairline */
 .btn--ghost {
-  border: 0.8px solid var(--color-border-strong);
+  border: 1px solid var(--color-border-strong);
+  background: rgba(255, 255, 255, 0.02);
   color: var(--color-text-secondary);
-  letter-spacing: 0.1em;
+  letter-spacing: -0.01em;
 }
 .btn--ghost:hover {
-  border-color: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--color-text);
 }
 
 /* Glass — translucent on imagery */
 .btn--glass {
-  border: 0.8px solid rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.07);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   color: #fff;
 }
 .btn--glass:hover {
   background: rgba(255, 255, 255, 0.16);
-}
-
-.btn--pill {
-  border-radius: var(--radius-pill);
-  padding-inline: 28px;
+  border-color: rgba(255, 255, 255, 0.35);
 }
 
 .btn--lg {
-  min-height: 48px;
-  padding: 14px 40px;
-  letter-spacing: 0.18em;
+  min-height: var(--btn-height-lg, 50px);
+  padding: 13px 32px;
+  font-size: 15px;
+  letter-spacing: -0.01em;
 }
 
-/* Hero "Discover" pill — white pill with dark icon chip */
+/* Hero "Discover" pill — white pill with dark icon chip (signature Vita benchmark) */
 .btn-hero {
   display: inline-flex;
   align-items: center;
@@ -197,24 +199,24 @@
   background: #fff;
   color: #0b0f11;
   border-radius: var(--radius-pill);
-  padding: 8px 10px 8px 22px;
+  padding: 8px 10px 8px 24px;
   font-size: 14px;
   font-weight: 600;
   letter-spacing: -0.01em;
-  min-height: 44px;
+  min-height: 46px;
   box-shadow: var(--shadow-pill);
   transition: transform 0.25s ease-out,
     box-shadow 0.25s ease-out;
 }
 .btn-hero:hover {
-  transform: scale(1.02);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
 }
 .btn-hero__icon {
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: var(--radius-pill);
   background: #12181a;
   color: #fff;
@@ -333,12 +335,12 @@
 
 .nav__link {
   position: relative;
-  font-size: 12px;
-  line-height: 17px;
+  font-size: 14px;
+  line-height: 1.4;
   font-weight: 500;
   color: var(--color-text-secondary);
-  letter-spacing: -0.005em;
-  padding-block: 4px;
+  letter-spacing: -0.01em;
+  padding-block: 6px;
   transition: color var(--dur-fast) var(--ease-standard);
   text-decoration: none;
 }
@@ -537,7 +539,8 @@
 
 .dest-card {
   position: relative;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card, 14px);
+  border: 1px solid var(--color-border);
   overflow: hidden;
   aspect-ratio: 566 / 754;
   background: #141c1f;
@@ -642,13 +645,17 @@
   display: flex;
   flex-direction: column;
   background: var(--color-surface-card);
-  border: 0.8px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card, 14px);
   overflow: hidden;
-  transition: border-color var(--dur-normal) var(--ease-standard);
+  transition: border-color var(--dur-normal) var(--ease-standard),
+              transform var(--dur-normal) var(--ease-standard),
+              box-shadow var(--dur-normal) var(--ease-standard);
 }
 .journey-card:hover {
   border-color: var(--color-border-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
 }
 .journey-card__media {
   position: relative;
@@ -831,8 +838,8 @@
 
 .place-card {
   background: var(--color-surface-card);
-  border: 0.8px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card, 14px);
   overflow: hidden;
   padding-top: 0;
 }
@@ -933,11 +940,11 @@
 .testimonials-editorial {
   display: grid;
   grid-template-columns: minmax(0, 542px) minmax(0, 544px);
-  justify-content: space-between;
-  gap: clamp(32px, 5vw, 86px);
+  justify-content: center;
+  gap: clamp(32px, 5vw, 76px);
   position: relative;
   width: 100%;
-  max-width: var(--container-max, 1195px);
+  max-width: min(100%, 1180px);
   margin-inline: auto;
   align-items: stretch;
 }
@@ -1029,7 +1036,6 @@
   box-sizing: border-box;
   max-width: 544px;
   width: 100%;
-  justify-self: end;
 }
 
 .testimonials-content__top {
@@ -1155,7 +1161,7 @@
   position: relative;
   overflow: hidden;
   background: var(--color-bg);
-  padding-top: var(--space-16);
+  padding-top: clamp(64px, 8vw, 96px);
 }
 
 .footer-bounce {
@@ -1187,18 +1193,19 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: var(--space-10);
+  gap: clamp(32px, 5vw, 64px);
 }
 .footer-brand {
   display: flex;
   flex-direction: column;
   gap: 14px;
   min-width: 160px;
-  max-width: 220px;
+  max-width: 240px;
 }
 .footer-brand__tag {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--color-text-muted);
+  line-height: 1.5;
 }
 .footer-cols {
   display: flex;
@@ -1212,20 +1219,23 @@
   min-width: 110px;
 }
 .footer-col__head {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: #fff;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 .footer-link {
-  font-size: 12.5px;
-  color: var(--color-text-muted);
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  text-decoration: none;
   transition: color var(--dur-fast) var(--ease-standard);
 }
 .footer-link:hover,
 .footer-link:focus-visible {
-  color: var(--color-text);
+  color: #fff;
 }
 
 .advisor {
@@ -1234,24 +1244,19 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  margin-top: var(--space-12);
-  padding: 20px 24px;
-  border: 0.8px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-accent-soft);
+  margin-top: clamp(40px, 6vw, 64px);
+  padding: clamp(24px, 3vw, 36px);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-card, 14px);
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.08) 0%, rgba(124, 58, 237, 0.04) 100%);
   width: 100%;
   box-sizing: border-box;
 }
 .advisor__text {
-  font-size: 13px;
-  color: var(--color-text-secondary);
+  font-size: clamp(15px, 1.2vw, 17px);
+  font-weight: 500;
+  color: var(--color-text);
   letter-spacing: -0.01em;
-}
-.advisor .btn {
-  text-transform: none;
-  letter-spacing: -0.01em;
-  font-weight: 600;
-  font-size: 12px;
 }
 
 .footer-bottom {
@@ -1260,14 +1265,16 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  margin-top: var(--space-8);
-  padding: 16px 0 20px;
-  border-top: 0.8px solid var(--color-border);
+  margin-top: clamp(32px, 5vw, 48px);
+  padding: 24px 0 32px;
+  border-top: 1px solid var(--color-border);
 }
 .footer-copy,
 .footer-legal a {
-  font-size: 10.5px;
-  color: var(--color-text-faint);
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-standard);
 }
 .footer-legal {
   display: flex;
@@ -1277,7 +1284,9 @@
 .footer-legal a {
   white-space: nowrap;
 }
-.footer-legal a:hover { color: var(--color-text-secondary); }
+.footer-legal a:hover {
+  color: #fff;
+}
 
 /* --------------------------------------------------------------------------
    Reveal-on-scroll (progressive enhancement)

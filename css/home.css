@@ -50,8 +50,8 @@
 .hero__title {
   font-size: var(--fs-hero);
   font-weight: 600;
-  line-height: 0.92;
-  letter-spacing: -0.055em;
+  line-height: 1.0;
+  letter-spacing: -0.04em;
   color: #fff;
   text-wrap: balance;
   margin: 0 auto;
@@ -168,11 +168,11 @@
 }
 .cta__sub {
   margin-top: clamp(24px, 2.8vw, 32px);
-  font-size: clamp(11.5px, 1.1vw, 13px);
+  font-size: clamp(13px, 1.1vw, 14px);
   letter-spacing: 0.08em;
   line-height: 1.4;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
 }
 .cta__btn {
   margin-top: clamp(28px, 3.2vw, 36px);

@@ -12,12 +12,12 @@
    1. Spacing & Typography Tokens (Scoped to Detail Page)
    -------------------------------------------------------------------------- */
 :root {
-  --detail-container-max: 1200px;
+  --detail-container-max: var(--container-max, 1360px);
   --detail-section-gap: clamp(48px, 5vw, 64px);
-  --detail-h1-size: clamp(22px, 2.5vw + 14px, 40px);
-  --detail-h2-size: clamp(18px, 1.2vw + 12px, 22px);
-  --detail-body-size: clamp(13.5px, 0.35vw + 12px, 15px);
-  --detail-meta-size: clamp(12.5px, 0.2vw + 12px, 13.5px);
+  --detail-h1-size: clamp(28px, 3.4vw, 44px);
+  --detail-h2-size: clamp(20px, 2.2vw, 26px);
+  --detail-body-size: clamp(15px, 1.1vw, 16px);
+  --detail-meta-size: 14px;
 }
 
 @media (max-width: 1023px) {

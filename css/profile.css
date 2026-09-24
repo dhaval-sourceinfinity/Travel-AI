@@ -14,9 +14,7 @@
 }
 
 .profile-container {
-  width: 100%;
-  max-width: 1440px;
-  padding-inline: clamp(20px, 5.55vw, 80px);
+  width: min(100% - (var(--container-pad) * 2), var(--container-max, 1360px));
   margin-inline: auto;
   box-sizing: border-box;
   display: flex;
@@ -65,19 +63,19 @@
 
 .profile-title {
   font-family: var(--font-sans);
-  font-size: clamp(28px, 2.5vw, 36px);
-  font-weight: 800;
-  line-height: 44px;
-  letter-spacing: -0.02em;
+  font-size: clamp(30px, 3.5vw, 44px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
   color: #F3F4F6;
   margin: 0;
 }
 
 .profile-subtitle {
   font-family: var(--font-sans);
-  font-size: 15px;
+  font-size: var(--fs-lede, 17px);
   font-weight: 400;
-  line-height: 18px;
+  line-height: 1.6;
   color: #8B8C94;
   margin: 0;
 }
@@ -88,11 +86,11 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 41px;
-  padding: 10px 20px;
+  height: 44px;
+  padding: 10px 24px;
   background-color: #1D1E23;
   border: 1px solid #2D2E36;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 600;
@@ -152,7 +150,7 @@
 .profile-card {
   background-color: #111114;
   border: 1px solid #1D1E23;
-  border-radius: 16px;
+  border-radius: var(--radius-card, 14px);
   box-sizing: border-box;
   overflow: visible;
   position: relative;

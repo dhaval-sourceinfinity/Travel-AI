@@ -48,7 +48,7 @@ body.auth-modal-locked {
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
+  border-radius: var(--radius-card, 14px);
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
   max-height: calc(100vh - 32px);
   max-height: calc(100dvh - 32px);
@@ -602,7 +602,7 @@ body.auth-modal-locked {
 .auth-btn-submit {
   width: 100%;
   height: 46px;
-  border-radius: 8px;
+  border-radius: var(--radius-pill);
   background: #7c3aed;
   color: #ffffff;
   font-size: 15px;

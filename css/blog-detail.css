@@ -103,9 +103,9 @@ html {
 
 .article-hero__title {
   font-size: var(--fs-article-h1);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.031em; /* Figma -1.5px at 48px */
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
   color: var(--color-text-strong);
 }
 
@@ -144,7 +144,7 @@ html {
   aspect-ratio: 32 / 15; /* Figma 1280 × 600 */
   object-fit: cover;
   object-position: center;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card, 14px);
   background-color: var(--color-surface-panel);
 }
 
@@ -423,7 +423,7 @@ html {
   aspect-ratio: 61 / 25; /* Figma 976 × 400 */
   object-fit: cover;
   object-position: center;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card, 14px);
   background-color: var(--color-surface-panel);
 }
 
@@ -443,7 +443,7 @@ html {
   padding: var(--space-6);
   background-color: var(--color-surface-panel);
   border: 1px solid var(--color-border-panel);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card, 14px);
 }
 
 .article-callout__label {
@@ -526,7 +526,7 @@ html {
   padding: var(--space-8);
   background-color: var(--color-surface-panel);
   border: 1px solid var(--color-border-panel);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card, 14px);
 }
 
 .author-card__avatar {
