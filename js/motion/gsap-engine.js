@@ -72,6 +72,9 @@
       const gsap = root.gsap;
       const ScrollTrigger = root.ScrollTrigger;
       gsap.registerPlugin(ScrollTrigger);
+      if (root.ScrollToPlugin) {
+        gsap.registerPlugin(root.ScrollToPlugin);
+      }
       if (root.MorphSVGPlugin) {
         gsap.registerPlugin(root.MorphSVGPlugin);
       }
@@ -224,17 +227,22 @@
       anchorListenerAttached = true;
 
       document.addEventListener("click", (e) => {
+        if (e.defaultPrevented) return;
         const link = e.target.closest('a[href^="#"]');
-        if (!link) return;
+        if (!link || link.classList.contains("terms-nav__link")) return;
         const hash = link.getAttribute("href");
         if (!hash || hash === "#") return;
         try {
           const target = document.querySelector(hash);
           if (target && lenisInstance && !isReducedMotion) {
             e.preventDefault();
+            const headerEl = document.getElementById("site-header");
+            const headerH = headerEl ? headerEl.offsetHeight : 72;
+            const extraGap = 28;
             lenisInstance.scrollTo(target, {
-              offset: 0,
-              duration: 1.15,
+              offset: -(headerH + extraGap),
+              duration: 1.5,
+              easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
               onComplete: () => {
                 if (
                   target.getAttribute("tabindex") === null &&

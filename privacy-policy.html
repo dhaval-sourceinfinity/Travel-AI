@@ -29,12 +29,14 @@
   <!-- Motion Foundation: GSAP 3.x + ScrollTrigger (pinned CDN) & Motion Engine -->
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/ScrollToPlugin.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/MorphSVGPlugin.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
   <script defer src="js/motion/gsap-presets.js"></script>
   <script defer src="js/motion/gsap-text.js"></script>
   <script defer src="js/motion/gsap-engine.js"></script>
   <script defer src="js/site.js"></script>
+  <script defer src="js/terms.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -42,97 +44,125 @@
   <header id="site-header" class="site-header"></header>
 
   <main id="main">
-    <section class="terms-section" aria-labelledby="privacy-heading">
+    <!-- Intro / Header Section -->
+    <section class="terms-intro" aria-labelledby="privacy-heading">
       <div class="terms-container">
-
-        <!-- Page Header -->
         <header class="terms-header">
           <h1 class="terms-title" id="privacy-heading" data-motion="fade-up">Privacy Policy</h1>
           <p class="terms-updated" data-motion="fade-up">Last updated: October 12, 2025</p>
         </header>
+      </div>
+    </section>
 
-        <!-- Privacy Policy Sections List -->
-        <div class="terms-content" data-motion-stagger>
+    <!-- Main Content Section (Full-Width Border Divider matching Terms of Use) -->
+    <section class="terms-body" aria-label="Privacy Policy Content">
+      <div class="terms-container">
+        <!-- Layout: Content + Sticky TOC Sidebar -->
+        <div class="terms-layout">
 
-          <article class="terms-block" data-motion="fade-up">
-            <h2 class="terms-block__title">1. Information We Collect</h2>
-            <p class="terms-block__text">
-              We collect information you provide directly, such as when you create an account, book travel, or contact support. This may include personal details (name, email, phone), payment information, and travel preferences. We also collect usage data (device, browser, IP, interactions) and cookie data to understand how you use the service.
-            </p>
-          </article>
+          <!-- Left Column: Privacy Sections List -->
+          <div class="terms-content" data-motion-stagger>
 
-          <article class="terms-block" data-motion="fade-up">
-            <h2 class="terms-block__title">2. How We Use Your Information</h2>
-            <p class="terms-block__text">
-              We use your information to provide and improve the service, personalize recommendations, communicate with you about your trips and account, and detect fraud. We may also use aggregated data to improve destination suggestions and travel planning features.
-            </p>
-          </article>
+            <article class="terms-block" id="privacy-collect" data-motion="fade-up">
+              <h2 class="terms-block__title">1. Information We Collect</h2>
+              <p class="terms-block__text">
+                We collect information you provide directly, such as when you create an account, book travel, or contact support. This may include personal details (name, email, phone), payment information, and travel preferences. We also collect usage data (device, browser, IP, interactions) and cookie data to understand how you use the service.
+              </p>
+            </article>
 
-          <article class="terms-block" data-motion="fade-up">
-            <h2 class="terms-block__title">3. Data Sharing &amp; Disclosure</h2>
-            <p class="terms-block__text">
-              We share data with third-party services (payment processors, travel providers) to facilitate bookings and support. We may also disclose information to comply with legal requirements, protect our rights, or respond to a request from law enforcement.
-            </p>
-          </article>
+            <article class="terms-block" id="privacy-usage" data-motion="fade-up">
+              <h2 class="terms-block__title">2. How We Use Your Information</h2>
+              <p class="terms-block__text">
+                We use your information to provide and improve the service, personalize recommendations, communicate with you about your trips and account, and detect fraud. We may also use aggregated data to improve destination suggestions and travel planning features.
+              </p>
+            </article>
 
-          <article class="terms-block" data-motion="fade-up">
-            <h2 class="terms-block__title">4. Data Security</h2>
-            <p class="terms-block__text">
-              We implement reasonable security safeguards, including encryption and access controls, to protect your information. While we take steps to secure your data, no method of transmission over the internet is completely secure.
-            </p>
-          </article>
+            <article class="terms-block" id="privacy-sharing" data-motion="fade-up">
+              <h2 class="terms-block__title">3. Data Sharing &amp; Disclosure</h2>
+              <p class="terms-block__text">
+                We share data with third-party services (payment processors, travel providers) to facilitate bookings and support. We may also disclose information to comply with legal requirements, protect our rights, or respond to a request from law enforcement.
+              </p>
+            </article>
 
-          <article class="terms-block" data-motion="fade-up">
-            <h2 class="terms-block__title">5. Your Rights &amp; Choices</h2>
-            <p class="terms-block__text">
-              You may request access to, correction of, or deletion of your personal data. You can also opt out of marketing communications and manage cookie preferences. Some choices may affect your ability to use certain features.
-            </p>
-          </article>
+            <article class="terms-block" id="privacy-security" data-motion="fade-up">
+              <h2 class="terms-block__title">4. Data Security</h2>
+              <p class="terms-block__text">
+                We implement reasonable security safeguards, including encryption and access controls, to protect your information. While we take steps to secure your data, no method of transmission over the internet is completely secure.
+              </p>
+            </article>
 
-          <article class="terms-block" data-motion="fade-up">
-            <h2 class="terms-block__title">6. Cookies &amp; Tracking Technologies</h2>
-            <p class="terms-block__text">
-              We use cookies and similar technologies to remember preferences, authenticate sessions, and analyze usage. You can manage cookie settings in your browser, but some features may not function as intended.
-            </p>
-          </article>
+            <article class="terms-block" id="privacy-rights" data-motion="fade-up">
+              <h2 class="terms-block__title">5. Your Rights &amp; Choices</h2>
+              <p class="terms-block__text">
+                You may request access to, correction of, or deletion of your personal data. You can also opt out of marketing communications and manage cookie preferences. Some choices may affect your ability to use certain features.
+              </p>
+            </article>
 
-          <article class="terms-block" data-motion="fade-up">
-            <h2 class="terms-block__title">7. Children's Privacy</h2>
-            <p class="terms-block__text">
-              Our service is not intended for children under 13. If you believe we have collected information from a child, please contact us so we can take appropriate action.
-            </p>
-          </article>
+            <article class="terms-block" id="privacy-cookies" data-motion="fade-up">
+              <h2 class="terms-block__title">6. Cookies &amp; Tracking Technologies</h2>
+              <p class="terms-block__text">
+                We use cookies and similar technologies to remember preferences, authenticate sessions, and analyze usage. You can manage cookie settings in your browser, but some features may not function as intended.
+              </p>
+            </article>
 
-          <article class="terms-block" data-motion="fade-up">
-            <h2 class="terms-block__title">8. International Data Transfers</h2>
-            <p class="terms-block__text">
-              We may transfer data across borders to operate the service globally. When we do, we apply appropriate safeguards to protect your information in accordance with applicable privacy laws.
-            </p>
-          </article>
+            <article class="terms-block" id="privacy-children" data-motion="fade-up">
+              <h2 class="terms-block__title">7. Children's Privacy</h2>
+              <p class="terms-block__text">
+                Our service is not intended for children under 13. If you believe we have collected information from a child, please contact us so we can take appropriate action.
+              </p>
+            </article>
 
-          <article class="terms-block" data-motion="fade-up">
-            <h2 class="terms-block__title">9. Data Retention</h2>
-            <p class="terms-block__text">
-              We retain your information for as long as necessary to provide the service, comply with legal obligations, and resolve disputes. After that period, we securely delete or de-identify your data.
-            </p>
-          </article>
+            <article class="terms-block" id="privacy-transfers" data-motion="fade-up">
+              <h2 class="terms-block__title">8. International Data Transfers</h2>
+              <p class="terms-block__text">
+                We may transfer data across borders to operate the service globally. When we do, we apply appropriate safeguards to protect your information in accordance with applicable privacy laws.
+              </p>
+            </article>
 
-          <article class="terms-block" data-motion="fade-up">
-            <h2 class="terms-block__title">10. Changes to This Policy</h2>
-            <p class="terms-block__text">
-              We may update this Privacy Policy at any time. If we make material changes, we will provide notice through the service. Your continued use after changes become effective means you accept the updated policy.
-            </p>
-          </article>
+            <article class="terms-block" id="privacy-retention" data-motion="fade-up">
+              <h2 class="terms-block__title">9. Data Retention</h2>
+              <p class="terms-block__text">
+                We retain your information for as long as necessary to provide the service, comply with legal obligations, and resolve disputes. After that period, we securely delete or de-identify your data.
+              </p>
+            </article>
 
-          <article class="terms-block" data-motion="fade-up">
-            <h2 class="terms-block__title">11. Contact Us</h2>
-            <p class="terms-block__text">
-              For questions about this Privacy Policy, please contact <a href="mailto:support@travelai.com">support@travelai.com</a>. We are happy to help with any inquiries regarding your data and privacy.
-            </p>
-          </article>
+            <article class="terms-block" id="privacy-changes" data-motion="fade-up">
+              <h2 class="terms-block__title">10. Changes to This Policy</h2>
+              <p class="terms-block__text">
+                We may update this Privacy Policy at any time. If we make material changes, we will provide notice through the service. Your continued use after changes become effective means you accept the updated policy.
+              </p>
+            </article>
+
+            <article class="terms-block" id="privacy-contact" data-motion="fade-up">
+              <h2 class="terms-block__title">11. Contact Us</h2>
+              <p class="terms-block__text">
+                For questions about this Privacy Policy, please contact <a href="mailto:support@travelai.com">support@travelai.com</a>. We are happy to help with any inquiries regarding your data and privacy.
+              </p>
+            </article>
+
+          </div>
+
+          <!-- Right Column: Sticky Table of Contents Sidebar -->
+          <aside class="terms-sidebar" aria-label="Table of contents">
+            <nav class="terms-nav">
+              <p class="terms-nav__title">Table of contents</p>
+              <ul class="terms-nav__list" role="list">
+                <li class="terms-nav__item"><a href="#privacy-collect" class="terms-nav__link is-active">1. Information We Collect</a></li>
+                <li class="terms-nav__item"><a href="#privacy-usage" class="terms-nav__link">2. How We Use Your Information</a></li>
+                <li class="terms-nav__item"><a href="#privacy-sharing" class="terms-nav__link">3. Data Sharing &amp; Disclosure</a></li>
+                <li class="terms-nav__item"><a href="#privacy-security" class="terms-nav__link">4. Data Security</a></li>
+                <li class="terms-nav__item"><a href="#privacy-rights" class="terms-nav__link">5. Your Rights &amp; Choices</a></li>
+                <li class="terms-nav__item"><a href="#privacy-cookies" class="terms-nav__link">6. Cookies &amp; Tracking Technologies</a></li>
+                <li class="terms-nav__item"><a href="#privacy-children" class="terms-nav__link">7. Children's Privacy</a></li>
+                <li class="terms-nav__item"><a href="#privacy-transfers" class="terms-nav__link">8. International Data Transfers</a></li>
+                <li class="terms-nav__item"><a href="#privacy-retention" class="terms-nav__link">9. Data Retention</a></li>
+                <li class="terms-nav__item"><a href="#privacy-changes" class="terms-nav__link">10. Changes to This Policy</a></li>
+                <li class="terms-nav__item"><a href="#privacy-contact" class="terms-nav__link">11. Contact Us</a></li>
+              </ul>
+            </nav>
+          </aside>
 
         </div>
-
       </div>
     </section>
   </main>

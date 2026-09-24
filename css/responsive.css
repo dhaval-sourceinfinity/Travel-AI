@@ -1264,3 +1264,31 @@ body.drawer-open {
   }
 }
 
+/* ---- Terms of Use / Legal Layout Responsiveness (Reference Matched) ------- */
+@media (max-width: 1024px) {
+  .terms-layout {
+    gap: clamp(20px, 3vw, 32px);
+  }
+  .terms-sidebar {
+    width: 250px;
+    padding-left: 20px;
+  }
+  .terms-nav__link {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 767px) {
+  .terms-layout {
+    display: block;
+  }
+  .terms-sidebar {
+    display: none;
+  }
+  .terms-content {
+    max-width: 100%;
+    padding-right: 0;
+  }
+}
+
